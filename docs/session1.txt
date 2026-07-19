@@ -1,0 +1,42 @@
+_______________________________________________________________________________________________________________
+FEATURES:
+	TERMIANL BASED PLAYER
+	AUTHENTIC TO UNAUTHENTIC TOGGLE
+	WEBSITE PEROSNALITY , ANGER AND SIMILAR EMOTIONS | FEATURE FOUR: THE HOSTILE REACTIVE UI
+	MASCOTS
+	the user gets certain stuff from other websites nd then fcking uploads it here kinda like witchcraft and then get a reward or result sort of
+	a game
+	FEATURE 4: PLACEMENT HEAD INTERROGATION | dont know what it meant but instead i wud have something like a diaglogue exchange where u to talk to an angry person , bold tupe shit think of it like the fcking invicible 
+	FEATURE 10: THE BURN RATE VISUALIZER
+This has a simple JavaScript counter incrementing continuously at the top of the screen. It calculates the theoretical hours of sleep lost versus lines of code written since starting your final semesters, turning your actual exhaustion into a live data metric.
+	FEATURE 6: THE CHAOS TOGGLE
+This has a hidden HTML checkbox wired to a global CSS variables file. Checking it instantly swaps the bone ash text to the esoteric blood red and sets a CSS animation on the body tag that slightly jitters the entire layout by 1 pixel every few seconds.
+	FEATURE 2: HARDWARE STRESS TESTER
+This has an HTML range slider labeled Acer Aspire 5 GPU Load. When the user drags the slider up, JavaScript fires multiple Web Worker threads calculating heavy math in the background, literally making their browser lag to simulate the hardware grind of running local models.
+
+	
+
+_______________________________________________________________________________________________________________
+FONT YET TO BE DECIDED: 
+bAbe nene is gonna be in it
+
+_________________________________________________________________________________________________________________
+Here are the exact hex codes for your CSS variables. No gradients. No softness. Just raw hex values.
+
+
+BACKGROUND / THE VOID : #050505
+Not quite absolute zero, but close enough. It feels like an unlit terminal screen.
+
+BORDERS / THE GRID : #1A1A1A
+Barely visible lines separating your layout. Exposes the architecture without screaming for attention.
+
+PRIMARY TEXT / BONE ASH : #D4D4D4
+Harsh white burns the retinas. This ash gray is readable but cold. It feels like reading server logs.
+
+PRIMARY ACCENT / ESOTERIC BLOOD : #CC0314
+This is your crosshair cursor, your interactive links, and your music visualizer. It is a deep, hostile crimson.
+
+HOVER STATES / SYSTEM PANIC : #FF0022
+A brighter, more aggressive red. When the site gets pissed, the background flashes to this, and the text inverts to pure black.
+
+_________________________________________________________________________________________________________________
