@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Netscape - [Resume - Systems Engineer]</title>
     <style>
         :root {
@@ -10,165 +12,223 @@
             --link-blue: #0000EE;
             --border-light: #FFFFFF;
             --border-dark: #808080;
-            --title-blue: #000080;
         }
 
-        body {
-            background-color: var(--os-gray);
+        body, html {
             margin: 0;
             padding: 0;
-            color: var(--text-main);
-        }
-
-        /* BROWSER CHROME */
-        .window {
+            height: 100%;
             background-color: var(--os-gray);
-            border-top: 2px solid var(--border-light);
-            border-left: 2px solid var(--border-light);
-            border-bottom: 2px solid var(--text-main);
-            border-right: 2px solid var(--text-main);
-            margin: 0;
-            height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            color: var(--text-main);
+            overflow: hidden;
+        }
+
+        /* 3D Browser Wrapper */
+        .window {
+            width: 100%;
+            height: 100%;
             box-sizing: border-box;
-            display: block; /* No flexbox */
+            border: 2px solid;
+            border-color: var(--border-light) var(--text-main) var(--text-main) var(--border-light);
+            display: block;
         }
 
+        /* Top Title Bar */
         .title-bar {
-            background-color: var(--title-blue);
-            color: var(--border-light);
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 12px;
+            background-color: #000080;
+            color: #FFFFFF;
             font-weight: bold;
-            padding: 2px 4px;
-            margin: 2px;
+            padding: 3px 5px;
+            font-size: 14px;
+            letter-spacing: 0.5px;
         }
 
+        /* Menu Bar */
         .menu-bar {
-            font-family: Arial, Helvetica, sans-serif;
+            padding: 5px;
             font-size: 12px;
-            padding: 4px 2px;
-            margin: 0 2px;
+            background-color: var(--os-gray);
         }
 
-        .menu-item {
-            display: inline-block;
+        .menu-bar span {
+            margin-right: 5px;
             padding: 2px 6px;
             cursor: default;
-            border: 1px solid transparent;
-        }
-        
-        .menu-item:hover {
-            border-top: 1px solid var(--border-light);
-            border-left: 1px solid var(--border-light);
-            border-bottom: 1px solid var(--border-dark);
-            border-right: 1px solid var(--border-dark);
+            border: 2px solid transparent;
+            user-select: none;
         }
 
-        .toolbar {
-            padding: 4px;
-            margin: 2px;
-            border-top: 1px solid var(--border-light);
-            border-left: 1px solid var(--border-light);
-            border-bottom: 1px solid var(--border-dark);
-            border-right: 1px solid var(--border-dark);
+        .menu-bar span:active,
+        .menu-bar span.active-btn {
+            border-color: var(--border-dark) var(--border-light) var(--border-light) var(--border-dark);
+            padding: 3px 5px 1px 7px; /* Classic 90s physical press text shift */
         }
 
-        .url-bar-container {
-            display: block; /* No flex */
-            padding: 6px;
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 12px;
+        .menu-bar span::first-letter {
+            text-decoration: underline;
         }
 
-        .url-label {
-            float: left;
-            margin-right: 8px;
-            margin-top: 4px;
+        /* Dropdown Styles */
+        .menu-item-container {
+            display: inline-block;
+            position: relative;
         }
 
-        .url-input {
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 12px;
-            background-color: var(--doc-bg);
-            color: var(--text-main);
-            border-top: 2px solid var(--border-dark);
-            border-left: 2px solid var(--border-dark);
-            border-bottom: 2px solid var(--border-light);
-            border-right: 2px solid var(--border-light);
-            padding: 3px;
-            width: 80%;
-            display: block;
-            box-sizing: border-box;
-        }
-
-        .clear { clear: both; }
-
-        .chrome-divider {
-            border: none;
-            border-top: 2px solid var(--border-dark);
-            border-bottom: 2px solid var(--border-light);
-            margin: 4px 0;
-            height: 0;
-        }
-
-        /* DOCUMENT AREA */
-        .document-wrapper {
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
             background-color: var(--os-gray);
-            padding: 10px;
-            height: calc(100vh - 120px);
-            overflow-y: scroll;
+            border: 2px solid;
+            border-color: var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
+            min-width: 200px;
+            z-index: 1000;
+            padding: 2px;
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.5);
         }
 
-        .document-content {
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            display: block;
+            padding: 3px 15px 3px 20px;
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 12px;
+            cursor: default;
+        }
+
+        .dropdown-item:hover {
+            background-color: #000080;
+            color: #FFFFFF;
+        }
+
+        .dropdown-separator {
+            border-top: 1px solid var(--border-dark);
+            border-bottom: 1px solid var(--border-light);
+            margin: 3px 2px;
+        }
+
+        /* URL Bar Section */
+        .toolbar {
+            padding: 5px;
+            background-color: var(--os-gray);
+        }
+
+        .location-label {
+            font-size: 12px;
+            margin-right: 5px;
+        }
+
+        .url-bar {
+            width: 80%;
+            border: 2px solid;
+            border-color: var(--border-dark) var(--border-light) var(--border-light) var(--border-dark);
+            padding: 4px;
+            font-family: "Courier New", monospace;
+            font-size: 12px;
             background-color: var(--doc-bg);
-            margin: 0 auto;
-            max-width: 800px;
-            padding: 40px;
+            color: var(--text-main);
+        }
+
+        /* 3D Groove Divider */
+        hr.chrome-divider {
+            border: 0;
             border-top: 2px solid var(--border-dark);
-            border-left: 2px solid var(--border-dark);
             border-bottom: 2px solid var(--border-light);
-            border-right: 2px solid var(--border-light);
+            margin: 2px 0;
+        }
+
+        /* Scrollable Document Area */
+        .document-area {
+            background-color: #808080; /* Classic dark grey outside the page */
+            height: calc(100% - 90px);
+            padding: 20px;
+            overflow-y: scroll;
+            border: 2px solid;
+            border-color: var(--border-dark) var(--border-light) var(--border-light) var(--border-dark);
+        }
+
+        /* The Actual Resume Page */
+        .resume-container {
+            background-color: var(--doc-bg);
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px solid var(--text-main);
+            padding: 40px;
             font-family: "Times New Roman", Times, serif;
             color: var(--text-main);
-            line-height: 1.2;
         }
 
-        h1, h2, h3 {
-            font-family: "Times New Roman", Times, serif;
-            font-weight: bold;
-            margin-top: 1.5em;
-            margin-bottom: 0.5em;
+        /* Image and Header Layout (No Flexbox) */
+        .pfp {
+            float: left;
+            width: 150px;
+            border: 2px solid;
+            border-color: var(--border-dark) var(--border-light) var(--border-light) var(--border-dark);
+            margin-right: 20px;
+            margin-bottom: 10px;
         }
 
-        h1 {
-            font-size: 32px;
-            text-align: center;
+        .header-section h1 {
             margin-top: 0;
+            font-size: 32px;
+            margin-bottom: 5px;
+            font-weight: bold;
         }
 
-        h2 {
+        .header-section h2 {
             font-size: 24px;
-            border-bottom: 1px solid var(--text-main);
-            padding-bottom: 2px;
+            font-weight: normal;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .clear {
+            clear: both;
+        }
+
+        hr.doc-divider {
+            border: 0;
+            border-top: 1px solid var(--text-main);
+            margin: 20px 0;
         }
 
         h3 {
+            font-size: 22px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        h4 {
             font-size: 18px;
+            margin-top: 20px;
+            margin-bottom: 5px;
+            text-decoration: underline;
         }
 
         p {
-            margin-bottom: 1em;
-            text-align: justify;
+            font-size: 16px;
+            line-height: 1.25;
+            margin-top: 5px;
+            margin-bottom: 15px;
         }
 
         ul {
             list-style-type: disc;
-            margin-left: 20px;
-            padding-left: 20px;
+            margin-top: 5px;
+            margin-bottom: 20px;
+            padding-left: 40px;
         }
 
         li {
-            margin-bottom: 0.5em;
+            margin-bottom: 8px;
+            font-size: 16px;
         }
 
         a {
@@ -176,99 +236,139 @@
             text-decoration: underline;
         }
 
-        a:visited {
-            color: purple;
+        code {
+            font-family: "Courier New", monospace;
+            font-size: 15px;
+            background-color: #E0E0E0;
+            padding: 1px 3px;
         }
 
-        code, .tech {
-            font-family: "Courier New", Courier, monospace;
-            font-size: 14px;
-        }
-
-        .doc-divider {
-            border: none;
-            border-top: 1px solid var(--border-dark);
-            border-bottom: 1px solid var(--border-light);
-            margin: 20px 0;
-            height: 0;
-        }
     </style>
 </head>
 <body>
+
     <div class="window">
-        <!-- BROWSER CHROME -->
-        <div class="title-bar">Netscape - [Resume - Systems Engineer]</div>
-        
+        <!-- Title Bar -->
+        <div class="title-bar">
+            Netscape - [Resume - Systems Engineer]
+        </div>
+
+        <!-- Menu Bar -->
         <div class="menu-bar">
-            <span class="menu-item">File</span>
-            <span class="menu-item">Edit</span>
-            <span class="menu-item">View</span>
-            <span class="menu-item">Go</span>
-            <span class="menu-item">Bookmarks</span>
-            <span class="menu-item">Options</span>
-            <span class="menu-item">Directory</span>
-            <span class="menu-item">Window</span>
-            <span class="menu-item">Help</span>
-        </div>
-        
-        <div class="toolbar">
-            <div class="url-bar-container">
-                <span class="url-label">Location:</span>
-                <input type="text" class="url-input" value="file:///C:/Users/Administrator/Documents/Resume_Final.html" readonly>
-                <div class="clear"></div>
+            <div class="menu-item-container">
+                <span id="file-menu-btn">File</span>
+                <div class="dropdown-menu" id="file-dropdown">
+                    <a href="#overview" class="dropdown-item">Overview</a>
+                    <a href="#core-capabilities" class="dropdown-item">Core Capabilities</a>
+                    <a href="#projects" class="dropdown-item">Projects / Case Studies</a>
+                    <div class="dropdown-separator"></div>
+                    <a href="#experience" class="dropdown-item">Experience &amp; Leadership</a>
+                </div>
             </div>
+            <span>Edit</span>
+            <span>View</span>
+            <span>Go</span>
+            <span>Bookmarks</span>
+            <span>Options</span>
+            <span>Directory</span>
+            <span>Window</span>
+            <span>Help</span>
         </div>
-        
+
+        <!-- URL Toolbar -->
+        <div class="toolbar">
+            <span class="location-label">Location:</span>
+            <input type="text" class="url-bar" value="file:///C:/Users/Administrator/Documents/Resume_Final.html" readonly>
+        </div>
+
         <hr class="chrome-divider">
 
-        <!-- RESUME DOCUMENT -->
-        <div class="document-wrapper">
-            <div class="document-content">
-                <h1>Systems &amp; Hardware Engineer</h1>
-                <hr class="doc-divider">
+        <!-- Document Area -->
+        <div class="document-area">
+            <div class="resume-container">
                 
-                <h2>Objective</h2>
-                <p>
-                    Engineering autonomous AI pipelines and physical IoT infrastructure. Seeking to leverage deep expertise in system architecture, hardware-software co-design, and reliable autonomous agents to scale robust technical solutions for modern industrial challenges.
-                </p>
+                <div class="header-section">
+                    <img src="pfp.png" class="pfp" alt="Profile Picture">
+                    <h1>Systems &amp; Hardware Engineer</h1>
+                    <h2>[Your Name]</h2>
+                    <h3 id="overview" style="margin-top: 0; margin-bottom: 5px;">Overview</h3>
+                    <p><strong>Objective:</strong> Engineering robust, scalable architectures combining edge-deployed physical computing with cloud-based intelligence. Focused on bridging the hardware-software gap.</p>
+                </div>
+                
+                <div class="clear"></div>
+                <hr class="doc-divider">
 
-                <h2>Core Capabilities</h2>
+                <h3 id="core-capabilities">Core Capabilities</h3>
                 <ul>
-                    <li><span class="tech">Stateful RAG workflows</span> for persistent, context-aware information retrieval systems.</li>
-                    <li><span class="tech">LangGraph</span> integration for multi-agent autonomous logic and control flow.</li>
-                    <li><span class="tech">FastAPI</span> backend development for high-throughput, low-latency API endpoints.</li>
-                    <li><span class="tech">ESP32 physical computing</span> and sensor telemetry for real-time edge processing.</li>
+                    <li>Engineering robust <code>Stateful RAG workflows</code> for continuous multi-modal data streams.</li>
+                    <li>Utilizing <code>LangGraph</code> for agentic orchestration and spatial context logic.</li>
+                    <li>Building high-performance event-driven microservices using <code>FastAPI</code>.</li>
+                    <li>Embedded <code>ESP32</code> physical computing and sensor fusion algorithms in C++.</li>
                 </ul>
 
-                <h2>Projects / Case Studies</h2>
-
-                <h3>FarmShield - Agricultural Risk Modeling</h3>
+                <h3 id="projects">Projects / Case Studies</h3>
+                
+                <h4>FarmShield - Agricultural Risk Modeling</h4>
                 <p>
-                    Developed an autonomous agricultural monitoring system utilizing edge-deployed sensor networks to predict crop risks and optimize resource allocation.
-                    <br>
+                    Established a digital twin of physical crop zones by aggregating environmental telemetry from distributed node clusters. Executed machine learning pipelines to predict resource exhaustion.
+                    <br><br>
                     <a href="#">View Architecture</a>
                 </p>
 
-                <h3>Ad-Pulse AI - Spatial Monetization Engine</h3>
+                <h4>Ad-Pulse AI - Spatial Monetization Engine</h4>
                 <p>
-                    Engineered a real-time spatial analytics engine capable of dynamically optimizing out-of-home advertising placement based on multi-modal environmental data streams.
-                    <br>
+                    Developed an event-driven microservices topology to dynamically optimize out-of-home advertising placements. Leveraged vector retrieval on high-frequency sensory ingestion.
+                    <br><br>
                     <a href="#">View Architecture</a>
                 </p>
 
-                <h3>IoT Accident Detection Helmet</h3>
+                <h4>IoT Accident Detection Helmet</h4>
                 <p>
-                    Designed and built wearable hardware for high-risk industrial environments, featuring instant anomaly detection and automated emergency broadcasting via low-power networks.
-                    <br>
+                    Engineered wearable industrial safety equipment utilizing an ESP32 microcontroller. Implemented FreeRTOS task scheduling for instant anomaly detection and local processing.
+                    <br><br>
                     <a href="#">View Architecture</a>
                 </p>
 
-                <h2>Experience &amp; Leadership</h2>
+                <h3 id="experience">Experience &amp; Leadership</h3>
                 <p>
-                    Directed comprehensive engineering initiatives, successfully orchestrating a multidisciplinary team of 45+ members. Led placement operations and strategic technical alignment, ensuring rigorous quality control and on-time delivery of complex cyber-physical systems.
+                    Directed university-level placement drives and strategic technical alignment. As Placement Head, orchestrated a multidisciplinary team of <strong>45+ members</strong>, managed enterprise cross-functional coordination, and scaled recruitment pipelines for large engineering cohorts with stringent quality control.
                 </p>
+
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const fileBtn = document.getElementById('file-menu-btn');
+            const fileDropdown = document.getElementById('file-dropdown');
+
+            fileBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                fileDropdown.classList.toggle('show');
+                fileBtn.classList.toggle('active-btn');
+            });
+
+            document.addEventListener('click', () => {
+                if (fileDropdown.classList.contains('show')) {
+                    fileDropdown.classList.remove('show');
+                    fileBtn.classList.remove('active-btn');
+                }
+            });
+
+            // Smooth instant jump for authentic 90s feel
+            const items = document.querySelectorAll('.dropdown-item');
+            items.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = item.getAttribute('href').substring(1);
+                    const target = document.getElementById(targetId);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'instant' });
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
