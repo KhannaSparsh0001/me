@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    
+    <!-- Tell mobile devices that adding the page the homescreen enables fullscreen support -->
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Request the browser to use a theme color -->
+    <meta name="theme-color" content="#3c790a">
+
+    <title>penny farthing card games</title>
+
+    <!-- Bootstrap -->
+    <link href="bootstrap-3.3.6-dist/css/theme-superhero.min.css" rel="stylesheet">
+
+    <!-- Moment -->
+    <script type="text/javascript" src="js/moment.js"></script>
+    
+    <!-- Load the game engine -->
+    <script type="text/javascript" src="js/random.js"></script>
+    <script type="text/javascript" src="js/model.js"></script>
+    <script type="text/javascript" src="js/view.js"></script>
+    <script type="text/javascript" src="js/controller.js"></script>
+    <script type="text/javascript" src="js/table.js"></script>
+    <script type="text/javascript" src="js/deck.js"></script>
+    <script type="text/javascript" src="js/ui.js"></script>
+    <script type="text/javascript" src="js/disk.js"></script>
+    <script type="text/javascript" src="js/history.js"></script>
+
+    <!-- Load game rules -->
+    <script type="text/javascript" src="rules/template.js"></script>
+    <script type="text/javascript" src="rules/doppelganger.js"></script>
+    <script type="text/javascript" src="rules/freecell.js"></script>
+    <script type="text/javascript" src="rules/klondike.js"></script>
+
+    <script type="text/javascript" src="js/tests.js"></script>
+
+    <style type="text/css">
+      html, body {
+        background: #021;
+        font-size: 1em;
+      }
+      canvas {
+        width: 80%;
+      }
+      .playfield-container {
+      }
+    </style>
+        
+  </head>
+  
+  <body>
+  
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" id="game-title"><i class="glyphicon glyphicon-heart"></i> penny farthing card games</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          
+          <ul class="nav navbar-nav">
+            
+          </ul>
+
+          <!-- Right aligned -->
+          <ul class="nav navbar-nav navbar-right">
+            <li><a id="game-ui-about-show" href="#">About</a></li>
+            <li><a href="#Settings" data-toggle="modal" data-target="#SettingsModal"><i class="glyphicon glyphicon-wrench"></i></a></li>
+          </ul>
+
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+
+    <!-- About Penny Farthing -->
+    <div id="game-ui-about" class="container">
+    
+      <!-- Fork Me Ribbon -->
+      <a href="https://github.com/wesleywerner/penny-farthing"><img style="float: right; width: 149px; height: 149px;" src="http://aral.github.com/fork-me-on-github-retina-ribbons/right-green@2x.png" alt="Fork me on GitHub"></a>
+
+      <!-- About Jumbotron -->
+      <div class="jumbotron">
+        <div class="page-header">
+          <h3>Penny Farthing Card Games</h3>
+        </div>
+        <div class="row">
+          <div class="col-md-10">
+            <!-- If you enjoy a great card game, look no further! We at Penny Farthing aim to please you with classic and new games till your heart's content. -->
+            <p><em>If 't be true thee enjoyeth a most wondrous card game, behold nay furth'r! We at penny farthing aim to prithee thee with classic and new games till thy heart's content.</em></p>
+          </div>
+          <div class="col-md-2">
+            <p>
+            <a href="https://commons.wikimedia.org/wiki/File%3ABicycling-ca1887-bigwheelers.jpg"><img src="assets/433px-Bicycling-ca1887-bigwheelers.jpg" class="img-responsive img-thumbnail" /></a>
+            </p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 text-info">A collection of classic card games you can play in your browser, on PC and mobile.</div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="panel">
+              <div class="panel-body">Penny Farthing was created by Wesley Werner, 2016. Licensed under <a href="http://www.gnu.org/licenses/gpl.txt">GPL v3</a></div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="panel">
+              <div class="panel-body">
+                <a href="http://sourceforge.net/projects/vector-cards/">Vectorized Playing Cards 2.0</a>
+                Copyright 2015 - Chris Aguilar - conjurenation@gmail.com
+                Licensed under <a href="http://www.gnu.org/copyleft/lesser.html">LGPL 3</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p>
+          <button id="game-ui-about-hide" class="btn btn-success btn-lg">Continue</button>
+        </p>
+      </div>
+
+    </div>
+    
+    <div id="ui-game-playfield" class="container-fluid" style="display: none;">
+
+      <div class="row">
+        
+        <!-- Playfield Canvas -->
+        <div class="col-md-8 text-center playfield-container">
+          <canvas id="playfield"></canvas>
+        </div>
+        
+        <div class="col-md-4">
+          
+          <!-- Game Number Panel -->
+          <div class="panel panel-default">
+            <div class="panel-heading"><i class="glyphicon glyphicon-play-circle"></i> Game Number</div>
+            <div class="panel-body">
+              <input id="game-number" type="number" class="form-control" />
+              <div class="btn-group btn-group-justified" role="group">
+                <a class="btn btn-default" id="game-ui-replay">Replay</a>
+                <a class="btn btn-default" id="game-ui-new">New</a>
+                <a class="btn btn-default" id="game-ui-history"><i class="glyphicon glyphicon-list"></i></a>
+                <a class="btn btn-default" id="game-ui-rules"><i class="glyphicon glyphicon-question-sign"></i></a>
+              </div>
+            </div>
+          </div>
+          
+          <!-- All Games List -->
+          <div class="panel panel-primary">
+            <div class="panel-heading"><i class="glyphicon glyphicon-heart"></i> Play Another Game</div>
+            <div class="panel-body">
+            
+              <div class="list-group" id="all-games-list">
+                  
+                  <!-- New games get built here via UI.JS -->
+
+              </div>
+
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    
+    <!-- Game History Modal -->
+    <div class="modal fade" id="GameHistoryModal" tabindex="-1" role="dialog" aria-labelledby="GameHistoryModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="GameHistoryModalLabel">Game History</h4>
+          </div>
+          <div class="modal-body">
+            <!-- History Table -->
+            <table class="table table-bordered">
+              <thead>
+                <tr><td>Game</td><td>Number</td><td>When</td><td>Won</td></tr>
+              </thead>
+              <tbody id="game-ui-history-table">
+                <!-- Generated via UI -->
+              </tbody>
+            </table>
+            <!-- About Game Numbers -->
+            <div class="alert alert-info" role="alert">
+              <i class="glyphicon glyphicon-heart"></i> You can replay the same games by their game number.
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Game Rules Modal -->
+    <div class="modal fade" id="GameRulesModal" tabindex="-1" role="dialog" aria-labelledby="GameRulesModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="GameRulesModalLabel">Game Rules</h4>
+          </div>
+          <div class="modal-body" id="game-info">
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal fade" id="SettingsModal" tabindex="-1" role="dialog" aria-labelledby="SettingsModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="SettingsModal">Settings</h4>
+          </div>
+          <div class="modal-body">
+            
+            <div class="row">
+              
+              <!-- Animations Setting -->
+              <div class="col-lg-4">
+              <label class="btn btn-block btn-info">Animations
+                <input id="game-ui-animations" type="checkbox" checked="true" />
+              </label>
+              </div>
+              <div class="col-lg-8">
+                You can turn of moving card animations if they are slow, or if you hate them.
+              </div>
+              
+              <!-- Clear Game History -->
+              <div class="col-lg-4">
+                <button id="game-ui-clear-history" class="btn btn-block btn-warning">Clear</button>
+              </div>
+              <div class="col-lg-8">
+                Clear your game play history.
+              </div>
+            
+            </div>
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    
+    <!-- Load card images -->
+    <div style="display: none">
+      <img id="cardback" src="assets/cardback.png" />
+      <img id="faces" src="assets/faces.png" />
+    </div>
+    
+    <!-- Bootstrap -->
+    <script src="bootstrap-3.3.6-dist/js/jquery-1.12.3.min.js"></script>
+    <script src="bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
+
+    <!-- Call to Initialize the game engine -->
+    <script type="text/javascript">
+      
+      game.ui.buildGamesMenu();
+      
+      // Remove this call when we are ready to build a landing page.
+      //game.ui.hideAboutPanel();
+      //game.ui.initialize('klondike');
+      
+    </script>
+
+  </body>
+</html>
