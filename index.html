@@ -339,7 +339,34 @@
             border-color: var(--border-dark) var(--border-light) var(--border-light) var(--border-dark);
             padding: 5px 13px 3px 15px;
         }
+    
+    #window-container{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:5000;
+}
 
+    .game-window{
+        position:absolute;
+        width:800px;
+        height:550px;
+        background:#c0c0c0;
+        border:2px outset white;
+        box-shadow:4px 4px 8px rgba(0,0,0,.4);
+        pointer-events:auto;
+    }
+
+    .game-window iframe{
+        width:100%;
+        height:calc(100% - 28px);
+        border:none;
+        display:block;
+    }
+
+    .dragging{
+        user-select:none;
+    }
     </style>
 </head>
 <body>
@@ -395,8 +422,7 @@
                 </div>
             </div>
             <span>Directory</span>
-            <div class="menu-item-container">
-                <span id="window-menu-btn">Window</span>
+            <!--
                 <div class="dropdown-menu" id="window-dropdown">
                     <span class=""dropdown-item>Games actually</span>
                     <div class="dropdown-separator"></div>
@@ -405,9 +431,20 @@
                     <a href="games_Dev/penny-farthing-main/" target="_blank" class="dropdown-item">Card Games</a>            
                 </div>    
             </div>
-            <span>Help</span>
+            -->
+            
+            <div class="menu-item-container">
+                <span id="window-menu-btn">Window</span>
+                <div class="dropdown-menu" id="window-dropdown">
+                    <div onclick="openGameModal('Mahjong Solitaire', 'games_Dev/mah-main/dist/index.html')">Play Mahjong</div>
+                    <div onclick="openGameModal('2048', 'games_Dev/2048-master/index.html')">Play 2048</div>
+                    <div onclick="openGameModal('Penny Farthing', 'games_Dev/penny-farthing-main/index.html')">Play Penny Farthing</div>
+                </div>
         </div>
-
+        <span>Help</span>
+        <div id="window-container"></div>
+    
+        </div>
         <!-- URL Toolbar -->
         <div class="toolbar">
             <span class="location-label">Location:</span>
@@ -722,13 +759,16 @@
             const messageForm = document.getElementById('message-form');
             const messageCancel = document.getElementById('message-cancel');
             const docArea = document.querySelector('.document-area');
+            const winGameBtn = document.getElementById('window-menu-btn');
+            const winGameDropdown = document.getElementById('window-dropdown');
+            
             const dropdowns = [
                 { btn: fileBtn, menu: fileDropdown },
                 { btn: viewBtn, menu: viewDropdown },
                 { btn: bookmarksBtn, menu: bookmarksDropdown },
-                { btn: optionsBtn, menu: optionsDropdown }
+                { btn: winGameBtn, menu: winGameDropdown },
+                { btn: optionsBtn, menu : optionsDropdown }
             ];
-
             function closeAllDropdowns() {
                 dropdowns.forEach(({ btn, menu }) => {
                     menu.classList.remove('show');
@@ -815,12 +855,16 @@
             optionsBtn.addEventListener('click', (e) => {
                 toggleDropdown(optionsBtn, optionsDropdown, e);
             });
-
+            
+            winGameBtn.addEventListener('click', (e) => toggleDropdown(winGameBtn, winGameDropdown, e));
+            
             sendMessageOption.addEventListener('click', (e) => {
                 e.preventDefault();
                 closeAllDropdowns();
                 messageDialog.showModal();
             });
+
+
 
             messageCancel.addEventListener('click', () => {
                 messageDialog.close();
@@ -837,6 +881,9 @@
                 messageDialog.close();
                 messageForm.reset();
             });
+            
+         
+
 
             document.addEventListener('click', closeAllDropdowns);
 
@@ -858,6 +905,73 @@
                 });
             });
         });
+        let highestZ = 100;
+
+        window.openGameModal = function(title, url){
+
+            const win = document.createElement("div");
+            win.className = "game-window";
+
+            win.style.left = "180px";
+            win.style.top = "120px";
+            win.style.zIndex = ++highestZ;
+
+            win.innerHTML = `
+                <div class="retro-window-header">
+                    <span>${title}</span>
+                    <button>X</button>
+                </div>
+
+                <iframe src="${url}"></iframe>
+            `;
+
+            document
+                .getElementById("window-container")
+                .appendChild(win);
+
+            win.querySelector("button").onclick = () => win.remove();
+
+            makeDraggable(win);
+        }
+
+        function makeDraggable(win){
+
+        const header = win.querySelector(".retro-window-header");
+
+        let dragging = false;
+        let x = 0;
+        let y = 0;
+
+        header.onmousedown = (e)=>{
+
+            dragging = true;
+
+            win.style.zIndex = ++highestZ;
+
+            x = e.clientX - win.offsetLeft;
+            y = e.clientY - win.offsetTop;
+
+            document.body.classList.add("dragging");
+        };
+
+        document.onmousemove = (e)=>{
+
+            if(!dragging) return;
+
+            win.style.left = (e.clientX - x) + "px";
+            win.style.top = (e.clientY - y) + "px";
+        };
+
+        document.onmouseup = ()=>{
+
+            dragging = false;
+            document.body.classList.remove("dragging");
+        };
+    }
+
+
     </script>
+
+    
 </body>
 </html>
