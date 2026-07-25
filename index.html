@@ -348,20 +348,48 @@
 }
 
     .game-window{
-        position:absolute;
-        width:800px;
-        height:550px;
-        background:#c0c0c0;
-        border:2px outset white;
-        box-shadow:4px 4px 8px rgba(0,0,0,.4);
-        pointer-events:auto;
+    position:absolute;
+
+    width:800px;
+    height:550px;
+
+    min-width:500px;
+    min-height:350px;
+
+    background:#c0c0c0;
+    border:2px outset white;
+    box-shadow:4px 4px 8px rgba(0,0,0,.4);
+
+    pointer-events:auto;
+
+    display:flex;
+    flex-direction:column;
+
+    resize:both;
+    overflow:hidden;
     }
 
     .game-window iframe{
+        flex:1;
         width:100%;
-        height:calc(100% - 28px);
         border:none;
         display:block;
+    }
+
+    .retro-window-header{
+    height:28px;
+    flex-shrink:0;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 6px;
+
+    background:#c0c0c0;
+    border-bottom:1px solid #808080;
+
+    cursor:move;
     }
 
     .dragging{
