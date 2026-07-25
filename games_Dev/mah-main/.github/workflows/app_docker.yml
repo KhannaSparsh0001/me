@@ -1,0 +1,60 @@
+name: 'app-docker'
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+
+permissions:
+  contents: read
+
+jobs:
+  build-docker:
+    name: MahImage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 26.x
+          package-manager-cache: false
+
+      - name: Write docker app config
+        run: |
+          echo "{\"name\": \"Mah\", \"title\": \"Mah - Mahjong\", \"category\": \"A Mahjong Solitaire Board Game\", \"description\": \"The original open source version of many Mahjong games out there. Completely free, no ads, no tracking.\", \"kyodai\":true, \"editor\":true}" > custom-build-config.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build release
+        run: npm run build:deploy-release
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@96fe6ef7f33517b61c61be40b68a1882f3264fb8 # v4.2.0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4.2.0
+
+      - name: Copy the release to the docker image build path
+        run: cp -r dist ./resources/docker-image/dist
+
+      - name: Login to DockerHub
+        uses: docker/login-action@af1e73f918a031802d376d3c8bbc3fe56130a9b0 # v4.4.0
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
+        with:
+          context: ./resources/docker-image/
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ffalt/mah:latest
