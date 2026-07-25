@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Minesweeper</title>
+
+<style>
+body{
+    margin:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    background:#c0c0c0;
+    font-family:Tahoma,sans-serif;
+}
+
+table{
+    border-collapse:collapse;
+    background:#bdbdbd;
+    box-shadow:
+        inset -2px -2px #fff,
+        inset 2px 2px #7b7b7b;
+}
+
+th{
+    width:32px;
+    height:32px;
+    cursor:pointer;
+    user-select:none;
+    font-size:20px;
+    font-weight:bold;
+    text-align:center;
+    vertical-align:middle;
+    border:2px solid;
+    border-color:#fff #7b7b7b #7b7b7b #fff;
+    background:#c0c0c0;
+}
+
+th:hover{
+    background:#d6d6d6;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<table border id="t"></table>
+
+<script>
+
+// Initialize 4 arrays of data and one game state:
+// b: bombs
+// v: viewed cells
+// f: flags
+// n: neighbours
+// g: gameover (1 win, -1 lost)
+// l: field is locked (boolean)
+
+b=[v=[]];
+f=[l=g=0];
+n=[];
+
+// Rendering function
+function r(d){
+
+for(M=!l;M;l=g){
+
+for(a=M=H="";s>++a;){
+
+for(
+j=s,
+H+="<tr>";
+~--j;
+H+="<th onclick=b[i="+I+"]?g--:v[i]=1;r() oncontextmenu=for(f["+I+"]^=g=1,a=0;a<s*s;)g&=b[a]^!f[a++];return!!r() "+(v[I]|g||"bgcolor=tan")+">"+(f[I]?"⚑":b[I]&g?"💣":v[I]|g&&n[I]||"  ")
+){
+
+for(
+
+I=a*s+j,
+
+T=d?b[I]=.1>Math.random():0,
+
+x=2;
+
+~x--;
+
+){
+
+for(
+
+y=2;
+
+~y--;
+
+~B&&B<s?
+
+(n[C]=~~n[C]+T)||v[I]|b[I]|!v[C]?0:v[I]=M=1
+
+:0
+
+){
+
+B=j+y;
+C=(a+x)*s+B;
+
+t.innerHTML=H;
+
+}
+
+}
+
+}
+
+}
+
+}
+
+}
+
+// Grid size
+r(s=9);
+
+</script>
+
+</body>
+</html>

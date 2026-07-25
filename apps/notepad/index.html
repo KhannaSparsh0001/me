@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Notepad</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    height:100vh;
+    background:#c0c0c0;
+    font-family:Tahoma,Verdana,sans-serif;
+    overflow:hidden;
+}
+
+.menu{
+    height:28px;
+    display:flex;
+    align-items:center;
+    gap:18px;
+    padding:0 10px;
+    background:#c0c0c0;
+    border-bottom:2px solid;
+    border-color:#fff #808080 #808080 #fff;
+    font-size:13px;
+}
+
+textarea{
+
+    width:100%;
+    height:calc(100vh - 58px);
+
+    resize:none;
+
+    border:none;
+    outline:none;
+
+    padding:10px;
+
+    font-family:"Courier New",monospace;
+    font-size:15px;
+
+    background:white;
+    color:black;
+
+}
+
+.status{
+
+    height:30px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:0 10px;
+
+    background:#c0c0c0;
+
+    border-top:2px solid;
+    border-color:#fff #808080 #808080 #fff;
+
+    font-size:12px;
+
+}
+
+button{
+
+    padding:2px 12px;
+
+    border:2px solid;
+    border-color:#fff #808080 #808080 #fff;
+
+    background:#c0c0c0;
+
+    cursor:pointer;
+
+}
+
+button:active{
+
+    border-color:#808080 #fff #fff #808080;
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="menu">
+
+<span>File</span>
+<span>Edit</span>
+<span>Search</span>
+<span>Help</span>
+
+<button id="download">
+Save</button>
+
+<button id="clear">
+Clear
+</button>
+
+</div>
+
+<textarea
+id="editor"
+spellcheck="false"
+placeholder="Type something..."
+></textarea>
+
+<div class="status">
+
+<span id="chars">0 Characters</span>
+
+<span>
+Auto Saved
+</span>
+
+</div>
+
+<script>
+
+const editor=document.getElementById("editor");
+
+const chars=document.getElementById("chars");
+
+editor.value=localStorage.getItem("retro_notepad")||"";
+
+updateCount();
+
+editor.addEventListener("input",()=>{
+
+localStorage.setItem("retro_notepad",editor.value);
+
+updateCount();
+
+});
+
+function updateCount(){
+
+chars.textContent=editor.value.length+" Characters";
+
+}
+
+document.getElementById("clear").onclick=()=>{
+
+if(confirm("Clear the document?")){
+
+editor.value="";
+
+localStorage.removeItem("retro_notepad");
+
+updateCount();
+
+}
+
+};
+
+document.getElementById("download").onclick=()=>{
+
+const blob=new Blob([editor.value],{type:"text/plain"});
+
+const a=document.createElement("a");
+
+a.href=URL.createObjectURL(blob);
+
+a.download="notes.txt";
+
+a.click();
+
+URL.revokeObjectURL(a.href);
+
+};
+
+</script>
+
+</body>
+</html>
