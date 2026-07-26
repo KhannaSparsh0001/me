@@ -94,7 +94,7 @@ if (!topScopeSystem.SystemAPI) {
             const iconHtml = appDetails.icon ? `<img src="${appDetails.icon}" style="width:32px; height:32px; margin-right:15px; image-rendering:pixelated;" alt="Icon">` : '';
 
             overlay.innerHTML = `
-                <div class="about-dialog game-window window-opening" style="z-index:999999; position:absolute; top:30%; left:35%; width:360px; resize:both; overflow:auto; font-family:'MS Sans Serif', Tahoma, Verdana, sans-serif; font-size:12px; background:#c0c0c0; border:2px solid; border-color:#dfdfdf #000 #000 #dfdfdf;">
+                <div class="about-dialog game-window window-opening" style="z-index:999999; position:absolute; top:30%; left:35%; width:360px; resize:both; overflow:auto; font-family:'R95 Sans Serif 8pt', 'MS Sans Serif', Tahoma, Verdana, sans-serif; font-size:12px; background:#c0c0c0; border:2px solid; border-color:#dfdfdf #000 #000 #dfdfdf;">
                     <div class="retro-window-header" style="cursor:default;">
                         <span>About ${appDetails.name}</span>
                         <button class="close-about">X</button>
