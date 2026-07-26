@@ -269,3 +269,18 @@ setInterval(()=>{
     animateCPU();
     animateMemory();
 },1000);
+
+document.getElementById('menu-help').onclick = () => {
+    let topScope = window;
+    try { topScope = window.top; } catch(e) {}
+    if (topScope.SystemAPI && topScope.SystemAPI.showAboutDialog) {
+        topScope.SystemAPI.showAboutDialog({
+            name: 'System Monitor',
+            version: '1.0',
+            description: 'Live diagnostics dashboard for browser and portfolio runtime information.',
+            developer: 'Sparsh Khanna',
+            copyright: '2026',
+            icon: '../../icons/notepad.png'
+        });
+    }
+};

@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@react95/sans-serif/index.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Netscape - [Resume - Systems Engineer]</title>
     <style>
@@ -19,7 +20,9 @@
             padding: 0;
             height: 100%;
             background-color: var(--os-gray);
-            font-family: Arial, Helvetica, sans-serif;
+            font-family: 'MS Sans Serif', Tahoma, Verdana, sans-serif;
+            font-smooth: never;
+            -webkit-font-smoothing: none;
             color: var(--text-main);
             overflow: hidden;
             cursor: default;
@@ -234,7 +237,7 @@
         }
 
         .identity-kicker {
-            font-family: Arial, Helvetica, sans-serif;
+            font-family: 'MS Sans Serif', Arial, Helvetica, sans-serif;
             font-size: 11px;
             font-weight: bold;
             letter-spacing: 2px;
@@ -568,7 +571,7 @@
                     <div onclick="openGameModal('Minesweeper', 'games_Dev/minesweeper/index.html')">Play Minesweeper</div>
                 </div>
         </div>
-        <span>Help</span>
+        <span id="help-btn" style="cursor:pointer;">Help</span>
         <div id="window-container"></div>
     
         </div>
@@ -1037,6 +1040,22 @@
             }
             localStorage.setItem("retro_visitor_count", count);
             
+            // (No extra system.js script injection needed here)
+
+            document.getElementById('help-btn').onclick = () => {
+                if (window.SystemAPI && window.SystemAPI.showAboutDialog) {
+                    window.SystemAPI.showAboutDialog({
+                        name: "System",
+                        version: "1.0",
+                        description: "The core retro portfolio operating system.",
+                        developer: "Sparsh Khanna",
+                        website: "https://github.com/KhannaSparsh0001",
+                        copyright: "2026",
+                        icon: "icons/pfp.png"
+                    });
+                }
+            };
+
             const countEl = document.getElementById("count");
             if (countEl) {
                 countEl.textContent = String(count).padStart(6, "0");

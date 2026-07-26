@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="https://v8.js-dos.com/latest/js-dos.css">
 <script src="https://v8.js-dos.com/latest/js-dos.js"></script>
 <title>DOOM.EXE</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@react95/sans-serif/index.min.css">
 </head>
 
 <style>
@@ -21,7 +22,7 @@ body{
 background:black;
 color:#00ff00;
 
-font-family:Consolas, "Courier New", monospace;
+font-family: 'Fixedsys', Consolas, "Courier New", monospace;
 
 height:100vh;
 
@@ -156,6 +157,8 @@ background:black;
 
 <body>
 
+<div id="help-btn" style="position:absolute; top:5px; right:5px; padding:2px 5px; background:#c0c0c0; color:#000; font-family:'MS Sans Serif', Tahoma, sans-serif; cursor:pointer; font-size:12px; font-weight:bold; z-index:100; border:2px solid; border-color:#fff #808080 #808080 #fff;">Help</div>
+
 <div id="screen">
 
 </div>
@@ -217,6 +220,21 @@ if(index<lines.length){
 addLine(lines[index]);
 
 index++;
+
+document.getElementById("help-btn").onclick = () => {
+    let topScope = window;
+    try { topScope = window.top; } catch(e) {}
+    if (topScope.SystemAPI && topScope.SystemAPI.showAboutDialog) {
+        topScope.SystemAPI.showAboutDialog({
+            name: "Doom",
+            version: "0.13.0",
+            description: "Classic DOS game running in the browser via js-dos.",
+            developer: "id Software / FreeDoom",
+            copyright: "1993",
+            icon: "../../icons/notepad.png"
+        });
+    }
+};
 
 setTimeout(nextLine,250);
 

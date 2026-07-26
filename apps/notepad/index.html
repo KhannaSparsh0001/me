@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Notepad</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@react95/sans-serif/index.min.css">
+<link rel="stylesheet" href="../../style.css">
 
 <style>
 
@@ -15,7 +17,9 @@
 body{
     height:100vh;
     background:#c0c0c0;
-    font-family:Tahoma,Verdana,sans-serif;
+    font-family: 'MS Sans Serif', Tahoma, Verdana, sans-serif;
+    font-smooth: never;
+    -webkit-font-smoothing: none;
     overflow:hidden;
     cursor: default;
 }
@@ -48,8 +52,9 @@ textarea{
 
     padding:10px;
 
-    font-family:"Courier New",monospace;
-    font-size:15px;
+    font-family: 'Fixedsys', "Courier New", monospace;
+    font-size: 15px;
+    line-height: 1.2;
 
     background:white;
     color:black;
@@ -204,13 +209,16 @@ URL.revokeObjectURL(a.href);
     }
 
     document.getElementById("help-btn").onclick = () => {
+        let topScope = window;
+        try { topScope = window.top; } catch(e) {}
         if (topScope.SystemAPI && topScope.SystemAPI.showAboutDialog) {
             topScope.SystemAPI.showAboutDialog({
                 name: "Notepad",
                 version: "1.0",
-                description: "A lightweight text editor for Windows 95.",
+                description: "Lightweight text editor for notes and plain text editing.",
                 developer: "Sparsh Khanna",
-                copyright: "2026"
+                copyright: "2026",
+                icon: "../../icons/notepad.png"
             });
         }
     };

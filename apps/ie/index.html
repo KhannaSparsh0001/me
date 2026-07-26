@@ -5,6 +5,7 @@
 <meta charset="UTF-8">
 
 <title>Internet Explorer</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@react95/sans-serif/index.min.css">
 
 <style>
 
@@ -24,7 +25,9 @@ align-items:center;
 
 background:#008080;
 
-font-family:Tahoma;
+font-family: 'MS Sans Serif', Tahoma, Verdana, sans-serif;
+font-smooth: never;
+-webkit-font-smoothing: none;
 
 overflow:hidden;
 
@@ -138,6 +141,11 @@ Internet Explorer 5
 
 </div>
 
+<div style="background:#c0c0c0; border-bottom:2px solid; border-color:#fff #808080 #808080 #fff; padding:2px 10px; display:flex; gap:15px; font-size:12px;">
+    <span style="cursor:pointer;" id="menu-file">File</span>
+    <span style="cursor:pointer;" id="menu-help">Help</span>
+</div>
+
 <div class="content">
 
 <div id="loading">
@@ -240,6 +248,20 @@ error.style.display="block";
 
 <script src="../../shared/processManager.js"></script>
 <script>
+    document.getElementById('menu-help').onclick = () => {
+        let topScope = window;
+        try { topScope = window.top; } catch(e) {}
+        if (topScope.SystemAPI && topScope.SystemAPI.showAboutDialog) {
+            topScope.SystemAPI.showAboutDialog({
+                name: "Internet Explorer",
+                version: "5.0",
+                description: "Retro browser simulation included as part of the Windows 95 experience.",
+                developer: "Sparsh Khanna",
+                copyright: "2026",
+                icon: "../../icons/ie.png" // fallback if not exist
+            });
+        }
+    };
     if (window.ProcessManager) {
         window.ProcessManager.register("Internet Explorer.exe");
         window.addEventListener("unload", () => {

@@ -8,6 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>System Monitor</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@react95/sans-serif/index.min.css">
 
 <style>
 
@@ -21,7 +22,9 @@ body{
 
 background:#008080;
 
-font-family:Tahoma,sans-serif;
+font-family: 'MS Sans Serif', Tahoma, Verdana, sans-serif;
+font-smooth: never;
+-webkit-font-smoothing: none;
 
 height:100vh;
 
@@ -252,6 +255,11 @@ overflow:hidden;
 
 </div>
 
+</div>
+
+<div style="background:#c0c0c0; border-bottom:2px solid; border-color:#fff #808080 #808080 #fff; padding:2px 10px; display:flex; gap:15px; font-size:12px;">
+    <span style="cursor:pointer;" id="menu-file">File</span>
+    <span style="cursor:pointer;" id="menu-help">Help</span>
 </div>
 
 <div class="content">

@@ -66,24 +66,69 @@ if (!topScopeSystem.SystemAPI) {
         },
         showAboutDialog: function(appDetails) {
             const doc = topScopeSystem.document;
+            const dialogId = 'about-' + appDetails.name.replace(/\s+/g, '-').toLowerCase();
+            
+            let existing = doc.getElementById(dialogId);
+            if (existing) {
+                // Focus existing dialog if already open
+                const dialogWindow = existing.querySelector('.about-dialog');
+                if (dialogWindow) {
+                    dialogWindow.style.zIndex = parseInt(dialogWindow.style.zIndex || 999999) + 1;
+                    dialogWindow.classList.remove('window-opening');
+                    // Trigger a small animation to show it was focused
+                    dialogWindow.style.transform = 'translate(-50%, -50%) scale(1.05)';
+                    setTimeout(() => { dialogWindow.style.transform = 'translate(-50%, -50%) scale(1)'; }, 100);
+                }
+                return;
+            }
+
             const overlay = doc.createElement('div');
+            overlay.id = dialogId;
             overlay.className = 'about-overlay';
             
+            const websiteHtml = appDetails.website ? `
+                <hr style="width:100%; border:0; border-top:2px solid #808080; border-bottom:2px solid #fff; margin:0;">
+                <p style="margin:0;"><a href="https://github.com/KhannaSparsh0001" target="_blank" style="color:blue;">Website / GitHub</a></p>
+            ` : '';
+
+            const iconHtml = appDetails.icon ? `<img src="${appDetails.icon}" style="width:32px; height:32px; margin-right:15px; image-rendering:pixelated;" alt="Icon">` : '';
+
             overlay.innerHTML = `
-                <div class="about-dialog game-window" style="z-index:999999; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width:320px;">
-                    <div class="retro-window-header">
+                <div class="about-dialog game-window window-opening" style="z-index:999999; position:absolute; top:30%; left:35%; width:360px; resize:both; overflow:auto; font-family:'MS Sans Serif', Tahoma, Verdana, sans-serif; font-size:12px; background:#c0c0c0; border:2px solid; border-color:#dfdfdf #000 #000 #dfdfdf;">
+                    <div class="retro-window-header" style="cursor:default;">
                         <span>About ${appDetails.name}</span>
                         <button class="close-about">X</button>
                     </div>
-                    <div style="padding:15px; text-align:center; background:#c0c0c0; border:2px solid; border-color:#dfdfdf #000 #000 #dfdfdf; display:flex; flex-direction:column; gap:10px;">
-                        <h2 style="margin:0; font-size:18px;">${appDetails.name}</h2>
-                        <p style="margin:0;">Version ${appDetails.version}</p>
-                        <p style="margin:0;">Developed by ${appDetails.developer || 'Sparsh Khanna'}</p>
-                        <p style="margin:0; font-size:11px;">&copy; ${appDetails.copyright || new Date().getFullYear()}</p>
-                        <hr style="width:100%; border-top:1px solid #808080; border-bottom:1px solid #fff;">
-                        <p style="margin:0; font-size:12px; text-align:left;">${appDetails.description}</p>
-                        <div style="margin-top:15px;">
-                            <button class="close-about" style="width:80px; padding:4px;">OK</button>
+                    <div style="padding:15px; text-align:left; display:flex; flex-direction:column; gap:12px;">
+                        
+                        <div style="display:flex; align-items:flex-start;">
+                            ${iconHtml}
+                            <div style="display:flex; flex-direction:column; gap:4px;">
+                                <h2 style="margin:0; font-size:16px;">${appDetails.name}</h2>
+                                <p style="margin:0;">Version ${appDetails.version || '1.0'}</p>
+                                <p style="margin:0;">${appDetails.description}</p>
+                            </div>
+                        </div>
+
+                        <hr style="width:100%; border:0; border-top:2px solid #808080; border-bottom:2px solid #fff; margin:0;">
+                        
+                        <div style="display:flex; flex-direction:column; gap:4px; text-align:center;">
+                            <p style="margin:0;">Developed by</p>
+                            <p style="margin:0; font-weight:bold;">${appDetails.developer || 'Sparsh Khanna'}</p>
+                        </div>
+
+                        ${websiteHtml}
+
+                        <hr style="width:100%; border:0; border-top:2px solid #808080; border-bottom:2px solid #fff; margin:0;">
+
+                        <div style="text-align:center;">
+                            <p style="margin:0;">Copyright &copy; ${appDetails.copyright || new Date().getFullYear()}</p>
+                        </div>
+
+                        <hr style="width:100%; border:0; border-top:2px solid #808080; border-bottom:2px solid #fff; margin:0;">
+
+                        <div style="display:flex; justify-content:center; margin-top:5px;">
+                            <button class="close-about" style="width:80px; padding:4px; cursor:pointer;">OK</button>
                         </div>
                     </div>
                 </div>
@@ -100,9 +145,68 @@ if (!topScopeSystem.SystemAPI) {
                     if (topScopeSystem.SystemAPI) {
                         topScopeSystem.SystemAPI.playSound('close');
                     }
-                    overlay.remove();
+                    const dialogWindow = overlay.querySelector('.about-dialog');
+                    if (dialogWindow) {
+                        dialogWindow.classList.remove('window-opening');
+                        dialogWindow.classList.add('window-closing');
+                        setTimeout(() => { if (overlay.parentNode) overlay.parentNode.removeChild(overlay); }, 150);
+                    } else {
+                        overlay.remove();
+                    }
                 };
             });
+            
+            // Make it draggable
+            const dialogWindow = overlay.querySelector('.about-dialog');
+            const header = overlay.querySelector('.retro-window-header');
+            if (dialogWindow && header) {
+                let isDragging = false;
+                let startX, startY, initialLeft, initialTop;
+
+                header.addEventListener('mousedown', (e) => {
+                    isDragging = true;
+                    startX = e.clientX;
+                    startY = e.clientY;
+                    // convert css left/top to numbers
+                    initialLeft = parseInt(window.getComputedStyle(dialogWindow).left || 0, 10) || dialogWindow.offsetLeft;
+                    initialTop = parseInt(window.getComputedStyle(dialogWindow).top || 0, 10) || dialogWindow.offsetTop;
+                    dialogWindow.style.zIndex = parseInt(dialogWindow.style.zIndex || 999999) + 1;
+                    
+                    // add an invisible blocking overlay to iframes so drag doesn't get lost
+                    const iframeBlocker = doc.createElement('div');
+                    iframeBlocker.id = 'iframe-drag-blocker';
+                    iframeBlocker.style.cssText = 'position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:999998; cursor:default;';
+                    doc.body.appendChild(iframeBlocker);
+                });
+
+                doc.addEventListener('mousemove', (e) => {
+                    if (!isDragging) return;
+                    e.preventDefault();
+                    const dx = e.clientX - startX;
+                    const dy = e.clientY - startY;
+                    dialogWindow.style.left = (initialLeft + dx) + "px";
+                    dialogWindow.style.top = (initialTop + dy) + "px";
+                });
+
+                doc.addEventListener('mouseup', () => {
+                    if (isDragging) {
+                        isDragging = false;
+                        const blocker = doc.getElementById('iframe-drag-blocker');
+                        if (blocker) blocker.remove();
+                    }
+                });
+            }
+
+            // Allow escape key to close
+            const escListener = (e) => {
+                if (e.key === 'Escape') {
+                    if (doc.getElementById(dialogId)) {
+                        closeBtns[0].click();
+                    }
+                    doc.removeEventListener('keydown', escListener);
+                }
+            };
+            doc.addEventListener('keydown', escListener);
         }
     };
 }
