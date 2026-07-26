@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Paint</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    height:100vh;
+
+    display:flex;
+    flex-direction:column;
+
+    overflow:hidden;
+
+    background:#c0c0c0;
+
+    font-family:Tahoma,Verdana,sans-serif;
+
+}
+
+
+/* ===========================
+   MENU BAR
+=========================== */
+
+.menu{
+
+    height:28px;
+
+    display:flex;
+    align-items:center;
+
+    gap:18px;
+
+    padding:0 10px;
+
+    background:#c0c0c0;
+
+    border-bottom:2px solid;
+    border-color:#fff #808080 #808080 #fff;
+
+    font-size:13px;
+
+}
+
+
+/* ===========================
+   TOOLBAR
+=========================== */
+
+.toolbar{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    padding:6px;
+
+    background:#c0c0c0;
+
+    border-bottom:2px solid;
+    border-color:#fff #808080 #808080 #fff;
+
+}
+
+.tool-btn{
+
+    width:34px;
+    height:34px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    cursor:pointer;
+
+    background:#c0c0c0;
+
+    border:2px solid;
+    border-color:#fff #808080 #808080 #fff;
+
+    font-size:18px;
+
+}
+
+.tool-btn.active{
+
+    border-color:#808080 #fff #fff #808080;
+
+}
+
+.tool-btn:active{
+
+    border-color:#808080 #fff #fff #808080;
+
+}
+
+.separator{
+
+    width:2px;
+    height:32px;
+
+    background:#808080;
+
+    margin:0 6px;
+
+}
+
+
+/* ===========================
+   COLORS
+=========================== */
+
+.colors{
+
+    display:flex;
+
+    gap:6px;
+
+    margin-left:8px;
+
+}
+
+.color{
+
+    width:22px;
+    height:22px;
+
+    cursor:pointer;
+
+    border:2px solid white;
+
+}
+
+.color.active{
+
+    outline:2px solid black;
+
+}
+
+
+/* ===========================
+   BRUSH SIZE
+=========================== */
+
+#brush{
+
+    margin-left:10px;
+
+    height:28px;
+
+}
+
+
+/* ===========================
+   CANVAS
+=========================== */
+
+.canvas-wrapper{
+
+    flex:1;
+
+    padding:10px;
+
+    overflow:hidden;
+
+}
+
+canvas{
+
+    width:100%;
+    height:100%;
+
+    background:white;
+
+    cursor:crosshair;
+
+    border:2px inset #808080;
+
+}
+
+
+/* ===========================
+   STATUS BAR
+=========================== */
+
+.status{
+
+    height:28px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:0 10px;
+
+    background:#c0c0c0;
+
+    border-top:2px solid;
+    border-color:#fff #808080 #808080 #fff;
+
+    font-size:12px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="menu">
+
+<span>File</span>
+<span>Edit</span>
+<span>Image</span>
+<span>Help</span>
+
+</div>
+
+
+<div class="toolbar">
+
+<div class="tool-btn active" id="pencil">
+✏
+</div>
+
+<div class="tool-btn" id="eraser">
+🧽
+</div>
+
+<div class="separator"></div>
+
+<div class="colors">
+
+<div class="color active"
+style="background:black"
+data-color="#000000"></div>
+
+<div class="color"
+style="background:red"
+data-color="#ff0000"></div>
+
+<div class="color"
+style="background:green"
+data-color="#00aa00"></div>
+
+<div class="color"
+style="background:blue"
+data-color="#0066ff"></div>
+
+<div class="color"
+style="background:yellow"
+data-color="#ffff00"></div>
+
+<div class="color"
+style="background:purple"
+data-color="#9900ff"></div>
+
+<div class="color"
+style="background:orange"
+data-color="#ff8800"></div>
+
+<div class="color"
+style="background:white;border:2px solid #666"
+data-color="#ffffff"></div>
+
+</div>
+
+
+<select id="brush">
+
+<option value="2">2 px</option>
+<option value="4" selected>4 px</option>
+<option value="8">8 px</option>
+<option value="12">12 px</option>
+
+</select>
+
+<div class="separator"></div>
+
+<div class="tool-btn"
+id="clear">
+🗑
+</div>
+
+<div class="tool-btn"
+id="download">
+💾
+</div>
+
+</div>
+
+
+<div class="canvas-wrapper">
+
+<canvas id="paint"></canvas>
+
+</div>
+
+
+<div class="status">
+
+<span id="toolLabel">
+
+Tool :
+Pencil
+
+</span>
+
+<span>
+
+Paint95
+
+</span>
+
+</div>
+
+
+<script>
+
+const canvas=document.getElementById("paint");
+const ctx=canvas.getContext("2d");
+
+function clearCanvas() {
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+function resizeCanvas(){
+    const rect=canvas.getBoundingClientRect();
+    // Save image data before resizing so it doesn't clear on window resize
+    let imgData = null;
+    if(canvas.width > 0 && canvas.height > 0) {
+        imgData = ctx.getImageData(0,0,canvas.width,canvas.height);
+    }
+    
+    canvas.width=rect.width;
+    canvas.height=rect.height;
+    
+    if(imgData) {
+        ctx.putImageData(imgData,0,0);
+    } else {
+        clearCanvas();
+    }
+}
+
+// Initial setup
+const rect=canvas.getBoundingClientRect();
+canvas.width=rect.width;
+canvas.height=rect.height;
+clearCanvas();
+
+window.addEventListener("resize",resizeCanvas);
+
+let drawing=false;
+let currentTool="pencil";
+let currentColor="#000000";
+let brushSize=4;
+
+// Drawing Events
+canvas.addEventListener('mousedown', (e) => {
+    drawing = true;
+    ctx.beginPath();
+    ctx.moveTo(e.offsetX, e.offsetY);
+});
+
+canvas.addEventListener('mousemove', (e) => {
+    if (!drawing) return;
+    ctx.lineTo(e.offsetX, e.offsetY);
+    ctx.strokeStyle = currentTool === "eraser" ? "#ffffff" : currentColor;
+    ctx.lineWidth = brushSize;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.stroke();
+});
+
+canvas.addEventListener('mouseup', () => {
+    drawing = false;
+    ctx.closePath();
+});
+
+canvas.addEventListener('mouseout', () => {
+    drawing = false;
+    ctx.closePath();
+});
+
+// Tool Selection Events
+document.querySelectorAll('.tool-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const id = btn.id;
+        
+        if (id === 'clear') {
+            clearCanvas();
+            return;
+        }
+        
+        if (id === 'download') {
+            const link = document.createElement('a');
+            link.download = 'paint95_drawing.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            return;
+        }
+
+        // Toggle pencil/eraser
+        if (id === 'pencil' || id === 'eraser') {
+            document.querySelectorAll('.tool-btn#pencil, .tool-btn#eraser').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentTool = id;
+            document.getElementById('toolLabel').textContent = 'Tool : ' + (id === 'pencil' ? 'Pencil' : 'Eraser');
+        }
+    });
+});
+
+// Color Selection Events
+document.querySelectorAll('.color').forEach(colorBtn => {
+    colorBtn.addEventListener('click', () => {
+        document.querySelectorAll('.color').forEach(c => c.classList.remove('active'));
+        colorBtn.classList.add('active');
+        currentColor = colorBtn.getAttribute('data-color');
+        
+        // Auto-switch to pencil if user selects a color while erasing
+        if (currentTool === 'eraser') {
+            document.getElementById('eraser').classList.remove('active');
+            document.getElementById('pencil').classList.add('active');
+            currentTool = 'pencil';
+            document.getElementById('toolLabel').textContent = 'Tool : Pencil';
+        }
+    });
+});
+
+// Brush Size
+document.getElementById('brush').addEventListener('change', (e) => {
+    brushSize = e.target.value;
+});
+
+</script>
+
+</body>
+</html>

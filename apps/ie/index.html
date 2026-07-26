@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+
+<title>Internet Explorer</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+
+height:100vh;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+background:#008080;
+
+font-family:Tahoma;
+
+overflow:hidden;
+
+}
+
+.window{
+
+width:500px;
+
+background:#c0c0c0;
+
+border:2px solid;
+border-color:#fff #808080 #808080 #fff;
+
+}
+
+.title{
+
+padding:5px 8px;
+
+background:linear-gradient(90deg,#000080,#1084d0);
+
+color:white;
+
+font-weight:bold;
+
+}
+
+.content{
+
+padding:30px;
+
+text-align:center;
+
+}
+
+h2{
+
+margin-bottom:20px;
+
+}
+
+#status{
+
+font-size:18px;
+
+margin-bottom:30px;
+
+}
+
+button{
+
+padding:6px 20px;
+
+background:#c0c0c0;
+
+border:2px solid;
+border-color:#fff #808080 #808080 #fff;
+
+cursor:pointer;
+
+}
+
+button:active{
+
+border-color:#808080 #fff #fff #808080;
+
+}
+
+.progress{
+
+width:100%;
+
+height:20px;
+
+background:white;
+
+margin:25px 0;
+
+}
+
+.bar{
+
+height:100%;
+
+width:0%;
+
+background:#000080;
+
+transition:.1s;
+
+}
+
+#error{
+
+display:none;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="window">
+
+<div class="title">
+
+Internet Explorer 5
+
+</div>
+
+<div class="content">
+
+<div id="loading">
+
+<h2>Connecting...</h2>
+
+<div class="progress">
+
+<div class="bar" id="bar"></div>
+
+</div>
+
+<p id="status">
+
+Dialing Internet...
+
+</p>
+
+</div>
+
+<div id="error">
+
+<h2>
+
+⚠ Fatal Error
+
+</h2>
+
+<p>
+
+Internet Explorer has encountered an unexpected error.
+
+<br><br>
+
+Please install Netscape Navigator.
+
+</p>
+
+<br>
+
+<button onclick="window.close()">
+
+OK
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+let progress=0;
+
+const bar=document.getElementById("bar");
+
+const status=document.getElementById("status");
+
+const loading=document.getElementById("loading");
+
+const error=document.getElementById("error");
+
+const msgs=[
+
+"Dialing Internet...",
+
+"Negotiating modem...",
+
+"Loading ActiveX...",
+
+"Opening homepage..."
+
+];
+
+let i=0;
+
+const timer=setInterval(()=>{
+
+progress+=5;
+
+bar.style.width=progress+"%";
+
+status.textContent=msgs[Math.min(i++,msgs.length-1)];
+
+if(progress>=100){
+
+clearInterval(timer);
+
+loading.style.display="none";
+
+error.style.display="block";
+
+}
+
+},100);
+
+</script>
+
+</body>
+</html>

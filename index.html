@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -395,6 +395,53 @@
     .dragging{
         user-select:none;
     }
+
+
+    #quick-launch{
+        position:fixed;
+        left:8px;
+        top:90px;
+        display:flex;
+        flex-direction:column;
+        gap:10px;
+        z-index:5000;
+        }
+
+        #quick-launch img{
+        width:32px;
+        height:32px;
+        cursor:pointer;
+        image-rendering:pixelated;
+        transition:.15s;
+        }
+
+        #quick-launch img:hover{
+        transform:scale(1.15);
+
+        }
+    
+    #visitor-counter{
+        position:fixed;
+        right:14px;
+        bottom:50px;
+        width:110px;
+        padding:8px;
+        background:#c0c0c0;
+        border:2px solid;
+        border-color:#fff #808080 #808080 #fff;
+        font-family:Tahoma;
+        font-size:12px;
+        text-align:center;
+        z-index:9999;
+        }
+
+        #count{
+        margin-top:5px;
+        font-size:20px;
+        font-weight:bold;
+        font-family:"Courier New";
+        }
+
     </style>
 </head>
 <body>
@@ -481,6 +528,15 @@
         </div>
 
         <hr class="chrome-divider">
+
+        <div id="quick-launch">
+            <img src="icons/notepad.png"
+                onclick="openApp('Notepad','apps/notepad/index.html')">
+            <img src="icons/paint.png"
+                onclick="openApp('Paint','apps/paint/index.html')">
+            <img src="icons/winamp.png"
+         onclick="openApp('Winamp','apps/winamp/index.html')">
+        </div>
 
         <!-- Document Area -->
         <div class="document-area">
@@ -751,6 +807,10 @@
         </div>
     </div>
 
+    <div id="visitor-counter">Visitors<div id="count">Loading...</div>
+
+</div>
+
     <dialog class="message-dialog" id="message-dialog">
         <div class="title-bar">New Message</div>
         <form id="message-form" class="dialog-body" method="dialog">
@@ -911,7 +971,15 @@
                 messageForm.reset();
             });
             
-         
+            fetch("https://api.counterapi.dev/v1/sparshkhanna/retroresume/up")
+            .then(r=>r.json())
+            .then(data=>{
+                document.getElementById("count").textContent = String(data.count).padStart(6,"0");
+            })
+            .catch(err => {
+                document.getElementById("count").textContent = "Error";
+                console.error("Counter API failed", err);
+            });
 
 
             document.addEventListener('click', closeAllDropdowns);

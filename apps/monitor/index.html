@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>System Monitor</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+
+background:#008080;
+
+font-family:Tahoma,sans-serif;
+
+height:100vh;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+overflow:hidden;
+
+}
+
+.window{
+
+width:720px;
+
+background:#c0c0c0;
+
+border:2px solid;
+
+border-color:#ffffff #808080 #808080 #ffffff;
+
+box-shadow:2px 2px 0 black;
+
+}
+
+.titlebar{
+
+height:28px;
+
+background:linear-gradient(to right,#000080,#1084d0);
+
+display:flex;
+
+align-items:center;
+
+justify-content:space-between;
+
+padding:0 8px;
+
+color:white;
+
+font-weight:bold;
+
+user-select:none;
+
+}
+
+.controls{
+
+display:flex;
+
+gap:4px;
+
+}
+
+.btn{
+
+width:18px;
+
+height:18px;
+
+background:#c0c0c0;
+
+border:2px solid;
+
+border-color:#ffffff #808080 #808080 #ffffff;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-size:11px;
+
+font-weight:bold;
+
+color:black;
+
+}
+
+.content{
+
+padding:12px;
+
+display:grid;
+
+grid-template-columns:1fr 1fr;
+
+gap:12px;
+
+}
+
+.panel{
+
+background:#c0c0c0;
+
+border:2px inset #fff;
+
+padding:10px;
+
+}
+
+.panel h3{
+
+margin-bottom:10px;
+
+font-size:15px;
+
+border-bottom:1px solid gray;
+
+padding-bottom:4px;
+
+}
+
+.row{
+
+display:flex;
+
+justify-content:space-between;
+
+margin:5px 0;
+
+font-size:14px;
+
+}
+
+.label{
+
+font-weight:bold;
+
+}
+
+.value{
+
+font-family:"Courier New",monospace;
+
+}
+
+.footer{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:8px 12px;
+
+border-top:2px solid #808080;
+
+background:#c0c0c0;
+
+font-size:13px;
+
+}
+
+#status{
+
+display:flex;
+
+align-items:center;
+
+gap:8px;
+
+}
+
+.led{
+
+width:12px;
+
+height:12px;
+
+border-radius:50%;
+
+background:#00ff00;
+
+box-shadow:0 0 6px #00ff00;
+
+}
+
+.progress{
+
+height:18px;
+
+background:#808080;
+
+border:2px inset white;
+
+margin-bottom:8px;
+
+overflow:hidden;
+
+}
+
+.fill{
+
+height:100%;
+
+width:0%;
+
+background:#0080ff;
+
+transition:width .5s;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="window">
+
+<div class="titlebar">
+
+<div>
+
+🖥 System Monitor
+
+</div>
+
+<div class="controls">
+
+<div class="btn">_</div>
+
+<div class="btn">□</div>
+
+<div class="btn">✕</div>
+
+</div>
+
+</div>
+
+<div class="content">
+
+<div class="panel">
+
+<h3>System</h3>
+
+<div class="row"><span class="label">OS</span><span class="value" id="os">---</span></div>
+
+<div class="row"><span class="label">Browser</span><span class="value" id="browser">---</span></div>
+
+<div class="row"><span class="label">CPU Cores</span><span class="value" id="cores">---</span></div>
+
+<div class="row"><span class="label">RAM</span><span class="value" id="ram">---</span></div>
+
+<div class="row"><span class="label">Language</span><span class="value" id="language">---</span></div>
+
+<div class="row"><span class="label">Timezone</span><span class="value" id="timezone">---</span></div>
+
+</div>
+
+<div class="panel">
+
+<h3>Display</h3>
+
+<div class="row"><span class="label">Resolution</span><span class="value" id="resolution">---</span></div>
+
+<div class="row"><span class="label">Viewport</span><span class="value" id="viewport">---</span></div>
+
+<div class="row"><span class="label">Color Depth</span><span class="value" id="depth">---</span></div>
+
+<div class="row"><span class="label">Pixel Ratio</span><span class="value" id="ratio">---</span></div>
+
+</div>
+
+<div class="panel">
+
+<h3>Network</h3>
+
+<div class="row"><span class="label">Status</span><span class="value" id="online">---</span></div>
+
+<div class="row"><span class="label">Connection</span><span class="value" id="connection">---</span></div>
+
+<div class="row"><span class="label">Downlink</span><span class="value" id="speed">---</span></div>
+
+<div class="row"><span class="label">Ping</span><span class="value" id="ping">---</span></div>
+
+</div>
+
+<div class="panel">
+
+<h3>Runtime</h3>
+<div class="row">
+    <span class="label">CPU Usage</span>
+    <span class="value" id="cpu">0%</span>
+</div>
+
+<div class="progress">
+    <div id="cpuBar" class="fill"></div>
+</div>
+
+<div class="row">
+    <span class="label">Memory Usage</span>
+    <span class="value" id="memory">0%</span>
+</div>
+
+<div class="progress">
+    <div id="memoryBar" class="fill"></div>
+</div>
+
+<div class="row">
+    <span class="label">Uptime</span>
+    <span class="value" id="uptime">00:00:00</span>
+</div>
+
+<div class="row"><span class="label">Battery</span><span class="value" id="battery">---</span></div>
+
+<div class="row"><span class="label">Visitors</span><span class="value" id="visitors">---</span></div>
+
+<div class="row"><span class="label">Clock</span><span class="value" id="clock">---</span></div>
+
+</div>
+
+</div>
+
+<div class="footer">
+
+<div id="status">
+
+<div class="led" id="led"></div>
+
+<span id="statusText">
+
+System Healthy
+
+</span>
+
+</div>
+
+<div>
+
+Portfolio v2.1
+
+</div>
+
+</div>
+
+</div>
+
+<script src="monitor.js"></script>
+
+</body>
+
+</html>
