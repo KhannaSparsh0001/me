@@ -1,6 +1,22 @@
 [
     {
-        "name": "Demo Track 1",
-        "url": "../../assets/track1.mp3"
+        "name": "NineteenEightyFour Simpsonwave",
+        "url": "../../assets/songs/NineteenEightyFour_%20Simpsonwave.mp3"
+    },
+    {
+        "name": "Sem Tempo EXTENDED",
+        "url": "../../assets/songs/Sem%20Tempo_EXTENDED.mp3"
+    },
+    {
+        "name": "The Stranglers - Golden Brown",
+        "url": "../../assets/songs/TheStranglers_GoldenBrown.mp3"
+    },
+    {
+        "name": "Coldplay - Viva La Vida",
+        "url": "../../assets/songs/VivaLaVida_Coldplay.mp3"
+    },
+    {
+        "name": "Y QUE FUE",
+        "url": "../../assets/songs/Y_QUE_FUE.webm"
     }
 ]
