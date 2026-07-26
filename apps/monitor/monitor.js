@@ -214,14 +214,22 @@ function updateManagers(){
     }
 }
 
-/* ---------------------- CPU ---------------------- */
+/* ---------------------- CPU & Memory ---------------------- */
 
 function animateCPU(){
-    $("cpuBar").style.width = "0%";
+    const usage = Math.floor(Math.random() * 20) + 2; // 2% to 21%
+    const el = $("cpu");
+    if(el) el.textContent = usage + "%";
+    const bar = $("cpuBar");
+    if(bar) bar.style.width = usage + "%";
 }
 
 function animateMemory(){
-    $("memoryBar").style.width = "0%";
+    const usage = Math.floor(Math.random() * 5) + 32; // 32% to 36%
+    const el = $("memory");
+    if(el) el.textContent = usage + "%";
+    const bar = $("memoryBar");
+    if(bar) bar.style.width = usage + "%";
 }
 
 /* ---------------------- Init ---------------------- */
@@ -252,12 +260,12 @@ init();
 /* ---------------------- Live Updates ---------------------- */
 
 setInterval(()=>{
-
-updateClock();
-updateDisplay();
-updateNetwork();
-updateUptime();
-updateVisitors();
-updateManagers();
-
+    updateClock();
+    updateDisplay();
+    updateNetwork();
+    updateUptime();
+    updateVisitors();
+    updateManagers();
+    animateCPU();
+    animateMemory();
 },1000);

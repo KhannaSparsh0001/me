@@ -976,7 +976,11 @@
             fetch("https://api.counterapi.dev/v1/sparshkhanna/retroresume/up")
             .then(r=>r.json())
             .then(data=>{
-                document.getElementById("count").textContent = String(data.count).padStart(6,"0");
+                if (data && data.count) {
+                    document.getElementById("count").textContent = String(data.count).padStart(6,"0");
+                } else {
+                    document.getElementById("count").textContent = "Error";
+                }
             })
             .catch(err => {
                 document.getElementById("count").textContent = "Error";

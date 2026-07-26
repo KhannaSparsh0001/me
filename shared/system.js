@@ -1,29 +1,24 @@
 // system.js
 
-let topScopeSystem = window;
-try {
-    if (window.top && window.top.document) {
-        topScopeSystem = window.top;
-    }
-} catch (e) {
-    // Cross-origin blocked
-}
-
-if (!topScopeSystem.SystemAPI) {
+if (!window.top.SystemAPI) {
     const bootTime = Date.now();
     let visitorCount = "Unavailable";
     
     // Fetch visitor count and store it globally
-    fetch("https://api.countapi.xyz/hit/sparsh-monitor/system")
+    fetch("https://api.counterapi.dev/v1/sparshkhanna/retroresume")
         .then(r => r.json())
         .then(data => {
-            visitorCount = data.value;
+            if (data && data.count) {
+                visitorCount = data.count;
+            } else {
+                visitorCount = "Error";
+            }
         })
         .catch(() => {
-            visitorCount = "N/A";
+            visitorCount = "Error";
         });
 
-    topScopeSystem.SystemAPI = {
+    window.top.SystemAPI = {
         getBootTime: function() {
             return bootTime;
         },
@@ -39,4 +34,4 @@ if (!topScopeSystem.SystemAPI) {
     };
 }
 
-window.SystemAPI = topScopeSystem.SystemAPI;
+window.SystemAPI = window.top.SystemAPI;

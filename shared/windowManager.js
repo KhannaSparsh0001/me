@@ -1,17 +1,8 @@
 // windowManager.js
 
-let topScopeWindow = window;
-try {
-    if (window.top && window.top.document) {
-        topScopeWindow = window.top;
-    }
-} catch (e) {
-    // Cross-origin blocked
-}
-
-if (!topScopeWindow.WindowManager) {
+if (!window.top.WindowManager) {
     const windows = {};
-    topScopeWindow.WindowManager = {
+    window.top.WindowManager = {
         open: function(id) {
             windows[id] = { id: id, state: 'open' };
         },
@@ -19,6 +10,7 @@ if (!topScopeWindow.WindowManager) {
             delete windows[id];
         },
         focus: function(id) {
+            // Keep it simple as requested
             if (windows[id]) {
                 for (let k in windows) {
                     windows[k].focused = false;
@@ -42,4 +34,4 @@ if (!topScopeWindow.WindowManager) {
     };
 }
 
-window.WindowManager = topScopeWindow.WindowManager;
+window.WindowManager = window.top.WindowManager;

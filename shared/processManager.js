@@ -1,17 +1,8 @@
 // processManager.js
 
-let topScope = window;
-try {
-    if (window.top && window.top.document) {
-        topScope = window.top;
-    }
-} catch (e) {
-    // Cross-origin blocked
-}
-
-if (!topScope.ProcessManager) {
+if (!window.top.ProcessManager) {
     const processes = new Set();
-    topScope.ProcessManager = {
+    window.top.ProcessManager = {
         register: function(processName) {
             processes.add(processName);
         },
@@ -24,4 +15,4 @@ if (!topScope.ProcessManager) {
     };
 }
 
-window.ProcessManager = topScope.ProcessManager;
+window.ProcessManager = window.top.ProcessManager;
