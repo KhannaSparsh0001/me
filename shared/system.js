@@ -4,19 +4,13 @@ if (!window.top.SystemAPI) {
     const bootTime = Date.now();
     let visitorCount = "Unavailable";
     
-    // Fetch visitor count and store it globally
-    fetch("https://api.counterapi.dev/v1/sparshkhanna/retroresume")
-        .then(r => r.json())
-        .then(data => {
-            if (data && data.count) {
-                visitorCount = data.count;
-            } else {
-                visitorCount = "Error";
-            }
-        })
-        .catch(() => {
-            visitorCount = "Error";
-        });
+    // Free APIs are hanging/broken. We sync with the instant simulated retro counter in localStorage.
+    let count = localStorage.getItem("retro_visitor_count");
+    if (count) {
+        visitorCount = String(count).padStart(6, "0");
+    } else {
+        visitorCount = "Error";
+    }
 
     window.top.SystemAPI = {
         getBootTime: function() {
