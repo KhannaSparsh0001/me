@@ -331,5 +331,15 @@
         // Initialize
         audio.volume = volSlider.value;
     </script>
+
+<script src="../../shared/processManager.js"></script>
+<script>
+    if (window.ProcessManager) {
+        window.ProcessManager.register("WinAmp95.exe");
+        window.addEventListener("unload", () => {
+            window.ProcessManager.unregister("WinAmp95.exe");
+        });
+    }
+</script>
 </body>
 </html>

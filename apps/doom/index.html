@@ -318,6 +318,15 @@ nextLine();
 
 </script>
 
+<script src="../../shared/processManager.js"></script>
+<script>
+    if (window.ProcessManager) {
+        window.ProcessManager.register("DOOM.exe");
+        window.addEventListener("unload", () => {
+            window.ProcessManager.unregister("DOOM.exe");
+        });
+    }
+</script>
 </body>
 
 </html>

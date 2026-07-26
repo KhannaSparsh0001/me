@@ -453,5 +453,14 @@ document.getElementById('brush').addEventListener('change', (e) => {
 
 </script>
 
+<script src="../../shared/processManager.js"></script>
+<script>
+    if (window.ProcessManager) {
+        window.ProcessManager.register("Paint.exe");
+        window.addEventListener("unload", () => {
+            window.ProcessManager.unregister("Paint.exe");
+        });
+    }
+</script>
 </body>
 </html>

@@ -1,9 +1,10 @@
 const $ = (id) => document.getElementById(id);
 
-let cpu = 18;
-let memory = 46;
-
-const startTime = Date.now();
+// Register process
+window.ProcessManager.register("Monitor.exe");
+window.addEventListener("unload", () => {
+    window.ProcessManager.unregister("Monitor.exe");
+});
 
 /* ---------------------- Browser ---------------------- */
 
@@ -169,77 +170,58 @@ function updateClock(){
 /* ---------------------- Uptime ---------------------- */
 
 function updateUptime(){
+    
+    if (!window.SystemAPI) return;
 
-    const elapsed=Math.floor((Date.now()-startTime)/1000);
+    const elapsed = window.SystemAPI.getUptime();
 
     const h=Math.floor(elapsed/3600);
-
     const m=Math.floor((elapsed%3600)/60);
-
     const s=elapsed%60;
 
     $("uptime").textContent=
-
         `${String(h).padStart(2,"0")}:`+
-
         `${String(m).padStart(2,"0")}:`+
-
         `${String(s).padStart(2,"0")}`;
-
 }
 
 /* ---------------------- Visitors ---------------------- */
 
 function updateVisitors(){
+    if (window.SystemAPI) {
+        $("visitors").textContent = window.SystemAPI.getVisitorCount();
+    } else {
+        $("visitors").textContent = "Unavailable";
+    }
+}
 
-fetch("https://api.countapi.xyz/hit/sparsh-monitor/system")
+function updateManagers(){
+    if (window.ProcessManager) {
+        const processes = window.ProcessManager.getProcesses();
+        const el = $("processesCount");
+        if (el) el.textContent = processes.length;
+    }
+    
+    if (window.WindowManager) {
+        const windows = window.WindowManager.getWindows();
+        const el = $("windowsCount");
+        if (el) el.textContent = windows.length;
+    }
 
-.then(r=>r.json())
-
-.then(data=>{
-
-$("visitors").textContent=data.value;
-
-})
-
-.catch(()=>{
-
-$("visitors").textContent="N/A";
-
-});
-
+    if (window.SystemAPI) {
+        const el = $("versionText");
+        if (el) el.textContent = "Portfolio v" + window.SystemAPI.getVersion();
+    }
 }
 
 /* ---------------------- CPU ---------------------- */
 
 function animateCPU(){
-
-    cpu += (Math.random()-0.5)*8;
-
-    cpu=Math.max(4,Math.min(88,cpu));
-
-    $("cpu").textContent=
-        Math.round(cpu)+"%";
-
-    $("cpuBar").style.width=
-        cpu+"%";
-
+    $("cpuBar").style.width = "0%";
 }
 
-/* ---------------------- Memory ---------------------- */
-
 function animateMemory(){
-
-    memory += (Math.random()-0.5)*3;
-
-    memory=Math.max(25,Math.min(82,memory));
-
-    $("memory").textContent=
-        Math.round(memory)+"%";
-
-    $("memoryBar").style.width=
-        memory+"%";
-
+    $("memoryBar").style.width = "0%";
 }
 
 /* ---------------------- Init ---------------------- */
@@ -257,11 +239,10 @@ updateBattery();
 updateVisitors();
 
 updateClock();
-
 updateUptime();
+updateManagers();
 
 animateCPU();
-
 animateMemory();
 
 }
@@ -273,15 +254,10 @@ init();
 setInterval(()=>{
 
 updateClock();
-
 updateDisplay();
-
 updateNetwork();
-
 updateUptime();
-
-animateCPU();
-
-animateMemory();
+updateVisitors();
+updateManagers();
 
 },1000);

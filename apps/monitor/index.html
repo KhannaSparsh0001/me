@@ -312,7 +312,7 @@ transition:width .5s;
 <h3>Runtime</h3>
 <div class="row">
     <span class="label">CPU Usage</span>
-    <span class="value" id="cpu">0%</span>
+    <span class="value" id="cpu">Unavailable</span>
 </div>
 
 <div class="progress">
@@ -321,7 +321,7 @@ transition:width .5s;
 
 <div class="row">
     <span class="label">Memory Usage</span>
-    <span class="value" id="memory">0%</span>
+    <span class="value" id="memory">Unavailable</span>
 </div>
 
 <div class="progress">
@@ -332,6 +332,10 @@ transition:width .5s;
     <span class="label">Uptime</span>
     <span class="value" id="uptime">00:00:00</span>
 </div>
+
+<div class="row"><span class="label">Processes</span><span class="value" id="processesCount">---</span></div>
+
+<div class="row"><span class="label">Windows</span><span class="value" id="windowsCount">---</span></div>
 
 <div class="row"><span class="label">Battery</span><span class="value" id="battery">---</span></div>
 
@@ -359,7 +363,7 @@ System Healthy
 
 <div>
 
-Portfolio v2.1
+<span id="versionText">Portfolio</span>
 
 </div>
 
@@ -367,6 +371,9 @@ Portfolio v2.1
 
 </div>
 
+<script src="../../shared/processManager.js"></script>
+<script src="../../shared/windowManager.js"></script>
+<script src="../../shared/system.js"></script>
 <script src="monitor.js"></script>
 
 </body>

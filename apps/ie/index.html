@@ -238,5 +238,14 @@ error.style.display="block";
 
 </script>
 
+<script src="../../shared/processManager.js"></script>
+<script>
+    if (window.ProcessManager) {
+        window.ProcessManager.register("Internet Explorer.exe");
+        window.addEventListener("unload", () => {
+            window.ProcessManager.unregister("Internet Explorer.exe");
+        });
+    }
+</script>
 </body>
 </html>

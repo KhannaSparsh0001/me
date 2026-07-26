@@ -182,5 +182,14 @@ URL.revokeObjectURL(a.href);
 
 </script>
 
+<script src="../../shared/processManager.js"></script>
+<script>
+    if (window.ProcessManager) {
+        window.ProcessManager.register("Notepad.exe");
+        window.addEventListener("unload", () => {
+            window.ProcessManager.unregister("Notepad.exe");
+        });
+    }
+</script>
 </body>
 </html>
