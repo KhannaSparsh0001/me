@@ -587,13 +587,13 @@
 
         <div id="quick-launch">
             <img src="icons/notepad.png"
-                onclick="openApp('Notepad','apps/notepad/index.html')" title="Notepad">
+                onclick="openApp('Notepad','apps/notepad/index.html', '600px', '450px')" title="Notepad">
             <img src="icons/paint.png"
-                onclick="openApp('Paint','apps/paint/index.html')" title="Paint">
+                onclick="openApp('Paint','apps/paint/index.html', '700px', '500px')" title="Paint">
             <img src="icons/winamp.png"
-                onclick="openApp('Winamp','apps/winamp/index.html')" title="Winamp">
-            <img src="icons/notepad.png"
-                onclick="openApp('System Monitor','apps/monitor/index.html')" title="System Monitor">
+                onclick="openApp('Winamp','apps/winamp/index.html', '290px', '375px')" title="Winamp">
+            <img src="icons/system-monitor.png"
+                onclick="openApp('System Monitor','apps/monitor/index.html', '450px', '350px')" title="System Monitor">
         </div>
 
         <!-- Document Area -->
@@ -1108,7 +1108,7 @@
         });
         let highestZ = 100;
 
-        window.openGameModal = function(title, url){
+        window.openGameModal = function(title, url, width, height){
 
             const win = document.createElement("div");
             win.className = "game-window";
@@ -1116,6 +1116,15 @@
             win.style.left = "180px";
             win.style.top = "120px";
             win.style.zIndex = ++highestZ;
+            
+            if (width) {
+                win.style.width = width;
+                win.style.minWidth = width;
+            }
+            if (height) {
+                win.style.height = height;
+                win.style.minHeight = height;
+            }
 
             win.innerHTML = `
                 <div class="retro-window-header">
