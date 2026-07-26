@@ -1,8 +1,17 @@
 // windowManager.js
 
-if (!window.top.WindowManager) {
+let topScopeWindow = window;
+try {
+    if (window.top && window.top.document) {
+        topScopeWindow = window.top;
+    }
+} catch (e) {
+    // Cross-origin blocked
+}
+
+if (!topScopeWindow.WindowManager) {
     const windows = {};
-    window.top.WindowManager = {
+    topScopeWindow.WindowManager = {
         open: function(id) {
             windows[id] = { id: id, state: 'open' };
         },
@@ -34,4 +43,4 @@ if (!window.top.WindowManager) {
     };
 }
 
-window.WindowManager = window.top.WindowManager;
+window.WindowManager = topScopeWindow.WindowManager;

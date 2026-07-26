@@ -22,6 +22,52 @@
             font-family: Arial, Helvetica, sans-serif;
             color: var(--text-main);
             overflow: hidden;
+            cursor: default;
+        }
+
+        * {
+            cursor: default;
+        }
+
+        button, a, .dropdown-item, .quick-launch img {
+            cursor: pointer !important;
+        }
+
+        input, textarea {
+            cursor: text !important;
+        }
+
+        .retro-window-header {
+            cursor: default !important;
+        }
+
+        .game-window {
+            resize: both;
+            overflow: hidden;
+        }
+
+        @keyframes windowOpen {
+            0% { opacity: 0; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes windowClose {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.95); }
+        }
+
+        .window-opening {
+            animation: windowOpen 0.15s ease-out forwards;
+        }
+
+        .window-closing {
+            animation: windowClose 0.15s ease-in forwards;
+        }
+
+        .window-minimizing {
+            transition: transform 0.15s ease-in, opacity 0.15s ease-in;
+            transform: scale(0.1) translateY(100vh);
+            opacity: 0;
         }
 
         /* 3D Browser Wrapper */
@@ -445,6 +491,11 @@
     </style>
 </head>
 <body>
+    <div id="boot-screen" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:black; color:#c0c0c0; z-index:9999999; font-family:'Courier New', monospace; padding:20px; box-sizing:border-box;">
+        <div>Starting Windows 95...</div>
+        <div style="margin-top:20px;">Memory Test: 32768K OK</div>
+        <div style="margin-top:10px;">Loading...</div>
+    </div>
 
     <div class="window">
         <!-- Title Bar -->
@@ -872,6 +923,7 @@
                 const wasOpen = menu.classList.contains('show');
                 closeAllDropdowns();
                 if (!wasOpen) {
+                    if (window.SystemAPI) window.SystemAPI.playSound('click');
                     menu.classList.add('show');
                     btn.classList.add('active-btn');
                 }
@@ -952,12 +1004,14 @@
             sendMessageOption.addEventListener('click', (e) => {
                 e.preventDefault();
                 closeAllDropdowns();
+                if (window.SystemAPI) window.SystemAPI.playSound('notify');
                 messageDialog.showModal();
             });
 
 
 
             messageCancel.addEventListener('click', () => {
+                if (window.SystemAPI) window.SystemAPI.playSound('click');
                 messageDialog.close();
             });
 
@@ -1008,6 +1062,28 @@
                     }
                 });
             });
+
+            // Boot sequence logic
+            if (!sessionStorage.getItem('booted')) {
+                const bootScreen = document.getElementById('boot-screen');
+                bootScreen.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+                
+                // Try to play startup sound (may be blocked by browser autoplay rules)
+                setTimeout(() => {
+                    if (window.SystemAPI) window.SystemAPI.playSound('startup');
+                }, 500);
+
+                setTimeout(() => {
+                    bootScreen.style.opacity = '0';
+                    bootScreen.style.transition = 'opacity 0.5s ease';
+                    setTimeout(() => {
+                        bootScreen.style.display = 'none';
+                        document.body.style.overflow = '';
+                        sessionStorage.setItem('booted', '1');
+                    }, 500);
+                }, 2500);
+            }
         });
         let highestZ = 100;
 
@@ -1023,7 +1099,7 @@
             win.innerHTML = `
                 <div class="retro-window-header">
                     <span>${title}</span>
-                    <button>X</button>
+                    <button class="close-btn">X</button>
                 </div>
 
                 <iframe src="${url}"></iframe>
@@ -1044,11 +1120,19 @@
                 }
             });
 
-            win.querySelector("button").onclick = () => {
+            if (window.SystemAPI) window.SystemAPI.playSound('open');
+            win.classList.add('window-opening');
+
+            win.querySelector(".close-btn").onclick = () => {
+                if (window.SystemAPI) window.SystemAPI.playSound('close');
                 if (window.WindowManager) {
                     window.WindowManager.close(title);
                 }
-                win.remove();
+                win.classList.remove('window-opening');
+                win.classList.add('window-closing');
+                setTimeout(() => {
+                    win.remove();
+                }, 150);
             };
 
             makeDraggable(win);

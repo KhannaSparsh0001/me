@@ -17,6 +17,11 @@ body{
     background:#c0c0c0;
     font-family:Tahoma,Verdana,sans-serif;
     overflow:hidden;
+    cursor: default;
+}
+
+*{
+    cursor: default;
 }
 
 .menu{
@@ -48,7 +53,7 @@ textarea{
 
     background:white;
     color:black;
-
+    cursor: text !important;
 }
 
 .status{
@@ -79,7 +84,7 @@ button{
 
     background:#c0c0c0;
 
-    cursor:pointer;
+    cursor:pointer !important;
 
 }
 
@@ -99,7 +104,7 @@ button:active{
 <span>File</span>
 <span>Edit</span>
 <span>Search</span>
-<span>Help</span>
+<span id="help-btn">Help</span>
 
 <button id="download">
 Save</button>
@@ -184,12 +189,31 @@ URL.revokeObjectURL(a.href);
 
 <script src="../../shared/processManager.js"></script>
 <script>
-    if (window.ProcessManager) {
-        window.ProcessManager.register("Notepad.exe");
+    let topScope = window;
+    try {
+        if (window.top && window.top.document) {
+            topScope = window.top;
+        }
+    } catch (e) {}
+
+    if (topScope.ProcessManager) {
+        topScope.ProcessManager.register("Notepad.exe");
         window.addEventListener("unload", () => {
-            window.ProcessManager.unregister("Notepad.exe");
+            topScope.ProcessManager.unregister("Notepad.exe");
         });
     }
+
+    document.getElementById("help-btn").onclick = () => {
+        if (topScope.SystemAPI && topScope.SystemAPI.showAboutDialog) {
+            topScope.SystemAPI.showAboutDialog({
+                name: "Notepad",
+                version: "1.0",
+                description: "A lightweight text editor for Windows 95.",
+                developer: "Sparsh Khanna",
+                copyright: "2026"
+            });
+        }
+    };
 </script>
 </body>
 </html>

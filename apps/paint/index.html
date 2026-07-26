@@ -27,6 +27,7 @@ body{
     background:#c0c0c0;
 
     font-family:Tahoma,Verdana,sans-serif;
+    cursor: default;
 
 }
 
@@ -186,9 +187,8 @@ canvas{
     height:100%;
 
     background:white;
-
-    cursor:crosshair;
-
+    display:block;
+    cursor: crosshair !important;
     border:2px inset #808080;
 
 }
@@ -230,7 +230,7 @@ canvas{
 <span>File</span>
 <span>Edit</span>
 <span>Image</span>
-<span>Help</span>
+<span id="help-btn">Help</span>
 
 </div>
 
@@ -337,6 +337,25 @@ Paint95
 
 const canvas=document.getElementById("paint");
 const ctx=canvas.getContext("2d");
+
+let topScope = window;
+try {
+    if (window.top && window.top.document) {
+        topScope = window.top;
+    }
+} catch (e) {}
+
+document.getElementById("help-btn").onclick = () => {
+    if (topScope.SystemAPI && topScope.SystemAPI.showAboutDialog) {
+        topScope.SystemAPI.showAboutDialog({
+            name: "Paint",
+            version: "1.0",
+            description: "A simple raster graphics editor for Windows 95.",
+            developer: "Sparsh Khanna",
+            copyright: "2026"
+        });
+    }
+};
 
 function clearCanvas() {
     ctx.fillStyle = "#ffffff";
