@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Guest Book</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@react95/sans-serif/index.min.css">
+    <link rel="stylesheet" href="guestbook.css">
+</head>
+<body>
+
+<div class="toolbar">
+    <button id="sign-btn">Sign Guest Book</button>
+    <button id="refresh-btn">Refresh</button>
+</div>
+
+<div class="entries-container" id="entries-container">
+    <div style="text-align: center; color: #7b7b7b; margin-top: 20px;">
+        Loading entries from GitHub...
+    </div>
+</div>
+
+<!-- Main Dialog Overlay -->
+<div class="modal-overlay" id="dialog-overlay" style="display: none;">
+    
+    <!-- Info Dialog -->
+    <div class="win95-dialog" id="info-dialog" style="display: none;">
+        <div class="dialog-header">
+            <span>Guest Book</span>
+            <div class="dialog-close" onclick="closeDialogs()">X</div>
+        </div>
+        <div class="dialog-body">
+            <div style="display: flex; gap: 15px; align-items: flex-start;">
+                <div style="font-size: 32px;">ℹ️</div>
+                <div>
+                    Signing this guest book requires<br>
+                    a verified GitHub account.<br><br>
+                    You will now be redirected to GitHub.<br>
+                    Identity is mandatory.
+                </div>
+            </div>
+            <div class="dialog-buttons">
+                <button id="continue-btn" style="width: 80px;">Continue</button>
+                <button onclick="closeDialogs()" style="width: 80px;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Networking Sequence Dialog -->
+    <div class="win95-dialog" id="network-dialog" style="display: none;">
+        <div class="dialog-header">
+            <span>Connecting...</span>
+        </div>
+        <div class="dialog-body">
+            <div id="network-status" style="margin-bottom: 10px;">Dialing github.com...</div>
+            <div class="progress-bar-container" id="progress-bar">
+                <!-- Blocks will be added here via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Dialog -->
+    <div class="win95-dialog" id="error-dialog" style="display: none;">
+        <div class="dialog-header">
+            <span>Error</span>
+            <div class="dialog-close" onclick="closeDialogs()">X</div>
+        </div>
+        <div class="dialog-body">
+            <div style="display: flex; gap: 15px; align-items: flex-start;">
+                <div style="font-size: 32px;">❌</div>
+                <div id="error-message">
+                    Unable to contact GitHub.<br>
+                    The guest book is currently unavailable.
+                </div>
+            </div>
+            <div class="dialog-buttons">
+                <button onclick="closeDialogs()" style="width: 80px;">OK</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Scripts -->
+<script src="../../services/guestbook/github.js"></script>
+<script src="guestbook.js"></script>
+</body>
+</html>

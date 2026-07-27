@@ -1,0 +1,225 @@
+body {
+    margin: 0;
+    padding: 10px;
+    background-color: #c0c0c0;
+    font-family: 'R95 Sans Serif 8pt', 'MS Sans Serif', Tahoma, sans-serif;
+    font-smooth: never;
+    -webkit-font-smoothing: none;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    box-sizing: border-box;
+    user-select: none;
+    color: #000;
+}
+
+.toolbar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #7b7b7b;
+    border-right: 2px solid #7b7b7b;
+    border-top: 2px solid #fff;
+    border-left: 2px solid #fff;
+    padding: 8px;
+    background: #c0c0c0;
+}
+
+button {
+    font-family: inherit;
+    font-size: inherit;
+    background-color: #c0c0c0;
+    border-top: 2px solid #fff;
+    border-left: 2px solid #fff;
+    border-bottom: 2px solid #000;
+    border-right: 2px solid #000;
+    padding: 4px 10px;
+    box-shadow: inset -1px -1px #7b7b7b, inset 1px 1px #dfdfdf;
+    cursor: pointer;
+}
+
+button:active {
+    border-top: 2px solid #000;
+    border-left: 2px solid #000;
+    border-bottom: 2px solid #fff;
+    border-right: 2px solid #fff;
+    box-shadow: inset 1px 1px #7b7b7b, inset -1px -1px #dfdfdf;
+    padding: 5px 9px 3px 11px; /* shift text when pressed */
+}
+
+.entries-container {
+    flex: 1;
+    overflow-y: auto;
+    background: #fff;
+    border-top: 2px solid #7b7b7b;
+    border-left: 2px solid #7b7b7b;
+    border-bottom: 2px solid #fff;
+    border-right: 2px solid #fff;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.entry-card {
+    background: #c0c0c0;
+    border-top: 2px solid #fff;
+    border-left: 2px solid #fff;
+    border-bottom: 2px solid #7b7b7b;
+    border-right: 2px solid #7b7b7b;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.entry-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #7b7b7b;
+    padding-bottom: 8px;
+}
+
+.entry-avatar {
+    width: 32px;
+    height: 32px;
+    border: 2px solid #7b7b7b;
+    background: #fff;
+}
+
+.entry-meta {
+    display: flex;
+    flex-direction: column;
+}
+
+.entry-username {
+    font-weight: bold;
+    color: #000;
+    text-decoration: none;
+}
+
+.entry-username:hover {
+    text-decoration: underline;
+    color: #000080;
+}
+
+.entry-date {
+    color: #7b7b7b;
+    font-size: 0.9em;
+}
+
+.entry-message {
+    background: #fff;
+    border: 2px inset #dfdfdf;
+    padding: 8px;
+    font-family: 'MS Sans Serif', Tahoma, sans-serif;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+/* Scrollbar Styling for entries-container to match Win95 */
+.entries-container::-webkit-scrollbar {
+    width: 16px;
+    background: #dfdfdf;
+    border-left: 1px solid #fff;
+}
+
+.entries-container::-webkit-scrollbar-thumb {
+    background: #c0c0c0;
+    border-top: 2px solid #fff;
+    border-left: 2px solid #fff;
+    border-right: 2px solid #7b7b7b;
+    border-bottom: 2px solid #7b7b7b;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.win95-dialog {
+    background: #c0c0c0;
+    border-top: 2px solid #fff;
+    border-left: 2px solid #fff;
+    border-bottom: 2px solid #000;
+    border-right: 2px solid #000;
+    padding: 3px;
+    min-width: 300px;
+    box-shadow: 1px 1px 0 #7b7b7b inset, -1px -1px 0 #7b7b7b inset;
+}
+
+.dialog-header {
+    background: #000080;
+    color: #fff;
+    font-weight: bold;
+    padding: 4px 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dialog-close {
+    background: #c0c0c0;
+    color: #000;
+    border-top: 2px solid #fff;
+    border-left: 2px solid #fff;
+    border-bottom: 2px solid #000;
+    border-right: 2px solid #000;
+    width: 16px;
+    height: 14px;
+    font-size: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.dialog-close:active {
+    border-top: 2px solid #000;
+    border-left: 2px solid #000;
+    border-bottom: 2px solid #fff;
+    border-right: 2px solid #fff;
+    padding-top: 1px;
+    padding-left: 1px;
+}
+
+.dialog-body {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.dialog-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.progress-bar-container {
+    border-top: 2px solid #7b7b7b;
+    border-left: 2px solid #7b7b7b;
+    border-bottom: 2px solid #fff;
+    border-right: 2px solid #fff;
+    background: #fff;
+    height: 20px;
+    display: flex;
+    padding: 2px;
+    gap: 2px;
+}
+
+.progress-block {
+    background: #000080;
+    width: 12px;
+    height: 100%;
+}

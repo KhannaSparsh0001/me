@@ -205,29 +205,6 @@
         let currentTrackIndex = 0;
         let isPlaying = false;
 
-        const defaultTracks = [
-            {
-                "name": "NineteenEightyFour Simpsonwave",
-                "url": "../../assets/songs/NineteenEightyFour_%20Simpsonwave.mp3"
-            },
-            {
-                "name": "Sem Tempo EXTENDED",
-                "url": "../../assets/songs/Sem%20Tempo_EXTENDED.mp3"
-            },
-            {
-                "name": "The Stranglers - Golden Brown",
-                "url": "../../assets/songs/TheStranglers_GoldenBrown.mp3"
-            },
-            {
-                "name": "Coldplay - Viva La Vida",
-                "url": "../../assets/songs/VivaLaVida_Coldplay.mp3"
-            },
-            {
-                "name": "Y QUE FUE",
-                "url": "../../assets/songs/Y_QUE_FUE.webm"
-            }
-        ];
-
         // Fetch playlist from assets folder
         fetch('../../assets/playlist.json')
             .then(response => response.json())
@@ -242,13 +219,8 @@
                 }
             })
             .catch(err => {
-                console.warn("Could not load playlist.json. Ensure you are running a local server to fetch. Falling back to default playlist.", err);
-                tracks = defaultTracks;
-                if (tracks.length > 0) {
-                    loadTrack();
-                } else {
-                    renderPlaylist();
-                }
+                console.error("Could not load playlist.json. Ensure you are running a local server to fetch.", err);
+                renderPlaylist();
             });
 
         function renderPlaylist() {
