@@ -15,7 +15,7 @@ const GuestbookService = (function() {
             return cache;
         }
 
-        const url = `https://api.github.com/repos/${OWNER}/${REPO}/issues?labels=${LABEL}&state=all&t=${Date.now()}`;
+        const url = `https://api.github.com/repos/${OWNER}/${REPO}/issues?state=all&t=${Date.now()}`;
         
         try {
             const response = await fetch(url, {
@@ -28,7 +28,12 @@ const GuestbookService = (function() {
                 throw new Error(`GitHub API returned status ${response.status}`);
             }
 
-            const issues = await response.json();
+            let issues = await response.json();
+            
+            // Filter issues by label OR by title to catch issues where the label wasn't created yet
+            issues = issues.filter(issue => 
+                issue.labels.some(l => l.name === LABEL) || issue.title === 'Guestbook Entry'
+            );
             
             const entries = issues.map(issue => {
                 const parsed = parseBody(issue.body);
