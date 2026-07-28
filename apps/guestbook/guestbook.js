@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         entriesContainer.innerHTML = '<div style="text-align: center; color: #7b7b7b; margin-top: 20px;">Loading entries from GitHub...</div>';
         
         try {
-            const entries = await GuestbookService.listEntries();
+            const entries = await GuestbookService.listEntries(true);
             
             if (entries.length === 0) {
                 entriesContainer.innerHTML = '<div style="text-align: center; color: #7b7b7b; margin-top: 20px;">No entries yet. Be the first to sign!</div>';
@@ -45,6 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
             entries.forEach(entry => {
                 const card = document.createElement('div');
                 card.className = 'entry-card';
+                if (entry.theme) {
+                    card.classList.add(`theme-${entry.theme}`);
+                }
                 
                 let tagsHtml = '';
                 if (entry.mood || entry.location) {
@@ -98,6 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('gb-name').value = '';
         document.getElementById('gb-website').value = '';
         document.getElementById('gb-location').value = '';
+        document.getElementById('gb-theme').value = '';
         document.getElementById('gb-mood').value = '';
         document.getElementById('gb-message').value = '';
 
@@ -120,6 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const name = document.getElementById('gb-name').value.trim();
         const website = document.getElementById('gb-website').value.trim();
         const location = document.getElementById('gb-location').value.trim();
+        const theme = document.getElementById('gb-theme').value;
         const mood = document.getElementById('gb-mood').value;
         const message = document.getElementById('gb-message').value.trim();
 
@@ -133,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const formData = { name, website, location, mood, message };
+        const formData = { name, website, location, mood, theme, message };
 
         // Hide form, show network sequence
         formDialog.style.display = 'none';

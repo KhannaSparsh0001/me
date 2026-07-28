@@ -268,3 +268,75 @@ button:active {
     color: #000080;
     text-decoration: underline;
 }
+
+/* --- THEMES --- */
+
+/* 1. The Matrix */
+.entry-card.theme-matrix {
+    background: #000;
+    border: 2px solid #0f0;
+    color: #0f0;
+    font-family: 'Courier New', Courier, monospace;
+}
+.entry-card.theme-matrix .entry-header { border-bottom: 1px solid #0f0; }
+.entry-card.theme-matrix .entry-username, .entry-card.theme-matrix .entry-date, .entry-card.theme-matrix .entry-website { color: #0f0; }
+.entry-card.theme-matrix .entry-avatar { border: 2px solid #0f0; }
+.entry-card.theme-matrix .entry-message { background: #000; border: 1px dashed #0f0; color: #0f0; font-family: 'Courier New', Courier, monospace; }
+.entry-card.theme-matrix .entry-tag { background: #0f0; color: #000; }
+
+/* 2. Cyberpunk 2077 */
+.entry-card.theme-cyberpunk {
+    background: #fcee0a; /* Cyberpunk Yellow */
+    border: 2px solid #00f0ff; /* Cyan */
+    color: #ff003c; /* Hot Pink/Red */
+    box-shadow: 3px 3px 0 #00f0ff;
+}
+.entry-card.theme-cyberpunk .entry-header { border-bottom: 2px solid #00f0ff; }
+.entry-card.theme-cyberpunk .entry-username { color: #00f0ff; background: #000; padding: 0 4px; }
+.entry-card.theme-cyberpunk .entry-date { color: #000; font-weight: bold; }
+.entry-card.theme-cyberpunk .entry-website { color: #ff003c; }
+.entry-card.theme-cyberpunk .entry-avatar { border: 2px solid #00f0ff; border-radius: 0; }
+.entry-card.theme-cyberpunk .entry-message { background: #000; border: 2px solid #ff003c; color: #00f0ff; }
+.entry-card.theme-cyberpunk .entry-tag { background: #ff003c; color: #fcee0a; }
+
+/* 3. Amber Terminal */
+.entry-card.theme-amber {
+    background: #000;
+    border: 2px solid #ffb000;
+    color: #ffb000;
+    font-family: 'Courier New', Courier, monospace;
+}
+.entry-card.theme-amber .entry-header { border-bottom: 1px solid #ffb000; }
+.entry-card.theme-amber .entry-username, .entry-card.theme-amber .entry-date, .entry-card.theme-amber .entry-website { color: #ffb000; }
+.entry-card.theme-amber .entry-avatar { border: 2px solid #ffb000; }
+.entry-card.theme-amber .entry-message { background: #000; border: 1px dotted #ffb000; color: #ffb000; font-family: 'Courier New', Courier, monospace; }
+.entry-card.theme-amber .entry-tag { background: #ffb000; color: #000; }
+
+/* 4. Synthwave */
+.entry-card.theme-synthwave {
+    background: #2b0f4c; /* Deep Purple */
+    border: 2px solid #ff007f; /* Hot Pink */
+    color: #00f0ff; /* Neon Blue */
+}
+.entry-card.theme-synthwave .entry-header { border-bottom: 1px solid #ff007f; }
+.entry-card.theme-synthwave .entry-username { color: #ff007f; text-shadow: 1px 1px #00f0ff; }
+.entry-card.theme-synthwave .entry-date { color: #ffb0ff; }
+.entry-card.theme-synthwave .entry-website { color: #ff007f; }
+.entry-card.theme-synthwave .entry-avatar { border: 2px solid #00f0ff; border-radius: 50%; }
+.entry-card.theme-synthwave .entry-message { background: #1a0830; border: 2px solid #ff007f; color: #00f0ff; }
+.entry-card.theme-synthwave .entry-tag { background: #ff007f; color: #fff; }
+
+/* 5. Spaceship HUD */
+.entry-card.theme-spaceship {
+    background: #1c2331; /* Dark grey-blue */
+    border: 2px solid #45a29e; /* Muted cyan */
+    color: #66fcf1; /* Bright cyan */
+    border-radius: 8px;
+}
+.entry-card.theme-spaceship .entry-header { border-bottom: 1px solid #45a29e; }
+.entry-card.theme-spaceship .entry-username { color: #c5c6c7; font-family: 'Courier New', monospace; }
+.entry-card.theme-spaceship .entry-date { color: #45a29e; }
+.entry-card.theme-spaceship .entry-website { color: #66fcf1; }
+.entry-card.theme-spaceship .entry-avatar { border: 2px solid #66fcf1; border-radius: 4px; }
+.entry-card.theme-spaceship .entry-message { background: #0b0c10; border: 1px solid #45a29e; color: #c5c6c7; }
+.entry-card.theme-spaceship .entry-tag { background: #45a29e; color: #0b0c10; }

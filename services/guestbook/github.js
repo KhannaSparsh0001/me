@@ -6,12 +6,16 @@ const GuestbookService = (function() {
     // In-memory cache for the session to avoid rate limits on reload
     let cache = null;
 
-    async function listEntries() {
+    async function listEntries(forceRefresh = false) {
+        if (forceRefresh) {
+            cache = null;
+        }
+
         if (cache) {
             return cache;
         }
 
-        const url = `https://api.github.com/repos/${OWNER}/${REPO}/issues?labels=${LABEL}&state=all`;
+        const url = `https://api.github.com/repos/${OWNER}/${REPO}/issues?labels=${LABEL}&state=all&t=${Date.now()}`;
         
         try {
             const response = await fetch(url, {
@@ -42,7 +46,8 @@ const GuestbookService = (function() {
                     visitorName: parsed.name || '',
                     website: parsed.website || '',
                     mood: parsed.mood || '',
-                    location: parsed.location || ''
+                    location: parsed.location || '',
+                    theme: parsed.theme || ''
                 };
             });
 
@@ -76,6 +81,7 @@ ${formData.name}
         if (formData.website) md += `\nWebsite:\n${formData.website}\n`;
         if (formData.mood) md += `\nMood:\n${formData.mood}\n`;
         if (formData.location) md += `\nLocation:\n${formData.location}\n`;
+        if (formData.theme) md += `\nTheme:\n${formData.theme}\n`;
 
         md += `\n---\n\n## Message\n\n${formData.message}\n`;
 
@@ -101,6 +107,7 @@ ${formData.name}
             website: '',
             mood: '',
             location: '',
+            theme: '',
             message: ''
         };
 
@@ -131,6 +138,10 @@ ${formData.name}
             // Extract Location
             const locationMatch = body.match(/Location:\n([^\n]+)/);
             if (locationMatch) result.location = escapeHtml(locationMatch[1].trim());
+
+            // Extract Theme
+            const themeMatch = body.match(/Theme:\n([^\n]+)/);
+            if (themeMatch) result.theme = escapeHtml(themeMatch[1].trim());
 
         } else {
             // Legacy entry fallback
