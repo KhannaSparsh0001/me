@@ -223,3 +223,48 @@ button:active {
     width: 12px;
     height: 100%;
 }
+
+/* Form Styles */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.win95-input, .win95-textarea, .win95-select {
+    font-family: 'MS Sans Serif', Tahoma, sans-serif;
+    background: #fff;
+    border-top: 2px solid #808080;
+    border-left: 2px solid #808080;
+    border-bottom: 2px solid #fff;
+    border-right: 2px solid #fff;
+    box-shadow: inset 1px 1px #000;
+    padding: 3px;
+    outline: none;
+    font-size: 12px;
+}
+
+.win95-textarea {
+    resize: none;
+}
+
+.entry-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 5px;
+}
+
+.entry-tag {
+    background: #000080;
+    color: #fff;
+    padding: 2px 6px;
+    font-size: 0.85em;
+    border-radius: 2px;
+}
+
+.entry-website {
+    font-size: 0.9em;
+    color: #000080;
+    text-decoration: underline;
+}

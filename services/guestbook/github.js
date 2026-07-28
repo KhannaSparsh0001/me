@@ -26,18 +26,25 @@ const GuestbookService = (function() {
 
             const issues = await response.json();
             
-            const entries = issues.map(issue => ({
-                id: issue.id,
-                username: issue.user.login,
-                avatar: issue.user.avatar_url,
-                profileUrl: issue.user.html_url,
-                date: new Date(issue.created_at).toLocaleDateString('en-US', { 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                }),
-                message: parseBody(issue.body)
-            }));
+            const entries = issues.map(issue => {
+                const parsed = parseBody(issue.body);
+                return {
+                    id: issue.id,
+                    username: issue.user.login,
+                    avatar: issue.user.avatar_url,
+                    profileUrl: issue.user.html_url,
+                    date: new Date(issue.created_at).toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    }),
+                    message: parsed.message,
+                    visitorName: parsed.name || '',
+                    website: parsed.website || '',
+                    mood: parsed.mood || '',
+                    location: parsed.location || ''
+                };
+            });
 
             cache = entries;
             return entries;
@@ -48,23 +55,39 @@ const GuestbookService = (function() {
         }
     }
 
-    function getSigningUrl() {
+    function getSigningUrl(formData) {
         const title = encodeURIComponent('Guestbook Entry');
-        const body = encodeURIComponent('## Guestbook Message\n\nPlease write your message below.\n\n');
+        
+        let md = `---
+schema: guestbook-v1
+theme: windows95
+portfolio: sparshkhanna
+created_from: portfolio
+---
+
+# Guestbook Entry
+
+## Visitor
+
+Name:
+${formData.name}
+`;
+
+        if (formData.website) md += `\nWebsite:\n${formData.website}\n`;
+        if (formData.mood) md += `\nMood:\n${formData.mood}\n`;
+        if (formData.location) md += `\nLocation:\n${formData.location}\n`;
+
+        md += `\n---\n\n## Message\n\n${formData.message}\n`;
+
+        const body = encodeURIComponent(md);
         return `https://github.com/${OWNER}/${REPO}/issues/new?labels=${LABEL}&title=${title}&body=${body}`;
     }
 
-    // A very basic markdown to text parser to strip HTML/MD tags or keep it simple
-    // For now we just sanitize and return basic text or simple paragraphs.
     function parseBody(body) {
-        if (!body) return "No message.";
+        if (!body) return { message: "No message." };
         
-        // Remove the template header if present
-        let cleaned = body.replace(/## Guestbook Message/g, '').trim();
-        cleaned = cleaned.replace(/Please write your message below\./g, '').trim();
-
-        // Basic HTML escape to prevent XSS if rendered via innerHTML
         const escapeHtml = (unsafe) => {
+            if (!unsafe) return '';
             return unsafe
                 .replace(/&/g, "&amp;")
                 .replace(/</g, "&lt;")
@@ -73,7 +96,50 @@ const GuestbookService = (function() {
                 .replace(/'/g, "&#039;");
         };
 
-        return escapeHtml(cleaned).replace(/\n/g, '<br>');
+        const result = {
+            name: '',
+            website: '',
+            mood: '',
+            location: '',
+            message: ''
+        };
+
+        // Check for YAML frontmatter block
+        const yamlRegex = /^---\n([\s\S]*?)\n---\n/;
+        const match = body.match(yamlRegex);
+        
+        if (match) {
+            // It's a structured entry
+            // Extract Message
+            const messageMatch = body.match(/## Message\n+([\s\S]*)$/);
+            if (messageMatch) {
+                result.message = escapeHtml(messageMatch[1].trim()).replace(/\n/g, '<br>');
+            }
+
+            // Extract Name
+            const nameMatch = body.match(/Name:\n([^\n]+)/);
+            if (nameMatch) result.name = escapeHtml(nameMatch[1].trim());
+
+            // Extract Website
+            const websiteMatch = body.match(/Website:\n([^\n]+)/);
+            if (websiteMatch) result.website = escapeHtml(websiteMatch[1].trim());
+
+            // Extract Mood
+            const moodMatch = body.match(/Mood:\n([^\n]+)/);
+            if (moodMatch) result.mood = escapeHtml(moodMatch[1].trim());
+
+            // Extract Location
+            const locationMatch = body.match(/Location:\n([^\n]+)/);
+            if (locationMatch) result.location = escapeHtml(locationMatch[1].trim());
+
+        } else {
+            // Legacy entry fallback
+            let cleaned = body.replace(/## Guestbook Message/g, '').trim();
+            cleaned = cleaned.replace(/Please write your message below\./g, '').trim();
+            result.message = escapeHtml(cleaned).replace(/\n/g, '<br>');
+        }
+
+        return result;
     }
 
     return {

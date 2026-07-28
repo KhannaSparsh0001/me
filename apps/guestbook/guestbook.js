@@ -5,10 +5,10 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Dialog elements
     const dialogOverlay = document.getElementById('dialog-overlay');
-    const infoDialog = document.getElementById('info-dialog');
+    const formDialog = document.getElementById('form-dialog');
     const networkDialog = document.getElementById('network-dialog');
     const errorDialog = document.getElementById('error-dialog');
-    const continueBtn = document.getElementById('continue-btn');
+    const submitFormBtn = document.getElementById('submit-form-btn');
     
     const networkStatus = document.getElementById('network-status');
     const progressBar = document.getElementById('progress-bar');
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Make closeDialogs available globally for onclick handlers
     window.closeDialogs = function() {
         dialogOverlay.style.display = 'none';
-        infoDialog.style.display = 'none';
+        if (formDialog) formDialog.style.display = 'none';
         networkDialog.style.display = 'none';
         errorDialog.style.display = 'none';
     };
@@ -45,15 +45,37 @@ document.addEventListener('DOMContentLoaded', () => {
             entries.forEach(entry => {
                 const card = document.createElement('div');
                 card.className = 'entry-card';
+                
+                let tagsHtml = '';
+                if (entry.mood || entry.location) {
+                    tagsHtml += '<div class="entry-tags">';
+                    if (entry.mood) tagsHtml += `<span class="entry-tag">Mood: ${entry.mood}</span>`;
+                    if (entry.location) tagsHtml += `<span class="entry-tag">Location: ${entry.location}</span>`;
+                    tagsHtml += '</div>';
+                }
+
+                let nameHtml = entry.username;
+                if (entry.visitorName) {
+                    nameHtml = `${entry.visitorName} (@${entry.username})`;
+                }
+
+                let websiteHtml = '';
+                if (entry.website) {
+                    const cleanUrl = entry.website.startsWith('http') ? entry.website : `https://${entry.website}`;
+                    websiteHtml = `<a href="${cleanUrl}" target="_blank" class="entry-website">${entry.website}</a>`;
+                }
+
                 card.innerHTML = `
                     <div class="entry-header">
                         <img src="${entry.avatar}" class="entry-avatar" alt="Avatar">
                         <div class="entry-meta">
-                            <a href="${entry.profileUrl}" target="_blank" class="entry-username">${entry.username}</a>
+                            <a href="${entry.profileUrl}" target="_blank" class="entry-username">${nameHtml}</a>
                             <span class="entry-date">${entry.date}</span>
                         </div>
                     </div>
                     <div class="entry-message">
+                        ${tagsHtml}
+                        ${websiteHtml ? websiteHtml + '<br><br>' : ''}
                         ${entry.message}
                     </div>
                 `;
@@ -71,8 +93,16 @@ document.addEventListener('DOMContentLoaded', () => {
             window.top.SystemAPI.playSound('click');
         }
         window.closeDialogs();
+        
+        // Reset form
+        document.getElementById('gb-name').value = '';
+        document.getElementById('gb-website').value = '';
+        document.getElementById('gb-location').value = '';
+        document.getElementById('gb-mood').value = '';
+        document.getElementById('gb-message').value = '';
+
         dialogOverlay.style.display = 'flex';
-        infoDialog.style.display = 'block';
+        formDialog.style.display = 'block';
     });
 
     refreshBtn.addEventListener('click', () => {
@@ -82,13 +112,31 @@ document.addEventListener('DOMContentLoaded', () => {
         loadEntries();
     });
 
-    continueBtn.addEventListener('click', () => {
+    submitFormBtn.addEventListener('click', () => {
         if (window.top.SystemAPI && window.top.SystemAPI.playSound) {
             window.top.SystemAPI.playSound('click');
         }
         
-        // Hide info, show network sequence
-        infoDialog.style.display = 'none';
+        const name = document.getElementById('gb-name').value.trim();
+        const website = document.getElementById('gb-website').value.trim();
+        const location = document.getElementById('gb-location').value.trim();
+        const mood = document.getElementById('gb-mood').value;
+        const message = document.getElementById('gb-message').value.trim();
+
+        if (!name) {
+            alert('Name is required.');
+            return;
+        }
+        
+        if (!message) {
+            alert('Message is required.');
+            return;
+        }
+
+        const formData = { name, website, location, mood, message };
+
+        // Hide form, show network sequence
+        formDialog.style.display = 'none';
         networkDialog.style.display = 'block';
         
         networkStatus.innerText = "Dialing github.com...";
@@ -102,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearInterval(interval);
                 networkStatus.innerText = "Connection established. Redirecting...";
                 setTimeout(() => {
-                    window.open(GuestbookService.getSigningUrl(), '_blank');
+                    window.open(GuestbookService.getSigningUrl(formData), '_blank');
                     window.closeDialogs();
                 }, 500);
                 return;

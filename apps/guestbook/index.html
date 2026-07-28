@@ -22,24 +22,41 @@
 <!-- Main Dialog Overlay -->
 <div class="modal-overlay" id="dialog-overlay" style="display: none;">
     
-    <!-- Info Dialog -->
-    <div class="win95-dialog" id="info-dialog" style="display: none;">
+    <!-- Form Dialog -->
+    <div class="win95-dialog" id="form-dialog" style="display: none; width: 350px;">
         <div class="dialog-header">
-            <span>Guest Book</span>
+            <span>Sign Guest Book</span>
             <div class="dialog-close" onclick="closeDialogs()">X</div>
         </div>
-        <div class="dialog-body">
-            <div style="display: flex; gap: 15px; align-items: flex-start;">
-                <div style="font-size: 32px;">ℹ️</div>
-                <div>
-                    Signing this guest book requires<br>
-                    a verified GitHub account.<br><br>
-                    You will now be redirected to GitHub.<br>
-                    Identity is mandatory.
-                </div>
+        <div class="dialog-body" style="gap: 10px;">
+            <div class="form-group">
+                <label for="gb-name">Name (required):</label>
+                <input type="text" id="gb-name" class="win95-input" placeholder="Your name">
             </div>
-            <div class="dialog-buttons">
-                <button id="continue-btn" style="width: 80px;">Continue</button>
+            <div class="form-group">
+                <label for="gb-website">Website (optional):</label>
+                <input type="text" id="gb-website" class="win95-input" placeholder="https://...">
+            </div>
+            <div class="form-group">
+                <label for="gb-location">Location (optional):</label>
+                <input type="text" id="gb-location" class="win95-input" placeholder="e.g. Germany">
+            </div>
+            <div class="form-group">
+                <label for="gb-mood">Mood (optional):</label>
+                <select id="gb-mood" class="win95-select">
+                    <option value="">Select a mood...</option>
+                    <option value="Happy">Happy</option>
+                    <option value="Inspired">Inspired</option>
+                    <option value="Nostalgic">Nostalgic</option>
+                    <option value="Curious">Curious</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="gb-message">Message (required):</label>
+                <textarea id="gb-message" class="win95-textarea" rows="4" placeholder="Leave a message..."></textarea>
+            </div>
+            <div class="dialog-buttons" style="margin-top: 10px;">
+                <button id="submit-form-btn" style="width: 120px;">Sign Guestbook</button>
                 <button onclick="closeDialogs()" style="width: 80px;">Cancel</button>
             </div>
         </div>
