@@ -493,6 +493,87 @@
         font-family:"Courier New";
         }
 
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .menu-bar span {
+                margin-right: 2px;
+                padding: 2px 4px;
+            }
+            .toolbar {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 5px;
+            }
+            .url-bar {
+                width: 100%;
+                margin-top: 5px;
+            }
+            .document-area {
+                height: calc(100% - 130px); /* Leave room for bottom dock */
+                padding: 10px;
+            }
+            .resume-container {
+                padding: 15px;
+            }
+            .pfp {
+                width: 100px;
+                margin-right: 15px;
+            }
+            .identity-block {
+                min-height: auto;
+            }
+            .header-section h1 {
+                font-size: 16px;
+            }
+            .header-section h2 {
+                font-size: 28px;
+            }
+            
+            /* Skills Table Stacking */
+            table, tbody, tr, td {
+                display: block;
+                width: 100%;
+            }
+            td {
+                margin-bottom: 20px;
+            }
+            
+            /* OS Windows */
+            .game-window {
+                width: 95% !important;
+                min-width: 0 !important;
+                height: 80% !important;
+                min-height: 0 !important;
+                left: 2.5% !important;
+                top: 5% !important;
+            }
+
+            /* Quick Launch Bar (Bottom Dock) */
+            #quick-launch {
+                top: auto !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                flex-direction: row !important;
+                justify-content: space-evenly !important;
+                align-items: center !important;
+                background-color: var(--os-gray);
+                border-top: 2px solid;
+                border-color: var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
+                padding: 5px 0 !important;
+                z-index: 10000;
+            }
+            #quick-launch img {
+                width: 32px !important;
+                height: 32px !important;
+            }
+
+            /* Hide visitor counter on small screens */
+            #visitor-counter {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
