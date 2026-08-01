@@ -25,9 +25,8 @@
         Dos(document.getElementById("doom-canvas"), {
             wdosboxUrl: "https://js-dos.com/6.22/current/wdosbox.js"
         }).ready(function (fs, main) {
-            // Extract the static zip file hosted in the same folder
             fs.extract("freedoom.zip").then(function () {
-                main(["-c", "DOOM.EXE"]); // Change to whatever your .exe is called
+                main(["-conf", "dosbox.conf", "-c", "DOOM.EXE"]); // Change to whatever your .exe is called
             });
         });
     </script>
