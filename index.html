@@ -577,7 +577,7 @@
         /* Mobile Game Overlay Styles */
         .mobile-game-overlay {
             position: absolute;
-            bottom: 20px;
+            bottom: 2px;
             left: 20px;
             right: 20px;
             display: flex;
@@ -623,7 +623,7 @@
 
         .mobile-game-overlay .action-buttons {
             flex-direction: column;
-            gap: 10px;
+            gap: 5px;
             justify-content: flex-end;
         }
 
@@ -1332,6 +1332,7 @@
                         <button class="dbtn down" data-key="ArrowDown">▼</button>
                     </div>
                     <div class="action-buttons">
+                        <button class="abtn" data-key="Escape">Y (Menu)</button>
                         <button class="abtn" data-key="Control">CTRL (Fire)</button>
                         <button class="abtn" data-key="Space">SPACE (Use)</button>
                         <button class="abtn" data-key="Alt">ALT (Strafe)</button>
@@ -1364,6 +1365,7 @@
                             case 'ArrowDown': keyCode = 40; break;
                             case 'ArrowLeft': keyCode = 37; break;
                             case 'ArrowRight': keyCode = 39; break;
+                            case 'Escape': keyCode = 27; break;
                             case 'Control': keyCode = 17; break;
                             case 'Space': keyCode = 32; break;
                             case 'Alt': keyCode = 18; break;
