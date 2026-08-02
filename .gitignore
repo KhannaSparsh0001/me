@@ -1,0 +1,49 @@
+# Dependencies
+node_modules/
+vendor/
+
+# Temporary files & directories
+tmp/
+temp/
+tmp-*/
+.tmp/
+tmp-doom/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+#games that i dont want to appear on the status
+games_Dev/OpenTTD/
+games_Dev/dxx-rebirth/
+games_Dev/openjazz/
+games_Dev/opentyrian/
+tmp-doom/
