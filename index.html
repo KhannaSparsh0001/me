@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@react95/sans-serif/index.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Netscape - [Resume - Systems Engineer]</title>
     <style>
@@ -648,10 +649,193 @@
             background: rgba(255, 255, 255, 0.4);
             transform: scale(0.95);
         }
+        /* Toggle Switch Styles */
+        .theme-switch-wrapper {
+            position: fixed;
+            top: 15px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            z-index: 9999;
+            background: var(--os-gray);
+            padding: 5px 10px;
+            border: 2px outset var(--border-light);
+        }
+        
+        body.modern-theme .theme-switch-wrapper {
+            border: none !important;
+            box-shadow: 4px 4px 8px #d1d9e6, -4px -4px 8px #ffffff !important;
+            border-radius: 20px !important;
+        }
+
+        .theme-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+            margin-left: 8px;
+        }
+        
+        .theme-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #808080;
+            transition: .4s;
+            border: 1px inset #fff;
+        }
+        
+        body.modern-theme .slider {
+            background-color: #e2e8f0;
+            border: none;
+            box-shadow: inset 2px 2px 4px #d1d9e6, inset -2px -2px 4px #ffffff;
+            border-radius: 24px !important;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background-color: #c0c0c0;
+            border: 1px outset #fff;
+            transition: .4s;
+        }
+        
+        body.modern-theme .slider:before {
+            background-color: #fff;
+            border: none;
+            box-shadow: 2px 2px 4px #d1d9e6;
+            border-radius: 50% !important;
+        }
+        
+        input:checked + .slider {
+            background-color: #3182ce;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+        
+        .theme-label {
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--text-main);
+        }
+
+        /* --- MODERN THEME OVERRIDES --- */
+        body.modern-theme {
+            --os-gray: #f0f3f8;
+            --doc-bg: #ffffff;
+            --text-main: #2d3748;
+            --link-blue: #3182ce;
+            --border-light: #ffffff;
+            --border-dark: #cbd5e0;
+            font-family: 'Inter', sans-serif !important;
+            background-color: var(--os-gray);
+        }
+
+        body.modern-theme * {
+            border-radius: 6px !important;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body.modern-theme .window,
+        body.modern-theme .game-window,
+        body.modern-theme .dropdown-menu,
+        body.modern-theme dialog.message-dialog,
+        body.modern-theme #visitor-counter {
+            border: none !important;
+            box-shadow: 10px 10px 20px #d1d9e6, -10px -10px 20px #ffffff !important;
+            background-color: var(--os-gray);
+        }
+        
+        body.modern-theme .title-bar,
+        body.modern-theme .retro-window-header {
+            background-color: #ffffff !important;
+            color: #2d3748 !important;
+            font-weight: 600;
+            border-bottom: 1px solid #e2e8f0 !important;
+            border-radius: 6px 6px 0 0 !important;
+        }
+
+        body.modern-theme .document-area {
+            border: none !important;
+            box-shadow: inset 4px 4px 8px #d1d9e6, inset -4px -4px 8px #ffffff !important;
+            background-color: #e2e8f0 !important;
+        }
+
+        body.modern-theme .resume-container {
+            border: none !important;
+            box-shadow: 6px 6px 15px rgba(0,0,0,0.05) !important;
+        }
+
+        body.modern-theme .url-bar,
+        body.modern-theme .dialog-row input,
+        body.modern-theme .dialog-row textarea {
+            border: none !important;
+            box-shadow: inset 3px 3px 6px #d1d9e6, inset -3px -3px 6px #ffffff !important;
+            background-color: var(--os-gray);
+            font-family: 'Inter', sans-serif !important;
+        }
+
+        body.modern-theme button,
+        body.modern-theme .dialog-actions button {
+            border: none !important;
+            box-shadow: 4px 4px 8px #d1d9e6, -4px -4px 8px #ffffff !important;
+            background-color: var(--os-gray);
+            transition: all 0.2s ease;
+        }
+        
+        body.modern-theme button:active,
+        body.modern-theme .dialog-actions button:active {
+            box-shadow: inset 4px 4px 8px #d1d9e6, inset -4px -4px 8px #ffffff !important;
+            padding: 4px 14px !important; 
+        }
+
+        body.modern-theme hr.chrome-divider,
+        body.modern-theme hr.doc-divider {
+            border: none !important;
+            height: 2px;
+            background: #e2e8f0;
+        }
+
+        body.modern-theme #quick-launch {
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(10px);
+            padding: 10px;
+            border-radius: 12px !important;
+            box-shadow: 4px 4px 10px rgba(0,0,0,0.05);
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+
+        body.modern-theme .menu-bar span:active,
+        body.modern-theme .menu-bar span.active-btn {
+            border: none !important;
+            background: #e2e8f0;
+            padding: 2px 6px !important;
+            box-shadow: inset 2px 2px 4px #d1d9e6, inset -2px -2px 4px #ffffff !important;
+        }
     </style>
 
 </head>
 <body>
+    <div class="theme-switch-wrapper">
+        <span class="theme-label">Modern</span>
+        <label class="theme-switch">
+            <input type="checkbox" id="theme-toggle">
+            <span class="slider"></span>
+        </label>
+    </div>
+
     <div id="boot-screen" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:black; color:#c0c0c0; z-index:9999999; font-family:'Courier New', monospace; padding:20px; box-sizing:border-box;">
         <div>Starting Windows 95...</div>
         <div style="margin-top:20px;">Memory Test: 32768K OK</div>
@@ -1475,5 +1659,28 @@
     <script src="shared/processManager.js"></script>
     <script src="shared/windowManager.js"></script>
     <script src="shared/system.js?v=2"></script>
+    <script>
+        const toggleSwitch = document.getElementById('theme-toggle');
+        const currentTheme = localStorage.getItem('theme');
+        
+        if (currentTheme) {
+            document.body.classList.add(currentTheme);
+            if (currentTheme === 'modern-theme') {
+                toggleSwitch.checked = true;
+            }
+        }
+        
+        function switchTheme(e) {
+            if (e.target.checked) {
+                document.body.classList.add('modern-theme');
+                localStorage.setItem('theme', 'modern-theme');
+            } else {
+                document.body.classList.remove('modern-theme');
+                localStorage.setItem('theme', '');
+            }
+        }
+        
+        toggleSwitch.addEventListener('change', switchTheme);
+    </script>
 </body>
 </html>
