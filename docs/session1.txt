@@ -14,6 +14,7 @@ This has a hidden HTML checkbox wired to a global CSS variables file. Checking i
 	FEATURE 2: HARDWARE STRESS TESTER
 This has an HTML range slider labeled Acer Aspire 5 GPU Load. When the user drags the slider up, JavaScript fires multiple Web Worker threads calculating heavy math in the background, literally making their browser lag to simulate the hardware grind of running local models.
 
+
 	
 
 _______________________________________________________________________________________________________________

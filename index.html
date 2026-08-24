@@ -648,13 +648,371 @@
             background: rgba(255, 255, 255, 0.4);
             transform: scale(0.95);
         }
+
+        /* 1. Base Pill Shape & Liquid Glass Setup */
+        .liquid-glass-btn {
+          position: relative;
+          width: 240px;
+          height: 70px;
+          border-radius: 50px;
+          border: none;
+          background: rgba(10, 10, 15, 0.4);
+          backdrop-filter: blur(12px) contrast(1.2);
+          -webkit-backdrop-filter: blur(12px) contrast(1.2);
+          cursor: pointer;
+          outline: none;
+          box-shadow: 
+            0 20px 30px -10px rgba(0, 0, 0, 0.8),
+            0 0 20px rgba(0, 255, 255, 0.2),
+            0 0 30px rgba(255, 0, 255, 0.15),
+            inset 0 0 0 1px rgba(255, 255, 255, 0.15),
+            inset 0 1px 3px rgba(255, 255, 255, 0.5),
+            inset 0 -2px 5px rgba(255, 215, 0, 0.2);
+          animation: levitate 4s ease-in-out infinite;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .liquid-glass-btn:hover {
+          transform: scale(1.05) translateY(-5px);
+          box-shadow: 
+            0 25px 40px -10px rgba(0, 0, 0, 0.9),
+            0 0 30px rgba(0, 255, 255, 0.4),
+            0 0 40px rgba(138, 43, 226, 0.4),
+            inset 0 0 0 1px rgba(255, 255, 255, 0.3),
+            inset 0 2px 4px rgba(255, 255, 255, 0.7);
+        }
+        .glitter-layer {
+          position: absolute;
+          inset: 0;
+          border-radius: 50px;
+          overflow: hidden;
+          z-index: 1;
+          pointer-events: none;
+          background: linear-gradient(
+            115deg, 
+            rgba(0, 255, 255, 0.3),
+            rgba(138, 43, 226, 0.3),
+            rgba(255, 0, 255, 0.3),
+            rgba(255, 215, 0, 0.3)
+          );
+          background-size: 300% 300%;
+          animation: iridescentFlow 6s ease infinite;
+          mix-blend-mode: color-dodge;
+        }
+        .glitter-layer::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background-image: 
+            radial-gradient(circle, #fff 1%, transparent 5%),
+            radial-gradient(circle, rgba(0, 255, 255, 0.8) 1%, transparent 4%),
+            radial-gradient(circle, rgba(255, 0, 255, 0.8) 1%, transparent 4%);
+          background-size: 10px 10px, 15px 15px, 20px 20px;
+          background-position: 0 0, 5px 5px, 10px 10px;
+          opacity: 0.6;
+          mix-blend-mode: overlay;
+          animation: sparkle 3s linear infinite;
+        }
+        .glass-reflection {
+          position: absolute;
+          top: 2px;
+          left: 2px;
+          right: 2px;
+          height: 45%;
+          background: linear-gradient(
+            to bottom, 
+            rgba(255, 255, 255, 0.4) 0%, 
+            rgba(255, 255, 255, 0.05) 100%
+          );
+          border-radius: 50px 50px 10px 10px;
+          pointer-events: none;
+          z-index: 2;
+        }
+        .lg-star-glint {
+          position: absolute;
+          top: 8px;
+          right: 20px;
+          width: 4px;
+          height: 4px;
+          background: #fff;
+          border-radius: 50%;
+          box-shadow: 
+            0 0 10px 2px rgba(255,255,255,0.8),
+            0 0 20px 5px rgba(0, 255, 255, 0.6);
+          z-index: 3;
+        }
+        .lg-star-glint::before, .lg-star-glint::after {
+          content: '';
+          position: absolute;
+          background: rgba(255, 255, 255, 0.9);
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+        .lg-star-glint::before { width: 20px; height: 1px; }
+        .lg-star-glint::after { width: 1px; height: 20px; }
+        .lg-btn-text {
+          position: relative;
+          z-index: 4;
+          color: #ffffff;
+          font-size: 14px;
+          font-weight: 600;
+          letter-spacing: 4px;
+          text-transform: uppercase;
+          text-shadow: 0 0 10px rgba(0, 255, 255, 0.8), 0 0 20px rgba(255, 0, 255, 0.5);
+        }
+        @keyframes levitate {
+          0%, 100% { transform: translateY(0) rotateX(0deg); }
+          50% { transform: translateY(-8px) rotateX(2deg); }
+        }
+        @keyframes iridescentFlow {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        @keyframes sparkle {
+          0% { transform: translateY(0px) scale(1); opacity: 0.5; }
+          50% { transform: translateY(-2px) scale(1.1); opacity: 0.8; }
+          100% { transform: translateY(0px) scale(1); opacity: 0.5; }
+        }
+
+        /* Dark Matter Glass Button */
+        .button-wrapper {
+            position: relative;
+            animation: levitate 6s ease-in-out infinite;
+            transform-style: preserve-3d;
+        }
+        .button-shadow {
+            position: absolute;
+            bottom: -35px;
+            left: 10%;
+            width: 80%;
+            height: 20px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 50%;
+            filter: blur(20px);
+            animation: shadow-pulse 6s ease-in-out infinite;
+            pointer-events: none;
+        }
+        @keyframes shadow-pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(0.85); opacity: 0.3; }
+        }
+        .dm-button {
+            position: relative;
+            width: 320px;
+            height: 96px;
+            border-radius: 48px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            outline: none;
+            transform-style: preserve-3d;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .dm-button:hover {
+            transform: scale(1.04) rotateX(5deg);
+        }
+        .dm-button:active {
+            transform: scale(0.97) translateY(5px);
+            transition: transform 0.1s ease;
+        }
+        .dm-inner {
+            position: absolute;
+            inset: 0;
+            border-radius: 48px;
+            overflow: hidden;
+            background: rgba(12, 12, 15, 0.65);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: inset 0 0 30px 10px rgba(0, 0, 0, 0.9),
+                        inset 0 15px 15px -10px rgba(255, 255, 255, 0.15);
+            z-index: 1;
+        }
+        .dm-filaments {
+            position: absolute;
+            inset: -50%;
+            width: 200%;
+            height: 200%;
+            opacity: 0.9;
+            pointer-events: none;
+            mix-blend-mode: hard-light;
+            animation: drift 30s linear infinite;
+        }
+        .dm-filaments.deep {
+            opacity: 0.5;
+            filter: blur(5px);
+            transform: scale(1.3) rotate(15deg);
+            animation: drift 45s linear infinite reverse;
+        }
+        @keyframes drift {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(-10%, -10%) rotate(5deg); }
+        }
+        .dm-mist {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 120%, transparent 40%, rgba(5, 5, 8, 0.9) 90%),
+                        radial-gradient(circle at 20% -20%, rgba(20, 20, 25, 0.4) 0%, transparent 60%);
+            mix-blend-mode: multiply;
+            z-index: 2;
+        }
+        .dm-glitter {
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.7'/%3E%3C/svg%3E");
+            background-size: 150px 150px;
+            mix-blend-mode: color-dodge;
+            opacity: 0.45;
+            z-index: 3;
+        }
+        .dm-diffraction {
+            position: absolute;
+            inset: 0;
+            background: conic-gradient(from 135deg at 50% 50%, 
+                transparent 0deg, rgba(0, 255, 255, 0.4) 60deg, transparent 120deg, 
+                rgba(255, 0, 255, 0.4) 180deg, transparent 240deg, 
+                rgba(200, 200, 255, 0.3) 300deg, transparent 360deg);
+            mix-blend-mode: screen;
+            opacity: 0.6;
+            z-index: 4;
+            filter: blur(8px);
+            transition: opacity 0.4s ease;
+        }
+        .dm-button:hover .dm-diffraction {
+            opacity: 0.85;
+            transform: rotate(5deg) scale(1.1);
+            transition: transform 1s ease, opacity 0.4s ease;
+        }
+        .dm-glass-highlight {
+            position: absolute;
+            top: 2px;
+            left: 2%;
+            right: 2%;
+            height: 45%;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.05) 50%, transparent 100%);
+            border-radius: 48px 48px 0 0;
+            pointer-events: none;
+            z-index: 5;
+        }
+        .dm-glass-bottom {
+            position: absolute;
+            bottom: 2px;
+            left: 4%;
+            right: 4%;
+            height: 30%;
+            background: linear-gradient(0deg, rgba(0, 255, 255, 0.15) 0%, transparent 100%);
+            border-radius: 0 0 48px 48px;
+            pointer-events: none;
+            z-index: 5;
+        }
+        .dm-chrome-edge {
+            position: absolute;
+            inset: 0;
+            border-radius: 48px;
+            padding: 1.5px;
+            background: linear-gradient(115deg, 
+                rgba(255,255,255,0.9) 0%, rgba(0,255,255,0.7) 15%, 
+                rgba(10,10,10,0.5) 30%, rgba(10,10,10,0.5) 70%, 
+                rgba(255,0,255,0.7) 85%, rgba(255,255,255,0.9) 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            z-index: 6;
+            pointer-events: none;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2), inset 0 0 10px rgba(255, 0, 255, 0.2);
+        }
+        .dm-star-glint {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 12px 3px rgba(255, 255, 255, 0.9), 
+                        0 0 25px 8px rgba(0, 255, 255, 0.6);
+            z-index: 7;
+            pointer-events: none;
+        }
+        .dm-star-glint.top-right { top: 12%; right: 18%; }
+        .dm-star-glint.bottom-left { bottom: 18%; left: 15%; transform: scale(0.6); box-shadow: 0 0 10px 2px #fff, 0 0 20px 5px rgba(255, 0, 255, 0.5); }
+        .dm-star-glint::before, .dm-star-glint::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent);
+        }
+        .dm-star-glint::before { width: 45px; height: 1px; }
+        .dm-star-glint::after { width: 1px; height: 45px; background: linear-gradient(180deg, transparent, rgba(255,255,255,0.9), transparent); }
+        .dm-text {
+            position: relative;
+            z-index: 8;
+            color: transparent;
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            background: linear-gradient(180deg, #ffffff 0%, #a0a5b0 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.9)) drop-shadow(0 2px 4px rgba(0, 0, 0, 1));
+        }
     </style>
 
 </head>
 <body>
-    <button onclick="window.location.href='modern.html'" style="position:fixed; top:15px; right:250px; z-index:9999; padding:5px 10px; font-family:sans-serif; font-size:12px; cursor:pointer; background:#c0c0c0; border:2px outset #fff; border-bottom-color:#808080; border-right-color:#808080; font-weight:bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3);">Space Theme</button>
-    <button onclick="window.location.href='modern-fintech.html'" style="position:fixed; top:15px; right:120px; z-index:9999; padding:5px 10px; font-family:sans-serif; font-size:12px; cursor:pointer; background:#c0c0c0; border:2px outset #fff; border-bottom-color:#808080; border-right-color:#808080; font-weight:bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3);">Option 2 (Fintech)</button>
-    <button onclick="window.location.href='modern-enterprise.html'" style="position:fixed; top:15px; right:20px; z-index:9999; padding:5px 10px; font-family:sans-serif; font-size:12px; cursor:pointer; background:#c0c0c0; border:2px outset #fff; border-bottom-color:#808080; border-right-color:#808080; font-weight:bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3);">Option 3 (SaaS)</button>
+    <!-- Hidden SVG Definitions for Dark Matter Mesh Filter -->
+    <svg style="width: 0; height: 0; position: absolute;">
+        <defs>
+            <filter id="dark-matter-mesh" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+                <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="5" result="noise" seed="12"/>
+                <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 4 -1.5" in="noise" result="alphaNoise" />
+                <feDisplacementMap in="alphaNoise" in2="noise" scale="35" xChannelSelector="R" yChannelSelector="G" result="distorted" />
+                <feColorMatrix type="matrix" values="0 0 0 0 0.05 0 0 0 0 0.06 0 0 0 0 0.08 0 0 0 2.5 0" in="distorted" result="filaments" />
+                <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -14" in="noise" result="peaks" />
+                <feColorMatrix type="matrix" values="0 0 0 0 0.2 0 0 0 0 0.8 0 0 0 0 1.0 0 0 0 2 0" in="peaks" result="energyNodes" />
+                <feGaussianBlur stdDeviation="1.5" in="energyNodes" result="glowingNodes" />
+                <feMerge result="mesh">
+                    <feMergeNode in="filaments" />
+                    <feMergeNode in="glowingNodes" />
+                </feMerge>
+                <feSpecularLighting in="mesh" surfaceScale="2" specularConstant="1.2" specularExponent="40" lighting-color="#ffffff" result="specular">
+                    <fePointLight x="160" y="-30" z="150" />
+                </feSpecularLighting>
+                <feComposite in="specular" in2="mesh" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" />
+            </filter>
+        </defs>
+    </svg>
+
+    <div style="position:fixed; top: 15px; right: 20px; z-index:9999; display: flex; gap: 20px; transform: scale(0.6); transform-origin: top right;">
+        <!-- Space Theme Button -->
+        <div class="button-wrapper">
+            <div class="button-shadow"></div>
+            <button class="dm-button" onclick="window.location.href='modern.html'">
+                <div class="dm-inner">
+                    <svg class="dm-filaments deep" preserveAspectRatio="none"><rect width="100%" height="100%" filter="url(#dark-matter-mesh)" /></svg>
+                    <svg class="dm-filaments" preserveAspectRatio="none"><rect width="100%" height="100%" filter="url(#dark-matter-mesh)" /></svg>
+                    <div class="dm-diffraction"></div>
+                    <div class="dm-glitter"></div>
+                    <div class="dm-mist"></div>
+                    <div class="dm-glass-highlight"></div>
+                    <div class="dm-glass-bottom"></div>
+                </div>
+                <div class="dm-chrome-edge"></div>
+                <div class="dm-star-glint top-right"></div>
+                <div class="dm-star-glint bottom-left"></div>
+                <span class="dm-text">Space Theme</span>
+            </button>
+        </div>
+
+        <!-- Fintech Theme Button -->
+        <button class="liquid-glass-btn" style="margin-top: 13px;" onclick="window.location.href='modern-fintech.html'">
+            <span class="glitter-layer"></span>
+            <span class="glass-reflection"></span>
+            <span class="lg-btn-text">Fintech</span>
+            <span class="lg-star-glint"></span>
+        </button>
+    </div>
 
     <div id="boot-screen" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:black; color:#c0c0c0; z-index:9999999; font-family:'Courier New', monospace; padding:20px; box-sizing:border-box;">
         <div>Starting Windows 95...</div>
