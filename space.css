@@ -1,0 +1,285 @@
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+:root {
+  --amber: #ffb000;
+  --amber-dim: rgba(255, 176, 0, 0.4);
+  --bg-dark: #0a0a0a;
+  --chassis: #2a2c2e;
+  --chassis-dark: #191b1c;
+  --metal-border: #444;
+  --hazard: #d9b310;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--chassis-dark);
+  font-family: 'VT323', monospace;
+  color: var(--amber);
+  margin: 0;
+  padding: 20px;
+  background-image: 
+    radial-gradient(circle, transparent 20%, var(--chassis-dark) 20%, var(--chassis-dark) 80%, transparent 80%, transparent),
+    radial-gradient(circle, transparent 20%, var(--chassis-dark) 20%, var(--chassis-dark) 80%, transparent 80%, transparent) 25px 25px,
+    linear-gradient(#222 2px, transparent 2px) 0 -1px,
+    linear-gradient(90deg, #222 2px, var(--chassis-dark) 2px) -1px 0;
+  background-size: 50px 50px, 50px 50px, 25px 25px, 25px 25px;
+}
+
+.terminal-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: var(--chassis);
+  border: 4px solid var(--metal-border);
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 
+    inset 0 0 20px rgba(0,0,0,0.8),
+    0 10px 30px rgba(0,0,0,0.9);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Header Section */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid var(--metal-border);
+  padding-bottom: 10px;
+}
+
+.sys-id {
+  font-size: 24px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.hazard-tape {
+  height: 20px;
+  width: 100%;
+  background: repeating-linear-gradient(
+    45deg,
+    #000,
+    #000 10px,
+    var(--hazard) 10px,
+    var(--hazard) 20px
+  );
+  border: 2px solid #000;
+  margin-bottom: 20px;
+}
+
+/* CRT Screen Effect */
+.crt-screen {
+  background-color: var(--bg-dark);
+  border: 8px solid #111;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: inset 0 0 15px rgba(0,0,0,1);
+  position: relative;
+  overflow: hidden;
+  color: var(--amber);
+  text-shadow: 0 0 5px var(--amber-dim);
+}
+
+.crt-screen::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  z-index: 2;
+  background-size: 100% 4px, 3px 100%;
+  pointer-events: none;
+}
+
+.crt-header {
+  font-size: 28px;
+  border-bottom: 2px dashed var(--amber-dim);
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+.grid-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.panel-title {
+  font-size: 22px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.data-row {
+  display: flex;
+  margin-bottom: 8px;
+  font-size: 18px;
+}
+
+.data-label {
+  width: 150px;
+  color: var(--amber-dim);
+  text-transform: uppercase;
+}
+
+.data-value {
+  flex: 1;
+}
+
+/* Project Logs */
+.project-log {
+  border: 1px solid var(--amber-dim);
+  padding: 15px;
+  margin-bottom: 15px;
+  background: rgba(255, 176, 0, 0.05);
+}
+
+.project-log h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: #fff;
+  text-shadow: 0 0 5px #fff;
+}
+
+.project-log p {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.status-indicator {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-color: var(--amber);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--amber);
+  margin-right: 10px;
+}
+
+.blink {
+  animation: blink-animation 1s steps(5, start) infinite;
+}
+
+@keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+
+/* Footer Controls */
+.control-panel {
+  display: flex;
+  gap: 15px;
+  padding: 15px;
+  background-color: #222;
+  border: 2px solid var(--metal-border);
+  border-radius: 5px;
+  margin-top: 20px;
+}
+
+.btn-mech {
+  background: linear-gradient(to bottom, #555, #333);
+  border: 2px solid #111;
+  color: #ccc;
+  padding: 10px 20px;
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 2px 2px rgba(0,0,0,0.5);
+  border-radius: 3px;
+}
+
+.btn-mech:active {
+  background: linear-gradient(to top, #555, #333);
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.8);
+  transform: translateY(2px);
+}
+
+.btn-mech a {
+  color: #ccc;
+  text-decoration: none;
+}
+
+/* Hologram Effect */
+.hologram-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  width: 140px;
+}
+
+.hologram-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  filter: sepia(100%) hue-rotate(160deg) saturate(400%) brightness(1.2) contrast(1.5) drop-shadow(0 0 10px #00ffff);
+  opacity: 0.8;
+  mix-blend-mode: screen;
+  animation: 
+    hologram-flicker 3s infinite,
+    hologram-float 4s ease-in-out infinite;
+  border: 2px solid rgba(0, 255, 255, 0.3);
+  z-index: 2;
+}
+
+.hologram-base {
+  width: 90px;
+  height: 15px;
+  background: radial-gradient(ellipse at top, #555, #111);
+  border-radius: 50%;
+  border: 1px solid #444;
+  box-shadow: 
+    0 -10px 20px rgba(0, 255, 255, 0.6),
+    inset 0 2px 5px #000;
+  margin-top: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Base Light Beam */
+.hologram-base::before {
+  content: "";
+  position: absolute;
+  top: -60px;
+  left: 10%;
+  width: 80%;
+  height: 60px;
+  background: linear-gradient(to top, rgba(0, 255, 255, 0.4), transparent);
+  clip-path: polygon(20% 0, 80% 0, 100% 100%, 0 100%);
+  pointer-events: none;
+  z-index: -1;
+  animation: beam-flicker 2s infinite;
+}
+
+@keyframes hologram-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes hologram-flicker {
+  0%, 100% { opacity: 0.8; }
+  10%, 12% { opacity: 0.2; transform: skewX(2deg); filter: sepia(100%) hue-rotate(160deg) saturate(400%) brightness(1.5) contrast(1.5) drop-shadow(0 0 20px #00ffff); }
+  11% { opacity: 0.9; transform: skewX(-2deg); }
+  50% { opacity: 0.9; }
+}
+
+@keyframes beam-flicker {
+  0%, 100% { opacity: 0.8; }
+  5%, 10% { opacity: 0.3; }
+  50% { opacity: 0.9; }
+}
