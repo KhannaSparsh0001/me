@@ -1,4 +1,4 @@
-**Deployed:** [SparshKhanna.xyz](https://www.sparshkhanna.xyz/)
+**Deployed:** [SparshKhanna.xyz](https://www.sparshkhanna.xyz/)   [domain expired, will be updated soon]
 
 ---
 
