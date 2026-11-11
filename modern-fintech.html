@@ -3,245 +3,571 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sparsh Khanna - Software Engineer</title>
+    <title>SPARSH.K // HFT Portfolio Terminal</title>
     <link rel="stylesheet" href="fintech.css">
 </head>
 <body>
-    <nav>
-        <div class="container nav-content">
-            <div class="nav-brand">Sparsh_Khanna</div>
-            <div class="nav-links">
-                <a href="#about">About</a>
-                <a href="#skills">Skills</a>
-                <a href="#projects">Projects</a>
-                <button class="theme-toggle-btn" onclick="window.location.href='index.html'">Toggle Retro OS</button>
+
+    <!-- ── Top HFT Command Bar ── -->
+    <header class="terminal-bar">
+        <div class="terminal-bar-inner">
+            <div class="brand-cluster">
+                <span class="live-dot"></span>
+                <span class="terminal-id">SPARSH.KHANNA</span>
+                <span class="terminal-status">LIVE</span>
+            </div>
+
+            <nav class="nav-links" aria-label="Dashboard sections">
+                <a href="#overview">Overview</a>
+                <a href="#allocation">Stack</a>
+                <a href="#orderbook">Positions</a>
+                <a href="#ledger">Ledger</a>
+                <a href="#comms">Comms</a>
+            </nav>
+
+            <div class="bar-right">
+                <span class="latency-pill" id="sys-clock">00:00:00 · 0.4ms</span>
+                <button class="term-switch-btn" onclick="window.location.href='space-theme.html'">✦ Space</button>
+                <button class="term-switch-btn" onclick="window.location.href='index.html'">⊞ Win95 OS</button>
             </div>
         </div>
-    </nav>
 
-    <section id="hero">
-        <div class="container hero-grid">
-            <div class="avatar-container">
-                <img src="pfp.png" alt="Sparsh Khanna" class="avatar-image" onerror="this.style.display='none'">
-            </div>
-            <div class="hero-content">
-                <h1>Hi, I'm Sparsh.</h1>
-                <p>I build systems, games, and web experiences.</p>
-                <p>Welcome to my standard portfolio.</p>
+        <!-- ── Continuous Horizontal Scrolling Data Ticker ── -->
+        <div class="ticker-wrap" aria-label="Skills market ticker">
+            <div class="ticker-track">
+                <div class="ticker-group">
+                    <span class="ticker-item"><span class="ticker-sym">LANGGRAPH</span> <span class="ticker-cat">[AI]</span> <span class="ticker-delta">▲ +99.4%</span></span>
+                    <span class="ticker-item"><span class="ticker-sym">PYTHON</span> <span class="ticker-cat">[CORE]</span> <span class="ticker-delta">▲ +98.2%</span></span>
+                    <span class="ticker-item"><span class="ticker-sym">ESP32</span> <span class="ticker-cat">[EDGE]</span> <span class="ticker-delta cyan">▲ +94.8%</span></span>
+                    <span class="ticker-item"><span class="ticker-sym">FASTAPI</span> <span class="ticker-cat">[API]</span> <span class="ticker-delta">▲ +93.5%</span></span>
+                    <span class="ticker-item"><span class="ticker-sym">REACT.JS</span> <span class="ticker-cat">[UI]</span> <span class="ticker-delta cyan">▲ +95.1%</span></span>
+                    <span class="ticker-item"><span class="ticker-sym">DJANGO/DRF</span> <span class="ticker-cat">[BE]</span> <span class="ticker-delta">▲ +91.6%</span></span>
+                    <span class="ticker-item"><span class="ticker-sym">POSTGRESQL</span> <span class="ticker-cat">[DB]</span> <span class="ticker-delta cyan">▲ +90.4%</span></span>
+                    <span class="ticker-item"><span class="ticker-sym">C++</span> <span class="ticker-cat">[IOT]</span> <span class="ticker-delta">▲ +89.7%</span></span>
+                    <span class="ticker-item"><span class="ticker-sym">POWERBI</span> <span class="ticker-cat">[DATA]</span> <span class="ticker-delta cyan">▲ +88.9%</span></span>
+                    <span class="ticker-item"><span class="ticker-sym">N8N / MCP</span> <span class="ticker-cat">[AUTO]</span> <span class="ticker-delta">▲ +92.3%</span></span>
+                </div>
+                <!-- Duplicate group for seamless infinite marquee -->
+                <div class="ticker-group" aria-hidden="true">
+                    <span class="ticker-item"><span class="ticker-sym">LANGGRAPH</span> <span class="ticker-cat">[AI]</span> <span class="ticker-delta">▲ +99.4%</span></span>
+                    <span class="ticker-item"><span class="ticker-sym">PYTHON</span> <span class="ticker-cat">[CORE]</span> <span class="ticker-delta">▲ +98.2%</span></span>
+                    <span class="ticker-item"><span class="ticker-sym">ESP32</span> <span class="ticker-cat">[EDGE]</span> <span class="ticker-delta cyan">▲ +94.8%</span></span>
+                    <span class="ticker-item"><span class="ticker-sym">FASTAPI</span> <span class="ticker-cat">[API]</span> <span class="ticker-delta">▲ +93.5%</span></span>
+                    <span class="ticker-item"><span class="ticker-sym">REACT.JS</span> <span class="ticker-cat">[UI]</span> <span class="ticker-delta cyan">▲ +95.1%</span></span>
+                    <span class="ticker-item"><span class="ticker-sym">DJANGO/DRF</span> <span class="ticker-cat">[BE]</span> <span class="ticker-delta">▲ +91.6%</span></span>
+                    <span class="ticker-item"><span class="ticker-sym">POSTGRESQL</span> <span class="ticker-cat">[DB]</span> <span class="ticker-delta cyan">▲ +90.4%</span></span>
+                    <span class="ticker-item"><span class="ticker-sym">C++</span> <span class="ticker-cat">[IOT]</span> <span class="ticker-delta">▲ +89.7%</span></span>
+                    <span class="ticker-item"><span class="ticker-sym">POWERBI</span> <span class="ticker-cat">[DATA]</span> <span class="ticker-delta cyan">▲ +88.9%</span></span>
+                    <span class="ticker-item"><span class="ticker-sym">N8N / MCP</span> <span class="ticker-cat">[AUTO]</span> <span class="ticker-delta">▲ +92.3%</span></span>
+                </div>
             </div>
         </div>
-    </section>
+    </header>
 
-    <section id="about" class="container">
-        <h2 class="section-title">Overview & Core Capabilities</h2>
-        <div class="card-panel">
-            <p><strong>Professional Summary:</strong> Systems &amp; Software Engineer specializing in Agentic AI architectures (LangGraph, Stateful RAG) and edge physical computing (ESP32). Proven track record leading GNDU placement operations&mdash;boosting drive productivity by 200% and managing 10+ recruitment drives with an official Placement Office LOR&mdash;and recognized as a State Winner in the India Skill Competition 2024.</p>
-            <br>
-            <ul>
-                <li>Engineering robust <code>Stateful RAG workflows</code> for continuous multi-modal data streams.</li>
-                <li>Utilizing <code>LangGraph</code> for agentic orchestration and spatial context logic.</li>
-                <li>Building high-performance event-driven microservices using <code>FastAPI</code>.</li>
-                <li>Embedded <code>ESP32</code> physical computing and sensor fusion algorithms in C++.</li>
+    <!-- ── Asymmetric Dashboard Grid ── -->
+    <main class="dashboard-shell">
+
+        <!-- ROW 1 LEFT (7 cols): Executive Identity & Equity Curve -->
+        <section id="overview" class="panel panel-live span-7 reveal">
+            <div class="panel-header">
+                <div class="panel-title"><span>●</span> EXECUTIVE TERMINAL // PROFILE</div>
+                <span class="panel-meta">ID: SK-2209 · GNDU</span>
+            </div>
+
+            <div class="hero-layout">
+                <div class="avatar-frame">
+                    <img src="pfp.png" alt="Sparsh Khanna" onerror="this.style.display='none'">
+                </div>
+                <div>
+                    <div class="hero-kicker">AGENTIC AI · SYSTEMS · EDGE IOT</div>
+                    <h1 class="hero-name">Sparsh Khanna</h1>
+                    <div class="hero-typewriter" id="typewriter-line"></div>
+                    <p class="hero-summary">
+                        Systems &amp; Software Engineer architecting <strong>Stateful RAG</strong>, <strong>LangGraph</strong> multi-agent workflows, and <strong>ESP32</strong> edge hardware. Proven leadership running GNDU placement operations with measurable <strong>+200%</strong> throughput.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="docs/Sparsh_khanna_Resume_gndu-18.pdf" target="_blank" class="btn-matrix">↓ Download Resume</a>
+                        <button class="btn-outline" onclick="window.location.href='index.html'">⊞ Launch Win95 OS</button>
+                        <button class="btn-outline" onclick="window.location.href='space-theme.html'">✦ Space Mode</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="equity-strip">
+                <div class="equity-label">
+                    OUTPUT TRAJECTORY (2022–2026) &nbsp;|&nbsp; <span>▲ +200.0% ALPHA</span>
+                </div>
+                <svg class="equity-svg" viewBox="0 0 240 36" fill="none" aria-hidden="true">
+                    <defs>
+                        <linearGradient id="eqGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#00ff88" stop-opacity="0.32"/>
+                            <stop offset="100%" stop-color="#00ff88" stop-opacity="0"/>
+                        </linearGradient>
+                    </defs>
+                    <path d="M2 31 L28 28 L52 29 L78 22 L106 24 L132 16 L160 18 L188 10 L214 11 L238 3 L238 35 L2 35 Z" fill="url(#eqGrad)"/>
+                    <path d="M2 31 L28 28 L52 29 L78 22 L106 24 L132 16 L160 18 L188 10 L214 11 L238 3" stroke="#00ff88" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="238" cy="3" r="2.8" fill="#00ff88"/>
+                </svg>
+            </div>
+        </section>
+
+        <!-- ROW 1 RIGHT (5 cols): Quantitative KPI Matrix -->
+        <aside class="panel span-5 reveal">
+            <div class="panel-header">
+                <div class="panel-title">QUANTITATIVE METRICS</div>
+                <span class="panel-meta">VERIFIED BENCHMARKS</span>
+            </div>
+
+            <div class="kpi-grid">
+                <div class="kpi-tile">
+                    <div class="kpi-top"><span>THROUGHPUT</span><span class="kpi-tag">GNDU</span></div>
+                    <div class="kpi-value">+200%</div>
+                    <div class="kpi-sub">Placement Drive Productivity</div>
+                </div>
+                <div class="kpi-tile">
+                    <div class="kpi-top"><span>EXECUTIONS</span><span class="kpi-tag">CORP</span></div>
+                    <div class="kpi-value">10+</div>
+                    <div class="kpi-sub">Drives (TCS, KPMG, Nagarro)</div>
+                </div>
+                <div class="kpi-tile">
+                    <div class="kpi-top"><span>VETTING</span><span class="kpi-tag">LEAD</span></div>
+                    <div class="kpi-value">45+</div>
+                    <div class="kpi-sub">Candidates Interviewed</div>
+                </div>
+                <div class="kpi-tile">
+                    <div class="kpi-top"><span>PORTFOLIO</span><span class="kpi-tag">SHIP</span></div>
+                    <div class="kpi-value">09</div>
+                    <div class="kpi-sub">Production &amp; R&amp;D Builds</div>
+                </div>
+            </div>
+
+            <div class="award-banner">
+                <div><strong>INDIA SKILL 2024</strong> · State Winner (IITSB)</div>
+                <span class="award-code">RANK #1</span>
+            </div>
+        </aside>
+
+        <!-- ROW 2 LEFT (4 cols): Asset Allocation / Stack Matrix -->
+        <section id="allocation" class="panel panel-cyan span-4 reveal">
+            <div class="panel-header">
+                <div class="panel-title cyan">PORTFOLIO ALLOCATION</div>
+                <span class="panel-meta">4 SECTORS</span>
+            </div>
+
+            <div class="alloc-block">
+                <div class="alloc-head">
+                    <span class="alloc-name">AI &amp; Agentic Orchestration</span>
+                    <span class="alloc-pct">34%</span>
+                </div>
+                <div class="alloc-bar"><div class="alloc-fill" style="width: 92%;"></div></div>
+                <div class="chip-row">
+                    <span class="tech-chip hot">LangGraph</span>
+                    <span class="tech-chip hot">Stateful RAG</span>
+                    <span class="tech-chip">LangChain</span>
+                    <span class="tech-chip">LangFlow</span>
+                    <span class="tech-chip">n8n</span>
+                    <span class="tech-chip">TTS / STT</span>
+                </div>
+            </div>
+
+            <div class="alloc-block">
+                <div class="alloc-head">
+                    <span class="alloc-name">Systems &amp; Full-Stack</span>
+                    <span class="alloc-pct">30%</span>
+                </div>
+                <div class="alloc-bar"><div class="alloc-fill" style="width: 88%;"></div></div>
+                <div class="chip-row">
+                    <span class="tech-chip hot">Python</span>
+                    <span class="tech-chip hot">FastAPI</span>
+                    <span class="tech-chip">Django / DRF</span>
+                    <span class="tech-chip">React.js</span>
+                    <span class="tech-chip">Next.js</span>
+                    <span class="tech-chip">WebSockets / JWT</span>
+                </div>
+            </div>
+
+            <div class="alloc-block">
+                <div class="alloc-head">
+                    <span class="alloc-name">Edge Hardware &amp; IoT</span>
+                    <span class="alloc-pct">20%</span>
+                </div>
+                <div class="alloc-bar"><div class="alloc-fill" style="width: 82%;"></div></div>
+                <div class="chip-row">
+                    <span class="tech-chip hot">ESP32</span>
+                    <span class="tech-chip">C++</span>
+                    <span class="tech-chip">Sensor Fusion</span>
+                    <span class="tech-chip">IoT Protocols</span>
+                </div>
+            </div>
+
+            <div class="alloc-block">
+                <div class="alloc-head">
+                    <span class="alloc-name">Data &amp; Persistence</span>
+                    <span class="alloc-pct">16%</span>
+                </div>
+                <div class="alloc-bar"><div class="alloc-fill" style="width: 78%;"></div></div>
+                <div class="chip-row">
+                    <span class="tech-chip">PostgreSQL</span>
+                    <span class="tech-chip">MySQL</span>
+                    <span class="tech-chip">PowerBI</span>
+                    <span class="tech-chip">Pandas / NumPy</span>
+                    <span class="tech-chip">MATLAB</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ROW 2 RIGHT (8 cols): Active Positions / Project Orderbook -->
+        <section id="orderbook" class="panel span-8 reveal">
+            <div class="panel-header">
+                <div class="panel-title">ACTIVE POSITIONS // PROJECTS</div>
+                <div class="filter-tabs" role="tablist" aria-label="Filter projects">
+                    <button class="filter-btn active" data-filter="all">ALL (9)</button>
+                    <button class="filter-btn" data-filter="featured">FEATURED (3)</button>
+                    <button class="filter-btn" data-filter="ai">AI</button>
+                    <button class="filter-btn" data-filter="iot">IOT</button>
+                    <button class="filter-btn" data-filter="web">WEB / DATA</button>
+                </div>
+            </div>
+
+            <div class="orders-grid">
+
+                <!-- 1. BLINKY -->
+                <article class="order-card featured" data-cat="featured ai">
+                    <div>
+                        <div class="order-top">
+                            <span class="order-ticker">$BLNK</span>
+                            <span class="order-status">● ACTIVE ALPHA</span>
+                        </div>
+                        <h3 class="order-name">BLINKY</h3>
+                        <p class="order-desc">Autonomous cross-platform AI tutor executing safe-click desktop loops via bounded local inference on screen reads.</p>
+                    </div>
+                    <div class="order-footer">
+                        <div class="chip-row">
+                            <span class="tech-chip hot">Agentic AI</span>
+                            <span class="tech-chip">TTS</span>
+                        </div>
+                        <svg class="mini-spark" viewBox="0 0 56 20" fill="none"><path d="M1 17 L12 14 L22 15 L34 8 L45 9 L55 2" stroke="#00ff88" stroke-width="1.6"/></svg>
+                    </div>
+                </article>
+
+                <!-- 2. IoT Smart Helmet -->
+                <article class="order-card featured" data-cat="featured iot">
+                    <div>
+                        <div class="order-top">
+                            <span class="order-ticker">$HLMX</span>
+                            <span class="order-status">● ACTIVE ALPHA</span>
+                        </div>
+                        <h3 class="order-name">IoT Smart Helmet</h3>
+                        <p class="order-desc">Automated emergency response hardware with continuous collision detection, Strava sync, and instant SOS dispatch.</p>
+                    </div>
+                    <div class="order-footer">
+                        <div class="chip-row">
+                            <span class="tech-chip hot">ESP32</span>
+                            <span class="tech-chip">C++</span>
+                        </div>
+                        <svg class="mini-spark" viewBox="0 0 56 20" fill="none"><path d="M1 16 L14 12 L25 13 L37 6 L46 7 L55 3" stroke="#00ff88" stroke-width="1.6"/></svg>
+                    </div>
+                </article>
+
+                <!-- 3. webNote -->
+                <article class="order-card featured" data-cat="featured web">
+                    <div>
+                        <div class="order-top">
+                            <span class="order-ticker">$WBNT</span>
+                            <span class="order-status">● ACTIVE ALPHA</span>
+                        </div>
+                        <h3 class="order-name">webNote</h3>
+                        <p class="order-desc">Decoupled React &amp; Django REST organizational workspace with JWT session persistence and full CRUD integrity.</p>
+                    </div>
+                    <div class="order-footer">
+                        <div class="chip-row">
+                            <span class="tech-chip hot">React</span>
+                            <span class="tech-chip">Django</span>
+                            <span class="tech-chip">PG</span>
+                        </div>
+                        <svg class="mini-spark" viewBox="0 0 56 20" fill="none"><path d="M1 15 L15 15 L26 10 L38 11 L47 5 L55 4" stroke="#00ff88" stroke-width="1.6"/></svg>
+                    </div>
+                </article>
+
+                <!-- 4. Women SOS Portal -->
+                <article class="order-card" data-cat="web">
+                    <div>
+                        <div class="order-top">
+                            <span class="order-ticker">$WSOS</span>
+                            <span class="order-status">DEPLOYED</span>
+                        </div>
+                        <h3 class="order-name">Women SOS Portal</h3>
+                        <p class="order-desc">Rapid-response safety web app with live location sharing and emergency alerts; built for SkillSprint v2.</p>
+                    </div>
+                    <div class="order-footer">
+                        <div class="chip-row">
+                            <span class="tech-chip">Next.js</span>
+                            <span class="tech-chip">Node.js</span>
+                            <span class="tech-chip">SQL</span>
+                        </div>
+                        <svg class="mini-spark" viewBox="0 0 56 20" fill="none"><path d="M1 17 L16 13 L29 14 L42 7 L55 5" stroke="#00e5ff" stroke-width="1.4"/></svg>
+                    </div>
+                </article>
+
+                <!-- 5. AirPulse: Japan -->
+                <article class="order-card" data-cat="web">
+                    <div>
+                        <div class="order-top">
+                            <span class="order-ticker">$AIRP</span>
+                            <span class="order-status">ANALYTICS</span>
+                        </div>
+                        <h3 class="order-name">AirPulse: Japan</h3>
+                        <p class="order-desc">Public health analytics dashboard mapping pollution spikes to respiratory admissions across Kaggle datasets.</p>
+                    </div>
+                    <div class="order-footer">
+                        <div class="chip-row">
+                            <span class="tech-chip">PowerBI</span>
+                            <span class="tech-chip">Data Modeling</span>
+                        </div>
+                        <svg class="mini-spark" viewBox="0 0 56 20" fill="none"><path d="M1 14 L13 16 L27 9 L41 11 L55 4" stroke="#00e5ff" stroke-width="1.4"/></svg>
+                    </div>
+                </article>
+
+                <!-- 6. Cinematic Verse -->
+                <article class="order-card" data-cat="web">
+                    <div>
+                        <div class="order-top">
+                            <span class="order-ticker">$CINV</span>
+                            <span class="order-status">SHIPPED</span>
+                        </div>
+                        <h3 class="order-name">Cinematic Verse</h3>
+                        <p class="order-desc">Media discovery interface powered by React Router, Context API state management, and external REST feeds.</p>
+                    </div>
+                    <div class="order-footer">
+                        <div class="chip-row">
+                            <span class="tech-chip">React</span>
+                            <span class="tech-chip">Vite</span>
+                        </div>
+                        <svg class="mini-spark" viewBox="0 0 56 20" fill="none"><path d="M1 16 L18 11 L30 12 L44 6 L55 6" stroke="#00e5ff" stroke-width="1.4"/></svg>
+                    </div>
+                </article>
+
+                <!-- 7. WordPress Projects -->
+                <article class="order-card" data-cat="web">
+                    <div>
+                        <div class="order-top">
+                            <span class="order-ticker">$WPCL</span>
+                            <span class="order-status">CLIENT</span>
+                        </div>
+                        <h3 class="order-name">WordPress Systems</h3>
+                        <p class="order-desc">Scalable client web architectures delivered for Tharoor Reimagined and Pyramid Realty.</p>
+                    </div>
+                    <div class="order-footer">
+                        <div class="chip-row">
+                            <span class="tech-chip">WordPress</span>
+                            <span class="tech-chip">UI/UX</span>
+                        </div>
+                        <svg class="mini-spark" viewBox="0 0 56 20" fill="none"><path d="M1 15 L15 12 L31 10 L43 8 L55 5" stroke="#00e5ff" stroke-width="1.4"/></svg>
+                    </div>
+                </article>
+
+                <!-- 8. Task Management System -->
+                <article class="order-card" data-cat="web">
+                    <div>
+                        <div class="order-top">
+                            <span class="order-ticker">$TMSK</span>
+                            <span class="order-status">CLI</span>
+                        </div>
+                        <h3 class="order-name">Task Management CLI</h3>
+                        <p class="order-desc">Data-driven Python productivity tracker generating visual execution metrics via Pandas and Matplotlib.</p>
+                    </div>
+                    <div class="order-footer">
+                        <div class="chip-row">
+                            <span class="tech-chip">Python</span>
+                            <span class="tech-chip">Pandas</span>
+                        </div>
+                        <svg class="mini-spark" viewBox="0 0 56 20" fill="none"><path d="M1 18 L14 15 L28 11 L40 12 L55 7" stroke="#00e5ff" stroke-width="1.4"/></svg>
+                    </div>
+                </article>
+
+                <!-- 9. IoT Smart Parking -->
+                <article class="order-card" data-cat="iot">
+                    <div>
+                        <div class="order-top">
+                            <span class="order-ticker">$PRKX</span>
+                            <span class="order-status">HARDWARE</span>
+                        </div>
+                        <h3 class="order-name">IoT Smart Parking</h3>
+                        <p class="order-desc">Real-time slot telemetry using IR/ultrasonic sensors and actuated servo barriers on ESP32.</p>
+                    </div>
+                    <div class="order-footer">
+                        <div class="chip-row">
+                            <span class="tech-chip">ESP32</span>
+                            <span class="tech-chip">Sensors</span>
+                            <span class="tech-chip">C++</span>
+                        </div>
+                        <svg class="mini-spark" viewBox="0 0 56 20" fill="none"><path d="M1 16 L17 13 L28 14 L42 7 L55 4" stroke="#00e5ff" stroke-width="1.4"/></svg>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ROW 3 LEFT (7 cols): Execution Ledger (Experience & Education) -->
+        <section id="ledger" class="panel span-7 reveal">
+            <div class="panel-header">
+                <div class="panel-title">EXECUTION LEDGER // EXPERIENCE</div>
+                <span class="panel-meta">CANDLESTICK LOG</span>
+            </div>
+
+            <ul class="candle-list">
+                <li>
+                    <div class="ledger-row">
+                        <strong>Placement Head — Electronics Forum, GNDU</strong>
+                        <span class="ledger-date">APR 2024 – PRESENT</span>
+                    </div>
+                    Boosted placement throughput by 200%. Coordinated 10+ recruitment drives (TCS, KPMG, Nagarro), managed 6 teams (4–50 members), and interviewed 45+ candidates. Awarded official Placement Office LOR.
+                </li>
+                <li>
+                    <div class="ledger-row">
+                        <strong>Java Intern — ApTech Institute</strong>
+                        <span class="ledger-date">JUN 2024 – JUL 2024</span>
+                    </div>
+                    Engineered a Tender Management System using Java, SQL, HTML, and CSS.
+                </li>
+                <li>
+                    <div class="ledger-row">
+                        <strong>Event Lead — TCS Leadership Connect</strong>
+                        <span class="ledger-date">LEADERSHIP</span>
+                    </div>
+                    Directed operations and coordination for a 32-member TCS corporate engagement.
+                </li>
             </ul>
-        </div>
-    </section>
 
-    <section id="skills" class="container">
-        <h2 class="section-title">Technical & Professional Skills</h2>
-        <div class="skills-grid">
-            <div class="skill-category">
-                <h3 class="skill-category-title">AI & Machine Learning</h3>
-                <div class="skill-tags">
-                    <span class="tech-tag">Agentic AI (LLMs/SLMs)</span>
-                    <span class="tech-tag">LangChain & LangGraph</span>
-                    <span class="tech-tag">LangFlow & n8n</span>
-                    <span class="tech-tag">Prompt Engineering</span>
+            <div class="edu-strip">
+                <div class="edu-box">
+                    <h4>Guru Nanak Dev University</h4>
+                    <p>B.Tech ECM (2022 – 2026)<br>CGPA: <span class="score">7.31 / 73.1%</span></p>
+                </div>
+                <div class="edu-box">
+                    <h4>Bhavan's SL Public School</h4>
+                    <p>10+2 CBSE: <span class="score">89.4%</span><br>Matriculation: <span class="score">92.8%</span></p>
                 </div>
             </div>
-            <div class="skill-category">
-                <h3 class="skill-category-title">Software Engineering</h3>
-                <div class="skill-tags">
-                    <span class="tech-tag">Python & JS (JSX)</span>
-                    <span class="tech-tag">Django & DRF</span>
-                    <span class="tech-tag">React.js & Vite</span>
-                    <span class="tech-tag">FastAPI & MCP</span>
-                </div>
-            </div>
-            <div class="skill-category">
-                <h3 class="skill-category-title">Hardware & IoT</h3>
-                <div class="skill-tags">
-                    <span class="tech-tag">ESP32</span>
-                    <span class="tech-tag">C++</span>
-                    <span class="tech-tag">Sensors & Protocols</span>
-                </div>
-            </div>
-            <div class="skill-category">
-                <h3 class="skill-category-title">Data & Analytics</h3>
-                <div class="skill-tags">
-                    <span class="tech-tag">PowerBI</span>
-                    <span class="tech-tag">Pandas & NumPy</span>
-                    <span class="tech-tag">PostgreSQL</span>
-                </div>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="education" class="container">
-        <h2 class="section-title">Education</h2>
-        <div class="card-panel">
-            <h3>Guru Nanak Dev University (GNDU)</h3>
-            <p><em>B.Tech ECM</em> (August 2022 &ndash; August 2026)<br>CGPA: <strong>7.31</strong> / 73.1%</p>
-            <hr style="border:0; border-top: 1px solid var(--border-color); margin: 15px 0;">
-            <h3>Bhavan's SL Public School, Amritsar</h3>
-            <p><em>10+2 CBSE</em> (2021 &ndash; 2022) - <strong>89.4%</strong><br>
-            <em>Matriculation CBSE</em> (2019 &ndash; 2020) - <strong>92.8%</strong></p>
-        </div>
-    </section>
+        <!-- ROW 3 RIGHT (5 cols): Credentials & Comms -->
+        <section id="comms" class="panel span-5 reveal">
+            <div class="panel-header">
+                <div class="panel-title cyan">CERTIFICATIONS &amp; COMMS</div>
+                <span class="panel-meta">MS ID: SparshKhanna-2209</span>
+            </div>
 
-    <section id="experience" class="container">
-        <h2 class="section-title">Experience & Leadership</h2>
-        <div class="card-panel">
-            <h3>Placement Head, Electronics Forum, GNDU</h3>
-            <p><em>Apr 2024 &ndash; Present</em><br>
-            Boosted placement productivity by 200%. Coordinated 10+ recruitment drives (TCS, KPMG, Nagarro). Managed 6 teams, interviewed 45+ candidates. Received Placement Office LOR.</p>
-            <hr style="border:0; border-top: 1px solid var(--border-color); margin: 15px 0;">
-            <h3>Java Intern, ApTech Institute</h3>
-            <p><em>Jun 2024 &ndash; Jul 2024</em><br>
-            Developed a Tender Management System using HTML, CSS, SQL, and Java.</p>
-            <hr style="border:0; border-top: 1px solid var(--border-color); margin: 15px 0;">
-            <h3>TCS Leadership Connect</h3>
-            <p>Event Lead for a TCS event involving 32 members. Managed logistics and team coordination.</p>
-        </div>
-    </section>
-
-    <section id="projects" class="container">
-        <h2 class="section-title">Projects / Case Studies</h2>
-        <div class="project-grid">
-            <div class="project-card">
-                <h3 class="project-title">BLINKY</h3>
-                <div class="project-desc">
-                    <p><strong>Impact:</strong> Achieved an autonomous cross-platform tutor capable of operating desktop interfaces as measured by its ability to execute safe-click loops and searches, by doing localized bounded AI inference based on screen reads.</p>
-                </div>
-                <div class="tech-stack">
-                    <span class="tech-tag">Agentic AI</span>
-                    <span class="tech-tag">Text-to-Speech</span>
-                </div>
-            </div>
-            <div class="project-card">
-                <h3 class="project-title">IoT Smart Helmet</h3>
-                <div class="project-desc">
-                    <p><strong>Impact:</strong> Achieved an automated emergency response system as measured by instantaneous SOS notification dispatch, by doing continuous collision detection and sensor monitoring.</p>
-                </div>
-                <div class="tech-stack">
-                    <span class="tech-tag">IoT Protocols</span>
-                    <span class="tech-tag">C++</span>
-                    <span class="tech-tag">ESP32</span>
-                </div>
-            </div>
-            <div class="project-card">
-                <h3 class="project-title">Women SOS Portal</h3>
-                <div class="project-desc">
-                    <p><strong>Impact:</strong> Achieved a rapid-response safety application as measured by successful deployment during Statusbrew SkillSprint v2, by doing real-time location sharing and emergency alert implementation.</p>
-                </div>
-                <div class="tech-stack">
-                    <span class="tech-tag">Next.js</span>
-                    <span class="tech-tag">Node.js</span>
-                    <span class="tech-tag">SQL</span>
-                </div>
-            </div>
-            <div class="project-card">
-                <h3 class="project-title">webNote</h3>
-                <div class="project-desc">
-                    <p><strong>Impact:</strong> Achieved a secure organizational tool for users as measured by robust session persistence, by doing full CRUD integration with token-based authentication.</p>
-                </div>
-                <div class="tech-stack">
-                    <span class="tech-tag">ReactJS</span>
-                    <span class="tech-tag">Django</span>
-                    <span class="tech-tag">PostgreSQL</span>
-                </div>
-            </div>
-            
-            <div class="project-card">
-                <h3 class="project-title">WordPress Projects</h3>
-                <div class="project-desc">
-                    <p><strong>Impact:</strong> Scalable WordPress architectures for clients including Tharoor Reimagined and Pyramid Realty.</p>
-                </div>
-                <div class="tech-stack">
-                    <span class="tech-tag">WordPress</span>
-                    <span class="tech-tag">UI/UX Design</span>
-                </div>
-            </div>
-            
-            <div class="project-card">
-                <h3 class="project-title">AirPulse: Japan Edition</h3>
-                <div class="project-desc">
-                    <p><strong>Impact:</strong> Actionable public health insights mapping pollution spikes to respiratory admissions using Kaggle datasets.</p>
-                </div>
-                <div class="tech-stack">
-                    <span class="tech-tag">PowerBI</span>
-                    <span class="tech-tag">Data Modeling</span>
-                </div>
-            </div>
-            
-            <div class="project-card">
-                <h3 class="project-title">Cinematic Verse</h3>
-                <div class="project-desc">
-                    <p><strong>Impact:</strong> Media discovery platform with client-side routing, external APIs, and dynamic bookmarking.</p>
-                </div>
-                <div class="tech-stack">
-                    <span class="tech-tag">React</span>
-                    <span class="tech-tag">Vite</span>
-                </div>
-            </div>
-            
-            <div class="project-card">
-                <h3 class="project-title">Task Management System</h3>
-                <div class="project-desc">
-                    <p><strong>Impact:</strong> CLI-based Python data-driven productivity tracker with visual task analytics.</p>
-                </div>
-                <div class="tech-stack">
-                    <span class="tech-tag">Python</span>
-                    <span class="tech-tag">Pandas</span>
-                </div>
-            </div>
-            
-            <div class="project-card">
-                <h3 class="project-title">IoT Smart Parking</h3>
-                <div class="project-desc">
-                    <p><strong>Impact:</strong> Optimized parking lot utilization with real-time slot availability and actuated servo barriers.</p>
-                </div>
-                <div class="tech-stack">
-                    <span class="tech-tag">ESP32</span>
-                    <span class="tech-tag">C++</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="achievements" class="container">
-        <h2 class="section-title">Achievements & Certifications</h2>
-        <div class="card-panel">
-            <ul>
-                <li><strong>State Winner:</strong> India Skill Competition 2024 (IITSB).</li>
-                <li><strong>Finalist:</strong> HackerWrath (top 5 among 42 teams) and SkillSprint.</li>
-                <li><strong>Hackathons:</strong> Hackerwrath (Team Leadership), StatusBrew SkillSprint (Responsive Web Design).</li>
-                <li><strong>Certifications:</strong> Microsoft Azure Fundamentals, Machine Learning by IBM, Postman API Student Expert, MATLAB Onramp, Prompt Engineering by OpenAI.</li>
-                <li><strong>Microsoft Learn ID:</strong> SparshKhanna-2209</li>
+            <ul class="candle-list cyan-candles">
+                <li><strong>Finalist:</strong> HackerWrath (Top 5 / 42 teams) &amp; StatusBrew SkillSprint v2.</li>
+                <li><strong>Cloud &amp; AI:</strong> Microsoft Azure Fundamentals, OpenAI Prompt Engineering, IBM ML with Python.</li>
+                <li><strong>APIs &amp; Tools:</strong> Postman API Student Expert, MATLAB Onramp, Hacktoberfest &amp; GSSoC.</li>
             </ul>
-        </div>
-    </section>
 
-    <footer>
-        <div class="container">
-            <div class="footer-prompt">C:\> exit<span class="cursor"></span></div>
-            <a href="mailto:khannasparsh0001@gmail.com" class="btn-download">Contact Me</a>
-            <div class="social-links">
-                <a href="https://github.com/khannasparsh0001" target="_blank" class="social-link">GitHub</a>
-                <a href="https://www.linkedin.com/in/khannasparsh/" target="_blank" class="social-link">LinkedIn</a>
-                <a href="https://medium.com/@khannasparsh0001" target="_blank" class="social-link">Medium</a>
+            <div class="comms-table">
+                <a class="comm-tile" href="mailto:khannasparsh0001@gmail.com">
+                    <span class="comm-k">Direct Mail</span>
+                    <span class="comm-v">khannasparsh0001@gmail.com</span>
+                </a>
+                <a class="comm-tile" href="https://github.com/khannasparsh0001" target="_blank" rel="noopener">
+                    <span class="comm-k">GitHub</span>
+                    <span class="comm-v">KhannaSparsh0001</span>
+                </a>
+                <a class="comm-tile" href="https://www.linkedin.com/in/khannasparsh/" target="_blank" rel="noopener">
+                    <span class="comm-k">LinkedIn</span>
+                    <span class="comm-v">/in/khannasparsh</span>
+                </a>
+                <a class="comm-tile" href="https://medium.com/@khannasparsh0001" target="_blank" rel="noopener">
+                    <span class="comm-k">Medium</span>
+                    <span class="comm-v">@khannasparsh0001</span>
+                </a>
             </div>
-            <div class="sys-time">SYSTEM_HALTED</div>
+        </section>
+
+    </main>
+
+    <!-- ── Terminal Footer ── -->
+    <footer class="terminal-footer">
+        <div class="footer-box">
+            <span>C:\&gt; SPARSH_KHANNA // HFT_TERMINAL // <span class="ok">STATUS: OPERATIONAL</span></span>
+            <span>2026 · STATIC EDGE DEPLOYMENT</span>
         </div>
     </footer>
+
+    <script>
+        /* ── 1. Typewriter Role Ticker ── */
+        const roles = ["Systems Engineer", "Agentic AI Architect", "Edge IoT Builder", "Full-Stack Developer", "Placement Head"];
+        let ri = 0, ci = 0, deleting = false;
+        const typeEl = document.getElementById("typewriter-line");
+
+        function runTypewriter() {
+            const word = roles[ri];
+            typeEl.textContent = deleting ? word.substring(0, ci--) : word.substring(0, ci++);
+            if (!deleting && ci > word.length) {
+                deleting = true;
+                setTimeout(runTypewriter, 1300);
+                return;
+            }
+            if (deleting && ci < 0) {
+                deleting = false;
+                ri = (ri + 1) % roles.length;
+                ci = 0;
+            }
+            setTimeout(runTypewriter, deleting ? 45 : 85);
+        }
+        runTypewriter();
+
+        /* ── 2. Live Terminal Clock ── */
+        const clockEl = document.getElementById("sys-clock");
+        function tickClock() {
+            const d = new Date();
+            const hh = String(d.getHours()).padStart(2, "0");
+            const mm = String(d.getMinutes()).padStart(2, "0");
+            const ss = String(d.getSeconds()).padStart(2, "0");
+            const ms = (0.3 + Math.random() * 0.3).toFixed(1);
+            if (clockEl) clockEl.textContent = `${hh}:${mm}:${ss} · ${ms}ms`;
+        }
+        tickClock();
+        setInterval(tickClock, 1000);
+
+        /* ── 3. Interactive Orderbook Filter Tabs ── */
+        const filterBtns = document.querySelectorAll(".filter-btn");
+        const orderCards = document.querySelectorAll(".order-card");
+
+        filterBtns.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                const filter = btn.dataset.filter;
+                filterBtns.forEach((b) => b.classList.remove("active"));
+                btn.classList.add("active");
+
+                orderCards.forEach((card) => {
+                    const cats = (card.dataset.cat || "").split(" ");
+                    const show = filter === "all" || cats.includes(filter);
+                    card.classList.toggle("hidden-card", !show);
+                });
+            });
+        });
+
+        /* ── 4. Scroll Reveal & Active Nav ── */
+        const revealObs = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) entry.target.classList.add("visible");
+            });
+        }, { threshold: 0.06 });
+        document.querySelectorAll(".reveal").forEach((el) => revealObs.observe(el));
+
+        const navLinks = document.querySelectorAll(".nav-links a[href^='#']");
+        const sections = document.querySelectorAll("section[id]");
+        window.addEventListener("scroll", () => {
+            let current = "";
+            sections.forEach((s) => {
+                if (window.scrollY >= s.offsetTop - 140) current = s.id;
+            });
+            navLinks.forEach((a) => {
+                a.classList.toggle("nav-active", a.getAttribute("href") === `#${current}`);
+            });
+        });
+    </script>
+
 </body>
 </html>

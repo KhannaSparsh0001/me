@@ -947,15 +947,182 @@
         .dm-text {
             position: relative;
             z-index: 8;
-            color: transparent;
-            font-size: 14px;
-            font-weight: 400;
-            letter-spacing: 0.35em;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 0.28em;
             text-transform: uppercase;
-            background: linear-gradient(180deg, #ffffff 0%, #a0a5b0 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.9)) drop-shadow(0 2px 4px rgba(0, 0, 0, 1));
+            text-shadow:
+                0 0 8px rgba(0, 245, 255, 0.9),
+                0 0 16px rgba(122, 168, 255, 0.8),
+                0 2px 4px rgba(0, 0, 0, 1),
+                0 0 2px #000;
+        }
+
+        /* ── Option 1: Recessed Win95 Dimensional Portal Containment Bay ── */
+        .portal-bay {
+            position: fixed;
+            right: 14px;
+            bottom: 124px;
+            width: 162px;
+            background: var(--os-gray);
+            border: 2px solid;
+            border-color: var(--border-light) #404040 #404040 var(--border-light);
+            box-shadow:
+                inset 1px 1px 0 #dfdfdf,
+                inset -1px -1px 0 var(--border-dark),
+                2px 2px 0 rgba(0, 0, 0, 0.35);
+            padding: 3px;
+            z-index: 9998;
+            touch-action: none;
+        }
+
+        .portal-bay-bar {
+            background: #000080;
+            color: #ffffff;
+            font-family: 'R95 Sans Serif 8pt', 'MS Sans Serif', Tahoma, sans-serif;
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            padding: 2px 5px;
+            margin-bottom: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            user-select: none;
+            cursor: move;
+            touch-action: none;
+        }
+
+        .portal-bay-led {
+            width: 6px;
+            height: 6px;
+            background: #00ff88;
+            box-shadow: 0 0 4px #00ff88;
+            display: inline-block;
+        }
+
+        .portal-void {
+            background:
+                linear-gradient(180deg, #7a7a7a 0%, #858585 50%, #757575 100%);
+            border: 2px solid;
+            border-color: var(--border-dark) var(--border-light) var(--border-light) var(--border-dark);
+            box-shadow:
+                inset 1px 1px 2px #505050,
+                inset -1px -1px 2px #a0a0a0;
+            padding: 10px 4px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            overflow: hidden;
+        }
+
+        .portal-slot-dm {
+            width: 144px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .portal-slot-lg {
+            width: 144px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .portal-scaler-dm {
+            transform: scale(0.44);
+            transform-origin: center;
+            flex-shrink: 0;
+        }
+
+        .portal-scaler-lg {
+            transform: scale(0.56);
+            transform-origin: center;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 768px) {
+            .portal-bay {
+                right: 8px;
+                bottom: 50px;
+                width: auto;
+            }
+            .portal-void {
+                flex-direction: row;
+                gap: 6px;
+                padding: 5px 6px 7px;
+            }
+            .portal-slot-dm {
+                width: 112px;
+                height: 36px;
+            }
+            .portal-slot-lg {
+                width: 108px;
+                height: 36px;
+            }
+            .portal-scaler-dm {
+                transform: scale(0.34);
+            }
+            .portal-scaler-lg {
+                transform: scale(0.44);
+            }
+        }
+
+        /* ── Dimensional Warp Transition Overlay ── */
+        #dimensional-rift {
+            position: fixed;
+            inset: 0;
+            z-index: 99999999;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.34s ease-in;
+        }
+
+        #dimensional-rift.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        #dimensional-rift.warp-space {
+            background:
+                radial-gradient(circle at center, rgba(122, 168, 255, 0.35) 0%, rgba(232, 168, 90, 0.18) 22%, #020307 62%);
+            animation: rift-space 0.4s ease-out forwards;
+        }
+
+        #dimensional-rift.warp-fintech {
+            background:
+                repeating-linear-gradient(
+                    to bottom,
+                    rgba(0, 255, 136, 0.14) 0px,
+                    rgba(0, 255, 136, 0.14) 1px,
+                    rgba(5, 7, 11, 0.94) 1px,
+                    rgba(5, 7, 11, 0.94) 4px
+                );
+            animation: rift-fintech 0.38s ease-out forwards;
+        }
+
+        .window.warping {
+            transition: transform 0.36s ease-in, filter 0.36s ease-in, opacity 0.36s ease-in;
+            transform: scale(1.03);
+            filter: blur(4px) brightness(0.45);
+            opacity: 0.25;
+        }
+
+        @keyframes rift-space {
+            0%   { opacity: 0; transform: scale(0.85); }
+            45%  { opacity: 0.9; transform: scale(1.04); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes rift-fintech {
+            0%   { opacity: 0; filter: brightness(1.8); }
+            50%  { opacity: 0.92; filter: brightness(1.2); }
+            100% { opacity: 1; filter: brightness(1); }
         }
     </style>
 
@@ -984,35 +1151,7 @@
         </defs>
     </svg>
 
-    <div style="position:fixed; top: 15px; right: 20px; z-index:9999; display: flex; gap: 20px; transform: scale(0.6); transform-origin: top right;">
-        <!-- Space Theme Button -->
-        <div class="button-wrapper">
-            <div class="button-shadow"></div>
-            <button class="dm-button" onclick="window.location.href='modern.html'">
-                <div class="dm-inner">
-                    <svg class="dm-filaments deep" preserveAspectRatio="none"><rect width="100%" height="100%" filter="url(#dark-matter-mesh)" /></svg>
-                    <svg class="dm-filaments" preserveAspectRatio="none"><rect width="100%" height="100%" filter="url(#dark-matter-mesh)" /></svg>
-                    <div class="dm-diffraction"></div>
-                    <div class="dm-glitter"></div>
-                    <div class="dm-mist"></div>
-                    <div class="dm-glass-highlight"></div>
-                    <div class="dm-glass-bottom"></div>
-                </div>
-                <div class="dm-chrome-edge"></div>
-                <div class="dm-star-glint top-right"></div>
-                <div class="dm-star-glint bottom-left"></div>
-                <span class="dm-text">Space Theme</span>
-            </button>
-        </div>
-
-        <!-- Fintech Theme Button -->
-        <button class="liquid-glass-btn" style="margin-top: 13px;" onclick="window.location.href='modern-fintech.html'">
-            <span class="glitter-layer"></span>
-            <span class="glass-reflection"></span>
-            <span class="lg-btn-text">Fintech</span>
-            <span class="lg-star-glint"></span>
-        </button>
-    </div>
+    <!-- Dimensional switches moved into the Win95 Portal Containment Bay (.portal-bay) -->
 
     <div id="boot-screen" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:black; color:#c0c0c0; z-index:9999999; font-family:'Courier New', monospace; padding:20px; box-sizing:border-box;">
         <div>Starting Windows 95...</div>
@@ -1422,9 +1561,54 @@
         </div>
     </div>
 
+    <!-- Recessed Win95 Dimensional Portal Containment Bay -->
+    <aside class="portal-bay" aria-label="Dimensional Portal Switch">
+        <div class="portal-bay-bar">
+            <span>PORTALS.SYS</span>
+            <span class="portal-bay-led" title="Rift Stable"></span>
+        </div>
+        <div class="portal-void">
+            <div class="portal-slot-dm">
+                <div class="portal-scaler-dm">
+                    <div class="button-wrapper">
+                        <div class="button-shadow"></div>
+                        <button class="dm-button" onclick="enterDimension('space-theme.html', 'space')" title="Enter Space Dimension">
+                            <div class="dm-inner">
+                                <svg class="dm-filaments deep" preserveAspectRatio="none"><rect width="100%" height="100%" filter="url(#dark-matter-mesh)" /></svg>
+                                <svg class="dm-filaments" preserveAspectRatio="none"><rect width="100%" height="100%" filter="url(#dark-matter-mesh)" /></svg>
+                                <div class="dm-diffraction"></div>
+                                <div class="dm-glitter"></div>
+                                <div class="dm-mist"></div>
+                                <div class="dm-glass-highlight"></div>
+                                <div class="dm-glass-bottom"></div>
+                            </div>
+                            <div class="dm-chrome-edge"></div>
+                            <div class="dm-star-glint top-right"></div>
+                            <div class="dm-star-glint bottom-left"></div>
+                            <span class="dm-text">Space Theme</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portal-slot-lg">
+                <div class="portal-scaler-lg">
+                    <button class="liquid-glass-btn" onclick="enterDimension('modern-fintech.html', 'fintech')" title="Enter FinTech Dimension">
+                        <span class="glitter-layer"></span>
+                        <span class="glass-reflection"></span>
+                        <span class="lg-btn-text">Fintech</span>
+                        <span class="lg-star-glint"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </aside>
+
     <div id="visitor-counter">Visitors<div id="count">Loading...</div>
 
 </div>
+
+    <div id="dimensional-rift" aria-hidden="true"></div>
 
     <dialog class="message-dialog" id="message-dialog">
         <div class="title-bar">New Message</div>
@@ -1589,17 +1773,50 @@
                 messageForm.reset();
             });
             
-            // Free counter APIs (like countapi.xyz and counterapi.dev) are currently dead or hanging.
-            // Using a simulated retro counter for perfect instant UX.
-            let count = localStorage.getItem("retro_visitor_count");
-            if (!count) {
-                count = Math.floor(Math.random() * 1000) + 1337; // Random retro base number
-            } else {
-                count = parseInt(count, 10) + 1;
+            // ── REAL VISITOR COUNTER via Firebase Realtime Database (free, no backend) ──
+            // SETUP (one-time, ~10 mins):
+            //   1. Go to https://console.firebase.google.com → create a project
+            //   2. Build → Realtime Database → Create database → Start in test mode
+            //   3. Copy your DB URL (looks like: https://YOUR-PROJECT-default-rtdb.firebaseio.com)
+            //   4. Paste it below replacing the placeholder
+            const FIREBASE_URL = "https://YOUR-PROJECT-default-rtdb.firebaseio.com/visitors.json";
+            const IS_FIREBASE_CONFIGURED = !FIREBASE_URL.includes("YOUR-PROJECT");
+
+            const countEl = document.getElementById("count");
+
+            async function initVisitorCounter() {
+                if (!IS_FIREBASE_CONFIGURED) {
+                    // Fallback: localStorage simulation until Firebase is set up
+                    let count = localStorage.getItem("retro_visitor_count");
+                    count = count ? parseInt(count, 10) + 1 : Math.floor(Math.random() * 1000) + 1337;
+                    localStorage.setItem("retro_visitor_count", count);
+                    if (countEl) countEl.textContent = String(count).padStart(6, "0");
+                    return;
+                }
+
+                try {
+                    // 1. Read current global count
+                    const readRes = await fetch(FIREBASE_URL);
+                    const current = (await readRes.json()) || 0;
+
+                    // 2. Increment globally
+                    await fetch(FIREBASE_URL, {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(current + 1)
+                    });
+
+                    // 3. Display — padded to 6 digits for retro odometer feel
+                    if (countEl) countEl.textContent = String(current + 1).padStart(6, "0");
+                } catch (err) {
+                    // Network error fallback — keep last known localStorage value
+                    const cached = localStorage.getItem("retro_visitor_count") || "000000";
+                    if (countEl) countEl.textContent = String(cached).padStart(6, "0");
+                    console.warn("Visitor counter: Firebase unreachable, using cached value.", err);
+                }
             }
-            localStorage.setItem("retro_visitor_count", count);
-            
-            // (No extra system.js script injection needed here)
+
+            initVisitorCounter();
 
             document.getElementById('help-btn').onclick = () => {
                 if (window.SystemAPI && window.SystemAPI.showAboutDialog) {
@@ -1614,11 +1831,6 @@
                     });
                 }
             };
-
-            const countEl = document.getElementById("count");
-            if (countEl) {
-                countEl.textContent = String(count).padStart(6, "0");
-            }
 
 
             document.addEventListener('click', closeAllDropdowns);
@@ -1831,6 +2043,127 @@
         };
     }
 
+        (function initPortalBaySnapDrag() {
+            const portalBay = document.querySelector(".portal-bay");
+            if (!portalBay) return;
+
+            const spring = "0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
+            let dragging = false;
+            let activePointerId = null;
+            let startX = 0;
+            let startY = 0;
+            let cleanupTimer = null;
+
+            function getLiveTranslate(el) {
+                const tr = getComputedStyle(el).transform;
+                if (!tr || tr === "none") return { x: 0, y: 0 };
+                if (typeof DOMMatrixReadOnly !== "undefined") {
+                    const m = new DOMMatrixReadOnly(tr);
+                    return { x: m.m41, y: m.m42 };
+                }
+                const match = tr.match(/matrix\(([^)]+)\)/);
+                if (!match) return { x: 0, y: 0 };
+                const parts = match[1].split(",").map(Number);
+                return { x: parts[4] || 0, y: parts[5] || 0 };
+            }
+
+            function onPointerMove(e) {
+                if (!dragging || e.pointerId !== activePointerId) return;
+                const nextX = e.clientX - startX;
+                const nextY = e.clientY - startY;
+                portalBay.style.transform = `translate3d(${nextX}px, ${nextY}px, 0)`;
+            }
+
+            function onBlur() {
+                snapBack();
+            }
+
+            function detachWindowListeners() {
+                window.removeEventListener("pointermove", onPointerMove);
+                window.removeEventListener("pointerup", snapBack);
+                window.removeEventListener("pointercancel", snapBack);
+                window.removeEventListener("blur", onBlur);
+            }
+
+            function snapBack(e) {
+                if (!dragging) return;
+                if (e && e.pointerId !== undefined && e.pointerId !== activePointerId) return;
+
+                dragging = false;
+                detachWindowListeners();
+                if (activePointerId !== null) {
+                    try {
+                        if (portalBay.hasPointerCapture && portalBay.hasPointerCapture(activePointerId)) {
+                            portalBay.releasePointerCapture(activePointerId);
+                        }
+                    } catch (_) {}
+                }
+                activePointerId = null;
+                document.body.classList.remove("dragging");
+
+                // Force reflow so switching from transition:none back to spring animates cleanly
+                void portalBay.offsetWidth;
+
+                portalBay.style.transition = `transform ${spring}`;
+                portalBay.style.transform = "translate3d(0px, 0px, 0)";
+                cleanupTimer = setTimeout(() => {
+                    portalBay.style.transition = "";
+                    portalBay.style.transform = "";
+                }, 480);
+            }
+
+            portalBay.addEventListener("pointerdown", (e) => {
+                if (e.pointerType === "mouse" && e.button !== 0) return;
+                if (e.target.closest("button, a, input, select, textarea")) return;
+
+                e.preventDefault();
+                clearTimeout(cleanupTimer);
+                dragging = true;
+                activePointerId = e.pointerId;
+
+                const pos = getLiveTranslate(portalBay);
+                portalBay.style.transition = "none";
+                portalBay.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0)`;
+
+                startX = e.clientX - pos.x;
+                startY = e.clientY - pos.y;
+                document.body.classList.add("dragging");
+
+                window.addEventListener("pointermove", onPointerMove);
+                window.addEventListener("pointerup", snapBack);
+                window.addEventListener("pointercancel", snapBack);
+                window.addEventListener("blur", onBlur);
+
+                try {
+                    portalBay.setPointerCapture(e.pointerId);
+                } catch (_) {}
+            });
+        })();
+
+        function enterDimension(url, realm) {
+            const rift = document.getElementById("dimensional-rift");
+            const osWin = document.querySelector(".window");
+            const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+            if (!rift || reduced) {
+                window.location.href = url;
+                return;
+            }
+
+            rift.className = "active " + (realm === "space" ? "warp-space" : "warp-fintech");
+            if (osWin) osWin.classList.add("warping");
+
+            setTimeout(() => {
+                window.location.href = url;
+            }, 380);
+        }
+
+        window.addEventListener("pageshow", () => {
+            const rift = document.getElementById("dimensional-rift");
+            const osWin = document.querySelector(".window");
+            if (rift) rift.className = "";
+            if (osWin) osWin.classList.remove("warping");
+        });
 
     </script>
 
