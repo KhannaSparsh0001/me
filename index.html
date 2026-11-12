@@ -1034,6 +1034,14 @@
             justify-content: center;
         }
 
+        .portal-slot-vanilla {
+            width: 144px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .portal-scaler-dm {
             transform: scale(0.44);
             transform-origin: center;
@@ -1044,6 +1052,60 @@
             transform: scale(0.56);
             transform-origin: center;
             flex-shrink: 0;
+        }
+
+        .portal-scaler-vanilla {
+            transform: scale(0.68);
+            transform-origin: center;
+            flex-shrink: 0;
+        }
+
+        /* 3. The E-Ink / Premium Paper Pill ("NORMAL") */
+        .vanilla-pill-btn {
+            position: relative;
+            width: 200px;
+            height: 50px;
+            border-radius: 40px;
+            border: 1px solid rgba(0, 0, 0, 0.18);
+            background: #FFFFFF;
+            box-shadow:
+                0 8px 18px -4px rgba(0, 0, 0, 0.65),
+                inset 0 2px 4px rgba(0, 0, 0, 0.14),
+                inset 0 -2px 3px rgba(0, 0, 0, 0.06);
+            cursor: pointer;
+            outline: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            padding: 0 16px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+        }
+
+        .vanilla-pill-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            background: #FDFDFD;
+            border-color: rgba(0, 0, 0, 0.3);
+            box-shadow:
+                0 12px 22px -4px rgba(0, 0, 0, 0.8),
+                inset 0 1px 3px rgba(0, 0, 0, 0.18);
+        }
+
+        .vanilla-pill-icon {
+            font-size: 15px;
+            color: #171717;
+            line-height: 1;
+            font-weight: 700;
+        }
+
+        .vanilla-pill-text {
+            color: #171717;
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.24em;
+            text-transform: uppercase;
+            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
         }
 
         @media (max-width: 768px) {
@@ -1065,11 +1127,18 @@
                 width: 108px;
                 height: 36px;
             }
+            .portal-slot-vanilla {
+                width: 108px;
+                height: 32px;
+            }
             .portal-scaler-dm {
                 transform: scale(0.34);
             }
             .portal-scaler-lg {
                 transform: scale(0.44);
+            }
+            .portal-scaler-vanilla {
+                transform: scale(0.54);
             }
         }
 
@@ -1106,6 +1175,11 @@
             animation: rift-fintech 0.38s ease-out forwards;
         }
 
+        #dimensional-rift.warp-vanilla {
+            background: #ffffff;
+            animation: rift-vanilla 0.34s ease-out forwards;
+        }
+
         .window.warping {
             transition: transform 0.36s ease-in, filter 0.36s ease-in, opacity 0.36s ease-in;
             transform: scale(1.03);
@@ -1123,6 +1197,12 @@
             0%   { opacity: 0; filter: brightness(1.8); }
             50%  { opacity: 0.92; filter: brightness(1.2); }
             100% { opacity: 1; filter: brightness(1); }
+        }
+
+        @keyframes rift-vanilla {
+            0%   { opacity: 0; }
+            50%  { opacity: 0.85; }
+            100% { opacity: 1; }
         }
     </style>
 
@@ -1205,6 +1285,7 @@
                 <span id="options-menu-btn">Options</span>
                 <div class="dropdown-menu" id="options-dropdown">
                     <a href="#send-message" class="dropdown-item" id="send-message-option"><img src="icons/send_msg.png" style="width: 16px; height: 16px; margin-right: 8px; vertical-align: middle; display: inline-block;">Send Message...</a>
+                    <a href="resume.html" class="dropdown-item">Executive Resume (Vanilla)</a>
                     <div class="dropdown-separator"></div>
                     <a href="docs\Sparsh_khanna_Resume_gndu-18.pdf" download="Sparsh-Khanna-Resume.pdf" class="dropdown-item" target="_blank">Download Resume</a>
                 </div>
@@ -1598,6 +1679,15 @@
                         <span class="glass-reflection"></span>
                         <span class="lg-btn-text">Fintech</span>
                         <span class="lg-star-glint"></span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="portal-slot-vanilla">
+                <div class="portal-scaler-vanilla">
+                    <button class="vanilla-pill-btn" onclick="enterDimension('resume.html', 'vanilla')" title="Enter Executive Resume (Normal Mode)">
+                        <span class="vanilla-pill-icon">≡</span>
+                        <span class="vanilla-pill-text">Normal</span>
                     </button>
                 </div>
             </div>
@@ -2141,6 +2231,14 @@
         })();
 
         function enterDimension(url, realm) {
+            if (window.playDimensionAudio) {
+                try {
+                    window.playDimensionAudio(realm);
+                } catch (e) {
+                    console.warn("Audio trigger error:", e);
+                }
+            }
+
             const rift = document.getElementById("dimensional-rift");
             const osWin = document.querySelector(".window");
             const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -2150,7 +2248,8 @@
                 return;
             }
 
-            rift.className = "active " + (realm === "space" ? "warp-space" : "warp-fintech");
+            const realmClass = realm === "space" ? "warp-space" : (realm === "fintech" ? "warp-fintech" : "warp-vanilla");
+            rift.className = "active " + realmClass;
             if (osWin) osWin.classList.add("warping");
 
             setTimeout(() => {
@@ -2169,6 +2268,7 @@
 
     <script src="shared/processManager.js"></script>
     <script src="shared/windowManager.js"></script>
+    <script src="shared/dimensionalAudio.js"></script>
     <script src="shared/system.js?v=2"></script>
 </body>
 </html>
