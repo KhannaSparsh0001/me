@@ -1,584 +1,607 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sparsh Khanna · Orbital Portfolio</title>
     <link rel="stylesheet" href="space.css">
 </head>
+
 <body>
 
-<!-- Layer 1: Multi-depth interactive starfield & meteors -->
-<canvas id="cosmos-canvas" aria-hidden="true"></canvas>
+    <!-- Layer 1: Multi-depth interactive starfield & meteors -->
+    <canvas id="cosmos-canvas" aria-hidden="true"></canvas>
 
-<!-- Layer 2: Milky Way dust, atmospheric planetary horizon & orbital arc -->
-<div class="celestial-stage" aria-hidden="true">
-    <div class="galactic-band"></div>
-    <div class="planet-horizon"></div>
-    <svg class="orbit-svg" viewBox="0 0 860 860" fill="none">
-        <circle cx="430" cy="430" r="395" stroke="rgba(165, 200, 255, 0.16)" stroke-width="1" stroke-dasharray="4 8"/>
-        <circle cx="430" cy="430" r="422" stroke="rgba(232, 168, 90, 0.10)" stroke-width="1"/>
-        <g class="orbit-satellite">
-            <circle cx="430" cy="35" r="3.2" fill="#e8a85a"/>
-            <circle cx="430" cy="35" r="9" fill="rgba(232, 168, 90, 0.22)"/>
-        </g>
-    </svg>
-</div>
-
-<div class="cosmos-shell">
-
-    <!-- ── Observatory Header ── -->
-    <header class="observatory-header">
-        <div class="telemetry-brand">
-            <span class="status-beacon"></span>
-            <span>SPARSH.K</span>
-            <span class="utc-readout" id="utc-clock">UTC 00:00:00</span>
-        </div>
-
-        <nav class="observatory-nav">
-            <a href="#about">About</a>
-            <a href="#skills">Capabilities</a>
-            <a href="#projects">Missions</a>
-            <a href="#experience">Flight Log</a>
-            <a href="#contact">Link</a>
-        </nav>
-
-        <div class="nav-actions">
-            <a href="resume.html" class="pill-btn" title="Executive Minimal Resume">Vanilla</a>
-            <a href="modern-fintech.html" class="pill-btn">Fintech</a>
-            <a href="index.html" class="pill-btn">Win95 OS</a>
-        </div>
-    </header>
-
-    <!-- ── Hero ── -->
-    <section id="about" class="hero-cosmos reveal">
-        <div class="eclipse-avatar">
-            <div class="eclipse-corona"></div>
-            <div class="eclipse-ring"></div>
-            <img src="pfp.png" alt="Sparsh Khanna" onerror="this.style.display='none'">
-        </div>
-        <div>
-            <div class="coord-tag">✦ 31.63° N · 74.87° E · SYSTEMS &amp; AI</div>
-            <h1 class="hero-title">Sparsh Khanna</h1>
-            <div class="hero-role" id="typewriter-role"></div>
-            <p class="hero-summary">
-                Systems &amp; Software Engineer specializing in Agentic AI architectures
-                (LangGraph, Stateful RAG) and edge physical computing (ESP32).
-                Recognized as State Winner at the India Skill Competition 2024.
-            </p>
-            <div class="hero-ctas">
-                <a href="docs/Sparsh_khanna_Resume_gndu-18.pdf" target="_blank" class="btn-starlight">↓ Download Resume</a>
-                <button class="btn-ghost" onclick="window.location.href='resume.html'">≡ Vanilla Resume</button>
-                <button class="btn-ghost" onclick="window.location.href='modern-fintech.html'">◈ Fintech View</button>
-                <button class="btn-ghost" onclick="window.location.href='index.html'">⊞ Win95 OS</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- ── Telemetry Stats ── -->
-    <div class="telemetry-strip reveal">
-        <div class="telemetry-cell">
-            <div class="telemetry-val">200%</div>
-            <div class="telemetry-lbl">Productivity Boost</div>
-        </div>
-        <div class="telemetry-cell">
-            <div class="telemetry-val">10+</div>
-            <div class="telemetry-lbl">Recruitment Drives</div>
-        </div>
-        <div class="telemetry-cell">
-            <div class="telemetry-val">45+</div>
-            <div class="telemetry-lbl">Candidates Interviewed</div>
-        </div>
-        <div class="telemetry-cell">
-            <div class="telemetry-val">09</div>
-            <div class="telemetry-lbl">Missions Shipped</div>
-        </div>
+    <!-- Layer 2: Milky Way dust, atmospheric planetary horizon & orbital arc -->
+    <div class="celestial-stage" aria-hidden="true">
+        <div class="galactic-band"></div>
+        <div class="planet-horizon"></div>
+        <svg class="orbit-svg" viewBox="0 0 860 860" fill="none">
+            <circle cx="430" cy="430" r="395" stroke="rgba(165, 200, 255, 0.16)" stroke-width="1"
+                stroke-dasharray="4 8" />
+            <circle cx="430" cy="430" r="422" stroke="rgba(232, 168, 90, 0.10)" stroke-width="1" />
+            <g class="orbit-satellite">
+                <circle cx="430" cy="35" r="3.2" fill="#e8a85a" />
+                <circle cx="430" cy="35" r="9" fill="rgba(232, 168, 90, 0.22)" />
+            </g>
+        </svg>
     </div>
 
-    <!-- ── 01 // Capabilities ── -->
-    <section id="skills" class="reveal">
-        <div class="section-kicker">01 // Telemetry &amp; Capabilities</div>
-        <h2 class="section-heading">Technical Stack</h2>
-        <div class="capabilities-grid">
-            <div class="cosmic-card">
-                <div class="cap-title">Agentic &amp; ML Systems</div>
-                <div class="cap-tags">
-                    <span class="cap-pill">Agentic AI</span>
-                    <span class="cap-pill">LangGraph</span>
-                    <span class="cap-pill">LangChain</span>
-                    <span class="cap-pill">LangFlow</span>
-                    <span class="cap-pill">n8n</span>
-                    <span class="cap-pill">Prompt Engineering</span>
-                    <span class="cap-pill">TTS / STT</span>
-                    <span class="cap-pill">Multi-agent Systems</span>
+    <div class="cosmos-shell">
+
+        <!-- ── Observatory Header ── -->
+        <header class="observatory-header">
+            <div class="telemetry-brand">
+                <span class="status-beacon"></span>
+                <span>SPARSH.K</span>
+                <span class="utc-readout" id="utc-clock">UTC 00:00:00</span>
+            </div>
+
+            <nav class="observatory-nav">
+                <a href="#about">About</a>
+                <a href="#skills">Capabilities</a>
+                <a href="#projects">Missions</a>
+                <a href="#experience">Flight Log</a>
+                <a href="#contact">Link</a>
+            </nav>
+
+            <div class="nav-actions">
+                <a href="resume.html" class="pill-btn" title="Executive Minimal Resume">NORMAL</a>
+                <a href="modern-fintech.html" class="pill-btn">Fintech</a>
+                <a href="index.html" class="pill-btn">Win95 OS</a>
+            </div>
+        </header>
+
+        <!-- ── Hero ── -->
+        <section id="about" class="hero-cosmos reveal">
+            <div class="eclipse-avatar">
+                <div class="eclipse-corona"></div>
+                <div class="eclipse-ring"></div>
+                <img src="pfp.png" alt="Sparsh Khanna" onerror="this.style.display='none'">
+            </div>
+            <div>
+                <div class="coord-tag">✦ 31.63° N · 74.87° E · SYSTEMS &amp; AI</div>
+                <h1 class="hero-title">Sparsh Khanna</h1>
+                <div class="hero-role" id="typewriter-role"></div>
+                <p class="hero-summary">
+                    Systems &amp; Software Engineer specializing in Agentic AI architectures
+                    (LangGraph, Stateful RAG) and edge physical computing (ESP32).
+                    Recognized as State Winner at the India Skill Competition 2024.
+                </p>
+                <div class="hero-ctas">
+                    <a href="docs/Sparsh_khanna_Resume_gndu-18.pdf" target="_blank" class="btn-starlight">↓ Download
+                        Resume</a>
                 </div>
             </div>
-            <div class="cosmic-card">
-                <div class="cap-title">Software Architecture</div>
-                <div class="cap-tags">
-                    <span class="cap-pill">Python</span>
-                    <span class="cap-pill">JavaScript</span>
-                    <span class="cap-pill">React.js</span>
-                    <span class="cap-pill">Django &amp; DRF</span>
-                    <span class="cap-pill">FastAPI</span>
-                    <span class="cap-pill">Next.js</span>
-                    <span class="cap-pill">REST / WebSockets</span>
-                    <span class="cap-pill">JWT</span>
-                </div>
+        </section>
+
+        <!-- ── Telemetry Stats ── -->
+        <div class="telemetry-strip reveal">
+            <div class="telemetry-cell">
+                <div class="telemetry-val">200%</div>
+                <div class="telemetry-lbl">Productivity Boost</div>
             </div>
-            <div class="cosmic-card">
-                <div class="cap-title">Edge &amp; Embedded Hardware</div>
-                <div class="cap-tags">
-                    <span class="cap-pill">ESP32</span>
-                    <span class="cap-pill">C++</span>
-                    <span class="cap-pill">IoT Protocols</span>
-                    <span class="cap-pill">Sensor Fusion</span>
-                    <span class="cap-pill">Embedded Systems</span>
-                </div>
+            <div class="telemetry-cell">
+                <div class="telemetry-val">10+</div>
+                <div class="telemetry-lbl">Recruitment Drives</div>
             </div>
-            <div class="cosmic-card">
-                <div class="cap-title">Data &amp; Analytics</div>
-                <div class="cap-tags">
-                    <span class="cap-pill">PowerBI</span>
-                    <span class="cap-pill">Pandas</span>
-                    <span class="cap-pill">NumPy</span>
-                    <span class="cap-pill">PostgreSQL</span>
-                    <span class="cap-pill">MySQL</span>
-                    <span class="cap-pill">MATLAB</span>
-                </div>
+            <div class="telemetry-cell">
+                <div class="telemetry-val">45+</div>
+                <div class="telemetry-lbl">Candidates Interviewed</div>
+            </div>
+            <div class="telemetry-cell">
+                <div class="telemetry-val">09</div>
+                <div class="telemetry-lbl">Missions Shipped</div>
             </div>
         </div>
-    </section>
 
-    <!-- ── 02 // Mission Catalog (All 9 Projects) ── -->
-    <section id="projects" class="reveal">
-        <div class="section-kicker">02 // Mission Catalog</div>
-        <h2 class="section-heading">Orbiting Projects</h2>
-        <div class="missions-grid">
-
-            <article class="cosmic-card mission-card featured">
-                <div>
-                    <div class="mission-meta">
-                        <span>CAT-01</span>
-                        <span class="mission-badge">✦ FEATURED</span>
+        <!-- ── 01 // Capabilities ── -->
+        <section id="skills" class="reveal">
+            <div class="section-kicker">01 // Telemetry &amp; Capabilities</div>
+            <h2 class="section-heading">Technical Stack</h2>
+            <div class="capabilities-grid">
+                <div class="cosmic-card">
+                    <div class="cap-title">Agentic &amp; ML Systems</div>
+                    <div class="cap-tags">
+                        <span class="cap-pill">Agentic AI</span>
+                        <span class="cap-pill">LangGraph</span>
+                        <span class="cap-pill">LangChain</span>
+                        <span class="cap-pill">LangFlow</span>
+                        <span class="cap-pill">n8n</span>
+                        <span class="cap-pill">Prompt Engineering</span>
+                        <span class="cap-pill">TTS / STT</span>
+                        <span class="cap-pill">Multi-agent Systems</span>
                     </div>
-                    <h3 class="mission-name">BLINKY</h3>
-                    <p class="mission-desc">Autonomous cross-platform AI tutor operating desktop interfaces via a local AI autopilot loop with bounded inference on screen reads.</p>
                 </div>
-                <div class="mission-stack">
-                    <span class="stack-chip">Agentic AI</span>
-                    <span class="stack-chip">TTS</span>
-                </div>
-            </article>
-
-            <article class="cosmic-card mission-card featured">
-                <div>
-                    <div class="mission-meta">
-                        <span>CAT-02</span>
-                        <span class="mission-badge">✦ FEATURED</span>
+                <div class="cosmic-card">
+                    <div class="cap-title">Software Architecture</div>
+                    <div class="cap-tags">
+                        <span class="cap-pill">Python</span>
+                        <span class="cap-pill">JavaScript</span>
+                        <span class="cap-pill">React.js</span>
+                        <span class="cap-pill">Django &amp; DRF</span>
+                        <span class="cap-pill">FastAPI</span>
+                        <span class="cap-pill">Next.js</span>
+                        <span class="cap-pill">REST / WebSockets</span>
+                        <span class="cap-pill">JWT</span>
                     </div>
-                    <h3 class="mission-name">IoT Smart Helmet</h3>
-                    <p class="mission-desc">Automated emergency response system using continuous collision detection and Strava syncing for real-time SOS dispatch.</p>
                 </div>
-                <div class="mission-stack">
-                    <span class="stack-chip">ESP32</span>
-                    <span class="stack-chip">C++</span>
-                    <span class="stack-chip">IoT</span>
-                </div>
-            </article>
-
-            <article class="cosmic-card mission-card featured">
-                <div>
-                    <div class="mission-meta">
-                        <span>CAT-03</span>
-                        <span class="mission-badge">✦ FEATURED</span>
+                <div class="cosmic-card">
+                    <div class="cap-title">Edge &amp; Embedded Hardware</div>
+                    <div class="cap-tags">
+                        <span class="cap-pill">ESP32</span>
+                        <span class="cap-pill">C++</span>
+                        <span class="cap-pill">IoT Protocols</span>
+                        <span class="cap-pill">Sensor Fusion</span>
+                        <span class="cap-pill">Embedded Systems</span>
                     </div>
-                    <h3 class="mission-name">webNote</h3>
-                    <p class="mission-desc">Secure organizational tool built with decoupled React/Django architecture, JWT authentication, and full CRUD persistence.</p>
                 </div>
-                <div class="mission-stack">
-                    <span class="stack-chip">ReactJS</span>
-                    <span class="stack-chip">Django</span>
-                    <span class="stack-chip">PostgreSQL</span>
-                </div>
-            </article>
-
-            <article class="cosmic-card mission-card">
-                <div>
-                    <div class="mission-meta"><span>CAT-04</span></div>
-                    <h3 class="mission-name">Women SOS Portal</h3>
-                    <p class="mission-desc">Rapid-response safety app with real-time location sharing and emergency alerts. Built during SkillSprint Hackathon v2.</p>
-                </div>
-                <div class="mission-stack">
-                    <span class="stack-chip">Next.js</span>
-                    <span class="stack-chip">Node.js</span>
-                    <span class="stack-chip">SQL</span>
-                </div>
-            </article>
-
-            <article class="cosmic-card mission-card">
-                <div>
-                    <div class="mission-meta"><span>CAT-05</span></div>
-                    <h3 class="mission-name">AirPulse: Japan</h3>
-                    <p class="mission-desc">Actionable public health insights mapping pollution spikes to respiratory hospital admissions using Kaggle datasets.</p>
-                </div>
-                <div class="mission-stack">
-                    <span class="stack-chip">PowerBI</span>
-                    <span class="stack-chip">Data Modeling</span>
-                    <span class="stack-chip">CSV</span>
-                </div>
-            </article>
-
-            <article class="cosmic-card mission-card">
-                <div>
-                    <div class="mission-meta"><span>CAT-06</span></div>
-                    <h3 class="mission-name">Cinematic Verse</h3>
-                    <p class="mission-desc">Media discovery platform featuring client-side routing, external API integrations, and dynamic bookmarking.</p>
-                </div>
-                <div class="mission-stack">
-                    <span class="stack-chip">React</span>
-                    <span class="stack-chip">Vite</span>
-                    <span class="stack-chip">Context API</span>
-                </div>
-            </article>
-
-            <article class="cosmic-card mission-card">
-                <div>
-                    <div class="mission-meta"><span>CAT-07</span></div>
-                    <h3 class="mission-name">WordPress Projects</h3>
-                    <p class="mission-desc">Scalable WordPress architectures crafted for production clients including Tharoor Reimagined and Pyramid Realty.</p>
-                </div>
-                <div class="mission-stack">
-                    <span class="stack-chip">WordPress</span>
-                    <span class="stack-chip">UI/UX</span>
-                </div>
-            </article>
-
-            <article class="cosmic-card mission-card">
-                <div>
-                    <div class="mission-meta"><span>CAT-08</span></div>
-                    <h3 class="mission-name">Task Management CLI</h3>
-                    <p class="mission-desc">Python data-driven productivity tracker featuring visual task analytics and a streamlined CLI workflow.</p>
-                </div>
-                <div class="mission-stack">
-                    <span class="stack-chip">Python</span>
-                    <span class="stack-chip">Pandas</span>
-                    <span class="stack-chip">Matplotlib</span>
-                </div>
-            </article>
-
-            <article class="cosmic-card mission-card">
-                <div>
-                    <div class="mission-meta"><span>CAT-09</span></div>
-                    <h3 class="mission-name">IoT Smart Parking</h3>
-                    <p class="mission-desc">Optimized parking lot utilization with real-time slot availability telemetry and actuated servo barriers.</p>
-                </div>
-                <div class="mission-stack">
-                    <span class="stack-chip">ESP32</span>
-                    <span class="stack-chip">C++</span>
-                    <span class="stack-chip">Sensors</span>
-                </div>
-            </article>
-
-        </div>
-    </section>
-
-    <!-- ── 03 // Flight Log & Education ── -->
-    <section id="experience" class="reveal">
-        <div class="section-kicker">03 // Flight Log &amp; Education</div>
-        <h2 class="section-heading">Service Record</h2>
-        <div class="cosmic-card">
-            <div class="flight-log">
-                <div class="flight-entry">
-                    <div class="flight-role">Placement Head — Electronics Forum, GNDU</div>
-                    <div class="flight-period">APR 2024 — PRESENT</div>
-                    <p class="flight-notes">Boosted placement productivity by 200%. Coordinated 10+ recruitment drives (TCS, KPMG, Nagarro), managed 6 cross-functional teams, and interviewed 45+ candidates. Awarded an official Placement Office Letter of Recommendation.</p>
-                </div>
-                <div class="flight-entry">
-                    <div class="flight-role">Java Intern — ApTech Institute</div>
-                    <div class="flight-period">JUN 2024 — JUL 2024</div>
-                    <p class="flight-notes">Engineered a Tender Management System using HTML, CSS, SQL, and Java.</p>
-                </div>
-                <div class="flight-entry">
-                    <div class="flight-role">B.Tech ECM — Guru Nanak Dev University</div>
-                    <div class="flight-period">AUG 2022 — AUG 2026</div>
-                    <p class="flight-notes">CGPA: 7.31 / 73.1% · State Winner, India Skill Competition 2024 (IITSB) · Finalist at HackerWrath (Top 5/42) &amp; SkillSprint.</p>
+                <div class="cosmic-card">
+                    <div class="cap-title">Data &amp; Analytics</div>
+                    <div class="cap-tags">
+                        <span class="cap-pill">PowerBI</span>
+                        <span class="cap-pill">Pandas</span>
+                        <span class="cap-pill">NumPy</span>
+                        <span class="cap-pill">PostgreSQL</span>
+                        <span class="cap-pill">MySQL</span>
+                        <span class="cap-pill">MATLAB</span>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- ── 04 // Deep Space Link ── -->
-    <section id="contact" class="reveal">
-        <div class="section-kicker">04 // Deep Space Link</div>
-        <h2 class="section-heading">Establish Contact</h2>
-        <div class="cosmic-card">
-            <div class="comms-grid">
-                <div class="comm-channel">
-                    <span class="comm-label">Direct Mail</span>
-                    <a class="comm-link" href="mailto:khannasparsh0001@gmail.com">khannasparsh0001@gmail.com</a>
-                </div>
-                <div class="comm-channel">
-                    <span class="comm-label">GitHub</span>
-                    <a class="comm-link" href="https://github.com/khannasparsh0001" target="_blank" rel="noopener">github.com/khannasparsh0001</a>
-                </div>
-                <div class="comm-channel">
-                    <span class="comm-label">LinkedIn</span>
-                    <a class="comm-link" href="https://www.linkedin.com/in/khannasparsh/" target="_blank" rel="noopener">linkedin.com/in/khannasparsh</a>
-                </div>
-                <div class="comm-channel">
-                    <span class="comm-label">Medium</span>
-                    <a class="comm-link" href="https://medium.com/@khannasparsh0001" target="_blank" rel="noopener">medium.com/@khannasparsh0001</a>
+        <!-- ── 02 // Mission Catalog (All 9 Projects) ── -->
+        <section id="projects" class="reveal">
+            <div class="section-kicker">02 // Mission Catalog</div>
+            <h2 class="section-heading">Orbiting Projects</h2>
+            <div class="missions-grid">
+
+                <article class="cosmic-card mission-card featured">
+                    <div>
+                        <div class="mission-meta">
+                            <span>CAT-01</span>
+                            <span class="mission-badge">✦ FEATURED</span>
+                        </div>
+                        <h3 class="mission-name">BLINKY</h3>
+                        <p class="mission-desc">Autonomous cross-platform AI tutor operating desktop interfaces via a
+                            local AI autopilot loop with bounded inference on screen reads.</p>
+                    </div>
+                    <div class="mission-stack">
+                        <span class="stack-chip">Agentic AI</span>
+                        <span class="stack-chip">TTS</span>
+                    </div>
+                </article>
+
+                <article class="cosmic-card mission-card featured">
+                    <div>
+                        <div class="mission-meta">
+                            <span>CAT-02</span>
+                            <span class="mission-badge">✦ FEATURED</span>
+                        </div>
+                        <h3 class="mission-name">IoT Smart Helmet</h3>
+                        <p class="mission-desc">Automated emergency response system using continuous collision detection
+                            and Strava syncing for real-time SOS dispatch.</p>
+                    </div>
+                    <div class="mission-stack">
+                        <span class="stack-chip">ESP32</span>
+                        <span class="stack-chip">C++</span>
+                        <span class="stack-chip">IoT</span>
+                    </div>
+                </article>
+
+                <article class="cosmic-card mission-card featured">
+                    <div>
+                        <div class="mission-meta">
+                            <span>CAT-03</span>
+                            <span class="mission-badge">✦ FEATURED</span>
+                        </div>
+                        <h3 class="mission-name">webNote</h3>
+                        <p class="mission-desc">Secure organizational tool built with decoupled React/Django
+                            architecture, JWT authentication, and full CRUD persistence.</p>
+                    </div>
+                    <div class="mission-stack">
+                        <span class="stack-chip">ReactJS</span>
+                        <span class="stack-chip">Django</span>
+                        <span class="stack-chip">PostgreSQL</span>
+                    </div>
+                </article>
+
+                <article class="cosmic-card mission-card">
+                    <div>
+                        <div class="mission-meta"><span>CAT-04</span></div>
+                        <h3 class="mission-name">Women SOS Portal</h3>
+                        <p class="mission-desc">Rapid-response safety app with real-time location sharing and emergency
+                            alerts. Built during SkillSprint Hackathon v2.</p>
+                    </div>
+                    <div class="mission-stack">
+                        <span class="stack-chip">Next.js</span>
+                        <span class="stack-chip">Node.js</span>
+                        <span class="stack-chip">SQL</span>
+                    </div>
+                </article>
+
+                <article class="cosmic-card mission-card">
+                    <div>
+                        <div class="mission-meta"><span>CAT-05</span></div>
+                        <h3 class="mission-name">AirPulse: Japan</h3>
+                        <p class="mission-desc">Actionable public health insights mapping pollution spikes to
+                            respiratory hospital admissions using Kaggle datasets.</p>
+                    </div>
+                    <div class="mission-stack">
+                        <span class="stack-chip">PowerBI</span>
+                        <span class="stack-chip">Data Modeling</span>
+                        <span class="stack-chip">CSV</span>
+                    </div>
+                </article>
+
+                <article class="cosmic-card mission-card">
+                    <div>
+                        <div class="mission-meta"><span>CAT-06</span></div>
+                        <h3 class="mission-name">Cinematic Verse</h3>
+                        <p class="mission-desc">Media discovery platform featuring client-side routing, external API
+                            integrations, and dynamic bookmarking.</p>
+                    </div>
+                    <div class="mission-stack">
+                        <span class="stack-chip">React</span>
+                        <span class="stack-chip">Vite</span>
+                        <span class="stack-chip">Context API</span>
+                    </div>
+                </article>
+
+                <article class="cosmic-card mission-card">
+                    <div>
+                        <div class="mission-meta"><span>CAT-07</span></div>
+                        <h3 class="mission-name">WordPress Projects</h3>
+                        <p class="mission-desc">Scalable WordPress architectures crafted for production clients
+                            including Tharoor Reimagined and Pyramid Realty.</p>
+                    </div>
+                    <div class="mission-stack">
+                        <span class="stack-chip">WordPress</span>
+                        <span class="stack-chip">UI/UX</span>
+                    </div>
+                </article>
+
+                <article class="cosmic-card mission-card">
+                    <div>
+                        <div class="mission-meta"><span>CAT-08</span></div>
+                        <h3 class="mission-name">Task Management CLI</h3>
+                        <p class="mission-desc">Python data-driven productivity tracker featuring visual task analytics
+                            and a streamlined CLI workflow.</p>
+                    </div>
+                    <div class="mission-stack">
+                        <span class="stack-chip">Python</span>
+                        <span class="stack-chip">Pandas</span>
+                        <span class="stack-chip">Matplotlib</span>
+                    </div>
+                </article>
+
+                <article class="cosmic-card mission-card">
+                    <div>
+                        <div class="mission-meta"><span>CAT-09</span></div>
+                        <h3 class="mission-name">IoT Smart Parking</h3>
+                        <p class="mission-desc">Optimized parking lot utilization with real-time slot availability
+                            telemetry and actuated servo barriers.</p>
+                    </div>
+                    <div class="mission-stack">
+                        <span class="stack-chip">ESP32</span>
+                        <span class="stack-chip">C++</span>
+                        <span class="stack-chip">Sensors</span>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ── 03 // Flight Log & Education ── -->
+        <section id="experience" class="reveal">
+            <div class="section-kicker">03 // Flight Log &amp; Education</div>
+            <h2 class="section-heading">Service Record</h2>
+            <div class="cosmic-card">
+                <div class="flight-log">
+                    <div class="flight-entry">
+                        <div class="flight-role">Placement Head — Electronics Forum, GNDU</div>
+                        <div class="flight-period">APR 2024 — PRESENT</div>
+                        <p class="flight-notes">Boosted placement productivity by 200%. Coordinated 10+ recruitment
+                            drives (TCS, KPMG, Nagarro), managed 6 cross-functional teams, and interviewed 45+
+                            candidates.</p>
+                        <div style="margin-top: 8px;">
+                            <a href="https://drive.google.com/drive/folders/1dt9hjfUmlBzcIeVf16jTz26QtQQYuks-?usp=sharing" target="_blank" rel="noopener" style="color: var(--starlight); text-decoration: none; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 4px; border-bottom: 1px dashed rgba(255,255,255,0.4);">
+                                ↗ View Official Placement Office Letter of Recommendation
+                            </a>
+                        </div>
+                    </div>
+                    <div class="flight-entry">
+                        <div class="flight-role">Java Intern — ApTech Institute</div>
+                        <div class="flight-period">JUN 2024 — JUL 2024</div>
+                        <p class="flight-notes">Engineered a Tender Management System using HTML, CSS, SQL, and Java.
+                        </p>
+                    </div>
+                    <div class="flight-entry">
+                        <div class="flight-role">B.Tech ECM — Guru Nanak Dev University</div>
+                        <div class="flight-period">AUG 2022 — AUG 2026</div>
+                        <p class="flight-notes">CGPA: 7.31 / 73.1% · State Winner, India Skill Competition 2024 (IITSB)
+                            · Finalist at HackerWrath (Top 5/42) &amp; SkillSprint.</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <footer class="observatory-footer">
-        <span>SPARSH KHANNA · ORBITAL SECTOR 31.63°N 74.87°E · 2026</span>
-        <a href="#about">↑ Return to Orbit</a>
-    </footer>
+        <!-- ── 04 // Deep Space Link ── -->
+        <section id="contact" class="reveal">
+            <div class="section-kicker">04 // Deep Space Link</div>
+            <h2 class="section-heading">Establish Contact</h2>
+            <div class="cosmic-card">
+                <div class="comms-grid">
+                    <div class="comm-channel">
+                        <span class="comm-label">Direct Mail</span>
+                        <a class="comm-link" href="mailto:khannasparsh0001@gmail.com">khannasparsh0001@gmail.com</a>
+                    </div>
+                    <div class="comm-channel">
+                        <span class="comm-label">GitHub</span>
+                        <a class="comm-link" href="https://github.com/khannasparsh0001" target="_blank"
+                            rel="noopener">github.com/khannasparsh0001</a>
+                    </div>
+                    <div class="comm-channel">
+                        <span class="comm-label">LinkedIn</span>
+                        <a class="comm-link" href="https://www.linkedin.com/in/khannasparsh/" target="_blank"
+                            rel="noopener">linkedin.com/in/khannasparsh</a>
+                    </div>
+                    <div class="comm-channel">
+                        <span class="comm-label">Medium</span>
+                        <a class="comm-link" href="https://medium.com/@khannasparsh0001" target="_blank"
+                            rel="noopener">medium.com/@khannasparsh0001</a>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-</div>
+        <footer class="observatory-footer">
+            <span>SPARSH KHANNA · ORBITAL SECTOR 31.63°N 74.87°E · 2026</span>
+            <a href="#about">↑ Return to Orbit</a>
+        </footer>
 
-<script>
-    /* ── 1. Multi-Depth Parallax Starfield & Meteor Engine ── */
-    (function initCosmos() {
-        const canvas = document.getElementById("cosmos-canvas");
-        const ctx = canvas.getContext("2d");
-        const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    </div>
 
-        // Spectral blackbody star colors (O/B blue, A/F white, G cream, K/M amber)
-        const SPECTRAL_PALETTE = [
-            { r: 168, g: 199, b: 255, weight: 0.22 },
-            { r: 244, g: 246, b: 255, weight: 0.45 },
-            { r: 255, g: 241, b: 214, weight: 0.20 },
-            { r: 255, g: 208, b: 155, weight: 0.13 }
-        ];
+    <script>
+        /* ── 1. Multi-Depth Parallax Starfield & Meteor Engine ── */
+        (function initCosmos() {
+            const canvas = document.getElementById("cosmos-canvas");
+            const ctx = canvas.getContext("2d");
+            const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-        function pickSpectralColor() {
-            let roll = Math.random();
-            for (const c of SPECTRAL_PALETTE) {
-                if (roll < c.weight) return c;
-                roll -= c.weight;
+            // Spectral blackbody star colors (O/B blue, A/F white, G cream, K/M amber)
+            const SPECTRAL_PALETTE = [
+                { r: 168, g: 199, b: 255, weight: 0.22 },
+                { r: 244, g: 246, b: 255, weight: 0.45 },
+                { r: 255, g: 241, b: 214, weight: 0.20 },
+                { r: 255, g: 208, b: 155, weight: 0.13 }
+            ];
+
+            function pickSpectralColor() {
+                let roll = Math.random();
+                for (const c of SPECTRAL_PALETTE) {
+                    if (roll < c.weight) return c;
+                    roll -= c.weight;
+                }
+                return SPECTRAL_PALETTE[1];
             }
-            return SPECTRAL_PALETTE[1];
-        }
 
-        let width = 0, height = 0, dpr = 1;
-        let stars = [];
-        let meteors = [];
-        let targetMouseX = 0, targetMouseY = 0;
-        let mouseX = 0, mouseY = 0;
-        let lastMeteorAt = 0;
+            let width = 0, height = 0, dpr = 1;
+            let stars = [];
+            let meteors = [];
+            let targetMouseX = 0, targetMouseY = 0;
+            let mouseX = 0, mouseY = 0;
+            let lastMeteorAt = 0;
 
-        function buildStars() {
-            const area = width * height;
-            const total = Math.min(460, Math.max(180, Math.floor(area / 3600)));
-            stars = [];
+            function buildStars() {
+                const area = width * height;
+                const total = Math.min(460, Math.max(180, Math.floor(area / 3600)));
+                stars = [];
 
-            for (let i = 0; i < total; i++) {
-                // Depth layer: 0 = far, 1 = mid, 2 = near
-                const layerRoll = Math.random();
-                const layer = layerRoll < 0.62 ? 0 : layerRoll < 0.90 ? 1 : 2;
-                const color = pickSpectralColor();
+                for (let i = 0; i < total; i++) {
+                    // Depth layer: 0 = far, 1 = mid, 2 = near
+                    const layerRoll = Math.random();
+                    const layer = layerRoll < 0.62 ? 0 : layerRoll < 0.90 ? 1 : 2;
+                    const color = pickSpectralColor();
 
-                stars.push({
-                    x: Math.random() * width,
-                    y: Math.random() * height,
-                    layer,
-                    radius: layer === 0 ? 0.55 + Math.random() * 0.45 : layer === 1 ? 0.9 + Math.random() * 0.6 : 1.4 + Math.random() * 0.9,
-                    baseAlpha: layer === 0 ? 0.25 + Math.random() * 0.35 : layer === 1 ? 0.45 + Math.random() * 0.35 : 0.72 + Math.random() * 0.28,
-                    twinkleSpeed: 0.0008 + Math.random() * 0.0022,
-                    twinklePhase: Math.random() * Math.PI * 2,
-                    driftY: layer === 0 ? 0.018 : layer === 1 ? 0.042 : 0.08,
-                    parallax: layer === 0 ? 6 : layer === 1 ? 16 : 32,
-                    spike: layer === 2 && Math.random() < 0.32,
-                    color
+                    stars.push({
+                        x: Math.random() * width,
+                        y: Math.random() * height,
+                        layer,
+                        radius: layer === 0 ? 0.55 + Math.random() * 0.45 : layer === 1 ? 0.9 + Math.random() * 0.6 : 1.4 + Math.random() * 0.9,
+                        baseAlpha: layer === 0 ? 0.25 + Math.random() * 0.35 : layer === 1 ? 0.45 + Math.random() * 0.35 : 0.72 + Math.random() * 0.28,
+                        twinkleSpeed: 0.0008 + Math.random() * 0.0022,
+                        twinklePhase: Math.random() * Math.PI * 2,
+                        driftY: layer === 0 ? 0.018 : layer === 1 ? 0.042 : 0.08,
+                        parallax: layer === 0 ? 6 : layer === 1 ? 16 : 32,
+                        spike: layer === 2 && Math.random() < 0.32,
+                        color
+                    });
+                }
+            }
+
+            function resize() {
+                dpr = Math.min(window.devicePixelRatio || 1, 2);
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = Math.floor(width * dpr);
+                canvas.height = Math.floor(height * dpr);
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                buildStars();
+            }
+
+            function spawnMeteor(now) {
+                const startX = width * (0.15 + Math.random() * 0.75);
+                const startY = height * (Math.random() * 0.35);
+                const angle = (Math.PI / 6) + Math.random() * 0.25;
+                const speed = 11 + Math.random() * 6;
+                meteors.push({
+                    x: startX,
+                    y: startY,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    length: 90 + Math.random() * 75,
+                    life: 0,
+                    maxLife: 38 + Math.random() * 20
                 });
-            }
-        }
-
-        function resize() {
-            dpr = Math.min(window.devicePixelRatio || 1, 2);
-            width = window.innerWidth;
-            height = window.innerHeight;
-            canvas.width = Math.floor(width * dpr);
-            canvas.height = Math.floor(height * dpr);
-            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-            buildStars();
-        }
-
-        function spawnMeteor(now) {
-            const startX = width * (0.15 + Math.random() * 0.75);
-            const startY = height * (Math.random() * 0.35);
-            const angle = (Math.PI / 6) + Math.random() * 0.25;
-            const speed = 11 + Math.random() * 6;
-            meteors.push({
-                x: startX,
-                y: startY,
-                vx: Math.cos(angle) * speed,
-                vy: Math.sin(angle) * speed,
-                length: 90 + Math.random() * 75,
-                life: 0,
-                maxLife: 38 + Math.random() * 20
-            });
-            lastMeteorAt = now;
-        }
-
-        function drawFrame(now) {
-            ctx.clearRect(0, 0, width, height);
-
-            // Smooth mouse parallax interpolation
-            mouseX += (targetMouseX - mouseX) * 0.05;
-            mouseY += (targetMouseY - mouseY) * 0.05;
-            const scrollFactor = window.scrollY * 0.08;
-
-            for (const s of stars) {
-                if (!reducedMotion) {
-                    s.y -= s.driftY;
-                    if (s.y < -4) s.y = height + 4;
-                }
-
-                // Seamless modulo wrapping with parallax offset
-                const px = ((s.x + mouseX * s.parallax) % width + width) % width;
-                const py = ((s.y + mouseY * s.parallax - scrollFactor * (s.layer + 1) * 0.25) % height + height) % height;
-
-                const twinkle = reducedMotion ? 1 : (0.72 + 0.28 * Math.sin(now * s.twinkleSpeed + s.twinklePhase));
-                const alpha = s.baseAlpha * twinkle;
-                const { r, g, b } = s.color;
-
-                ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha.toFixed(3)})`;
-                ctx.beginPath();
-                ctx.arc(px, py, s.radius, 0, Math.PI * 2);
-                ctx.fill();
-
-                // Subtle 4-point optical diffraction spikes on bright foreground stars
-                if (s.spike) {
-                    const spikeLen = s.radius * 4.4;
-                    ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${(alpha * 0.35).toFixed(3)})`;
-                    ctx.lineWidth = 0.7;
-                    ctx.beginPath();
-                    ctx.moveTo(px - spikeLen, py);
-                    ctx.lineTo(px + spikeLen, py);
-                    ctx.moveTo(px, py - spikeLen);
-                    ctx.lineTo(px, py + spikeLen);
-                    ctx.stroke();
-                }
+                lastMeteorAt = now;
             }
 
-            // Occasional shooting star with tapered tail
-            if (!reducedMotion) {
-                if (now - lastMeteorAt > 4200 + Math.random() * 3500) {
-                    spawnMeteor(now);
-                }
+            function drawFrame(now) {
+                ctx.clearRect(0, 0, width, height);
 
-                for (let i = meteors.length - 1; i >= 0; i--) {
-                    const m = meteors[i];
-                    m.x += m.vx;
-                    m.y += m.vy;
-                    m.life += 1;
+                // Smooth mouse parallax interpolation
+                mouseX += (targetMouseX - mouseX) * 0.05;
+                mouseY += (targetMouseY - mouseY) * 0.05;
+                const scrollFactor = window.scrollY * 0.08;
 
-                    const progress = m.life / m.maxLife;
-                    const opacity = Math.sin(progress * Math.PI);
-                    const mag = Math.hypot(m.vx, m.vy);
-                    const tailX = m.x - (m.vx / mag) * m.length;
-                    const tailY = m.y - (m.vy / mag) * m.length;
+                for (const s of stars) {
+                    if (!reducedMotion) {
+                        s.y -= s.driftY;
+                        if (s.y < -4) s.y = height + 4;
+                    }
 
-                    const grad = ctx.createLinearGradient(m.x, m.y, tailX, tailY);
-                    grad.addColorStop(0, `rgba(238, 242, 255, ${(opacity * 0.95).toFixed(3)})`);
-                    grad.addColorStop(0.25, `rgba(168, 199, 255, ${(opacity * 0.45).toFixed(3)})`);
-                    grad.addColorStop(1, "rgba(168, 199, 255, 0)");
+                    // Seamless modulo wrapping with parallax offset
+                    const px = ((s.x + mouseX * s.parallax) % width + width) % width;
+                    const py = ((s.y + mouseY * s.parallax - scrollFactor * (s.layer + 1) * 0.25) % height + height) % height;
 
-                    ctx.strokeStyle = grad;
-                    ctx.lineWidth = 1.6;
+                    const twinkle = reducedMotion ? 1 : (0.72 + 0.28 * Math.sin(now * s.twinkleSpeed + s.twinklePhase));
+                    const alpha = s.baseAlpha * twinkle;
+                    const { r, g, b } = s.color;
+
+                    ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha.toFixed(3)})`;
                     ctx.beginPath();
-                    ctx.moveTo(m.x, m.y);
-                    ctx.lineTo(tailX, tailY);
-                    ctx.stroke();
+                    ctx.arc(px, py, s.radius, 0, Math.PI * 2);
+                    ctx.fill();
 
-                    if (m.life >= m.maxLife) {
-                        meteors.splice(i, 1);
+                    // Subtle 4-point optical diffraction spikes on bright foreground stars
+                    if (s.spike) {
+                        const spikeLen = s.radius * 4.4;
+                        ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${(alpha * 0.35).toFixed(3)})`;
+                        ctx.lineWidth = 0.7;
+                        ctx.beginPath();
+                        ctx.moveTo(px - spikeLen, py);
+                        ctx.lineTo(px + spikeLen, py);
+                        ctx.moveTo(px, py - spikeLen);
+                        ctx.lineTo(px, py + spikeLen);
+                        ctx.stroke();
                     }
                 }
 
-                requestAnimationFrame(drawFrame);
+                // Occasional shooting star with tapered tail
+                if (!reducedMotion) {
+                    if (now - lastMeteorAt > 4200 + Math.random() * 3500) {
+                        spawnMeteor(now);
+                    }
+
+                    for (let i = meteors.length - 1; i >= 0; i--) {
+                        const m = meteors[i];
+                        m.x += m.vx;
+                        m.y += m.vy;
+                        m.life += 1;
+
+                        const progress = m.life / m.maxLife;
+                        const opacity = Math.sin(progress * Math.PI);
+                        const mag = Math.hypot(m.vx, m.vy);
+                        const tailX = m.x - (m.vx / mag) * m.length;
+                        const tailY = m.y - (m.vy / mag) * m.length;
+
+                        const grad = ctx.createLinearGradient(m.x, m.y, tailX, tailY);
+                        grad.addColorStop(0, `rgba(238, 242, 255, ${(opacity * 0.95).toFixed(3)})`);
+                        grad.addColorStop(0.25, `rgba(168, 199, 255, ${(opacity * 0.45).toFixed(3)})`);
+                        grad.addColorStop(1, "rgba(168, 199, 255, 0)");
+
+                        ctx.strokeStyle = grad;
+                        ctx.lineWidth = 1.6;
+                        ctx.beginPath();
+                        ctx.moveTo(m.x, m.y);
+                        ctx.lineTo(tailX, tailY);
+                        ctx.stroke();
+
+                        if (m.life >= m.maxLife) {
+                            meteors.splice(i, 1);
+                        }
+                    }
+
+                    requestAnimationFrame(drawFrame);
+                }
             }
+
+            window.addEventListener("resize", resize);
+            window.addEventListener("mousemove", (e) => {
+                targetMouseX = (e.clientX / width - 0.5) * -1;
+                targetMouseY = (e.clientY / height - 0.5) * -1;
+            });
+
+            resize();
+            requestAnimationFrame(drawFrame);
+        })();
+
+        /* ── 2. Card Starlight Hover Spotlight ── */
+        document.querySelectorAll(".cosmic-card").forEach((card) => {
+            card.addEventListener("mousemove", (e) => {
+                const rect = card.getBoundingClientRect();
+                card.style.setProperty("--mx", `${e.clientX - rect.left}px`);
+                card.style.setProperty("--my", `${e.clientY - rect.top}px`);
+            });
+        });
+
+        /* ── 3. Live Observatory UTC Clock ── */
+        const clockEl = document.getElementById("utc-clock");
+        function updateClock() {
+            const now = new Date();
+            const hh = String(now.getUTCHours()).padStart(2, "0");
+            const mm = String(now.getUTCMinutes()).padStart(2, "0");
+            const ss = String(now.getUTCSeconds()).padStart(2, "0");
+            if (clockEl) clockEl.textContent = `UTC ${hh}:${mm}:${ss}`;
         }
+        updateClock();
+        setInterval(updateClock, 1000);
 
-        window.addEventListener("resize", resize);
-        window.addEventListener("mousemove", (e) => {
-            targetMouseX = (e.clientX / width - 0.5) * -1;
-            targetMouseY = (e.clientY / height - 0.5) * -1;
-        });
+        /* ── 4. Typewriter Role Telemetry ── */
+        const roles = ["Systems Engineer", "Agentic AI Developer", "IoT Builder", "Full-Stack Dev", "Placement Head"];
+        let ri = 0, ci = 0, deleting = false;
+        const roleEl = document.getElementById("typewriter-role");
 
-        resize();
-        requestAnimationFrame(drawFrame);
-    })();
-
-    /* ── 2. Card Starlight Hover Spotlight ── */
-    document.querySelectorAll(".cosmic-card").forEach((card) => {
-        card.addEventListener("mousemove", (e) => {
-            const rect = card.getBoundingClientRect();
-            card.style.setProperty("--mx", `${e.clientX - rect.left}px`);
-            card.style.setProperty("--my", `${e.clientY - rect.top}px`);
-        });
-    });
-
-    /* ── 3. Live Observatory UTC Clock ── */
-    const clockEl = document.getElementById("utc-clock");
-    function updateClock() {
-        const now = new Date();
-        const hh = String(now.getUTCHours()).padStart(2, "0");
-        const mm = String(now.getUTCMinutes()).padStart(2, "0");
-        const ss = String(now.getUTCSeconds()).padStart(2, "0");
-        if (clockEl) clockEl.textContent = `UTC ${hh}:${mm}:${ss}`;
-    }
-    updateClock();
-    setInterval(updateClock, 1000);
-
-    /* ── 4. Typewriter Role Telemetry ── */
-    const roles = ["Systems Engineer", "Agentic AI Developer", "IoT Builder", "Full-Stack Dev", "Placement Head"];
-    let ri = 0, ci = 0, deleting = false;
-    const roleEl = document.getElementById("typewriter-role");
-
-    function typeRole() {
-        const word = roles[ri];
-        roleEl.textContent = deleting ? word.substring(0, ci--) : word.substring(0, ci++);
-        if (!deleting && ci > word.length) {
-            deleting = true;
-            setTimeout(typeRole, 1400);
-            return;
+        function typeRole() {
+            const word = roles[ri];
+            roleEl.textContent = deleting ? word.substring(0, ci--) : word.substring(0, ci++);
+            if (!deleting && ci > word.length) {
+                deleting = true;
+                setTimeout(typeRole, 1400);
+                return;
+            }
+            if (deleting && ci < 0) {
+                deleting = false;
+                ri = (ri + 1) % roles.length;
+                ci = 0;
+            }
+            setTimeout(typeRole, deleting ? 45 : 85);
         }
-        if (deleting && ci < 0) {
-            deleting = false;
-            ri = (ri + 1) % roles.length;
-            ci = 0;
-        }
-        setTimeout(typeRole, deleting ? 45 : 85);
-    }
-    typeRole();
+        typeRole();
 
-    /* ── 5. Scroll Reveal & Active Nav Tracking ── */
-    const revealObs = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-            if (entry.isIntersecting) entry.target.classList.add("visible");
-        });
-    }, { threshold: 0.08 });
-    document.querySelectorAll(".reveal").forEach((el) => revealObs.observe(el));
+        /* ── 5. Scroll Reveal & Active Nav Tracking ── */
+        const revealObs = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) entry.target.classList.add("visible");
+            });
+        }, { threshold: 0.08 });
+        document.querySelectorAll(".reveal").forEach((el) => revealObs.observe(el));
 
-    const navLinks = document.querySelectorAll(".observatory-nav a[href^='#']");
-    const navSections = document.querySelectorAll("section[id]");
-    window.addEventListener("scroll", () => {
-        let activeId = "";
-        navSections.forEach((sec) => {
-            if (window.scrollY >= sec.offsetTop - 160) activeId = sec.id;
+        const navLinks = document.querySelectorAll(".observatory-nav a[href^='#']");
+        const navSections = document.querySelectorAll("section[id]");
+        window.addEventListener("scroll", () => {
+            let activeId = "";
+            navSections.forEach((sec) => {
+                if (window.scrollY >= sec.offsetTop - 160) activeId = sec.id;
+            });
+            navLinks.forEach((link) => {
+                link.classList.toggle("active", link.getAttribute("href") === `#${activeId}`);
+            });
         });
-        navLinks.forEach((link) => {
-            link.classList.toggle("active", link.getAttribute("href") === `#${activeId}`);
-        });
-    });
-</script>
+    </script>
 
 </body>
+
 </html>
