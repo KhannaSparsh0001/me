@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@react95/sans-serif/index.min.css">
@@ -15,7 +16,8 @@
             --border-dark: #808080;
         }
 
-        body, html {
+        body,
+        html {
             margin: 0;
             padding: 0;
             height: 100%;
@@ -32,11 +34,15 @@
             cursor: default;
         }
 
-        button, a, .dropdown-item, .quick-launch img {
+        button,
+        a,
+        .dropdown-item,
+        .quick-launch img {
             cursor: pointer !important;
         }
 
-        input, textarea {
+        input,
+        textarea {
             cursor: text !important;
         }
 
@@ -50,13 +56,27 @@
         }
 
         @keyframes windowOpen {
-            0% { opacity: 0; transform: scale(0.95); }
-            100% { opacity: 1; transform: scale(1); }
+            0% {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         @keyframes windowClose {
-            0% { opacity: 1; transform: scale(1); }
-            100% { opacity: 0; transform: scale(0.95); }
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(0.95);
+            }
         }
 
         .window-opening {
@@ -111,7 +131,8 @@
         .menu-bar span:active,
         .menu-bar span.active-btn {
             border-color: var(--border-dark) var(--border-light) var(--border-light) var(--border-dark);
-            padding: 3px 5px 1px 7px; /* Classic 90s physical press text shift */
+            padding: 3px 5px 1px 7px;
+            /* Classic 90s physical press text shift */
         }
 
         .menu-bar span::first-letter {
@@ -135,7 +156,7 @@
             min-width: 200px;
             z-index: 1000;
             padding: 2px;
-            box-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+            box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
         }
 
         .dropdown-menu.show {
@@ -200,7 +221,8 @@
 
         /* Scrollable Document Area */
         .document-area {
-            background-color: #808080; /* Classic dark grey outside the page */
+            background-color: #808080;
+            /* Classic dark grey outside the page */
             height: calc(100% - 90px);
             padding: 20px;
             overflow-y: scroll;
@@ -331,13 +353,13 @@
             color: var(--text-main);
             border: 2px solid;
             border-color: var(--border-light) var(--text-main) var(--text-main) var(--border-light);
-            box-shadow: 4px 4px 0 rgba(0,0,0,0.55);
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.55);
             padding: 0;
             width: min(420px, calc(100% - 30px));
         }
 
         dialog.message-dialog::backdrop {
-            background: rgba(0,0,0,0.25);
+            background: rgba(0, 0, 0, 0.25);
         }
 
         .dialog-body {
@@ -390,107 +412,107 @@
             border-color: var(--border-dark) var(--border-light) var(--border-light) var(--border-dark);
             padding: 5px 13px 3px 15px;
         }
-    
-    #window-container{
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    z-index:5000;
-}
 
-    .game-window{
-    position:absolute;
-
-    width:800px;
-    height:550px;
-
-    min-width:500px;
-    min-height:350px;
-
-    background:#c0c0c0;
-    border:2px outset white;
-    box-shadow:4px 4px 8px rgba(0,0,0,.4);
-
-    pointer-events:auto;
-
-    display:flex;
-    flex-direction:column;
-
-    resize:both;
-    overflow:hidden;
-    }
-
-    .game-window iframe{
-        flex:1;
-        width:100%;
-        border:none;
-        display:block;
-    }
-
-    .retro-window-header{
-    height:28px;
-    flex-shrink:0;
-
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-
-    padding:0 6px;
-
-    background:#c0c0c0;
-    border-bottom:1px solid #808080;
-
-    cursor:move;
-    }
-
-    .dragging{
-        user-select:none;
-    }
-
-
-    #quick-launch{
-        position:fixed;
-        left:8px;
-        top:90px;
-        display:flex;
-        flex-direction:column;
-        gap:10px;
-        z-index:10;
+        #window-container {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 5000;
         }
 
-        #quick-launch img{
-        width:32px;
-        height:32px;
-        cursor:pointer;
-        image-rendering:pixelated;
-        transition:.15s;
+        .game-window {
+            position: absolute;
+
+            width: 800px;
+            height: 550px;
+
+            min-width: 500px;
+            min-height: 350px;
+
+            background: #c0c0c0;
+            border: 2px outset white;
+            box-shadow: 4px 4px 8px rgba(0, 0, 0, .4);
+
+            pointer-events: auto;
+
+            display: flex;
+            flex-direction: column;
+
+            resize: both;
+            overflow: hidden;
         }
 
-        #quick-launch img:hover{
-        transform:scale(1.15);
-
-        }
-    
-    #visitor-counter{
-        position:fixed;
-        right:14px;
-        bottom:50px;
-        width:110px;
-        padding:8px;
-        background:#c0c0c0;
-        border:2px solid;
-        border-color:#fff #808080 #808080 #fff;
-        font-family:Tahoma;
-        font-size:12px;
-        text-align:center;
-        z-index:9999;
+        .game-window iframe {
+            flex: 1;
+            width: 100%;
+            border: none;
+            display: block;
         }
 
-        #count{
-        margin-top:5px;
-        font-size:20px;
-        font-weight:bold;
-        font-family:"Courier New";
+        .retro-window-header {
+            height: 28px;
+            flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 6px;
+
+            background: #c0c0c0;
+            border-bottom: 1px solid #808080;
+
+            cursor: move;
+        }
+
+        .dragging {
+            user-select: none;
+        }
+
+
+        #quick-launch {
+            position: fixed;
+            left: 8px;
+            top: 90px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        #quick-launch img {
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            image-rendering: pixelated;
+            transition: .15s;
+        }
+
+        #quick-launch img:hover {
+            transform: scale(1.15);
+
+        }
+
+        #visitor-counter {
+            position: fixed;
+            right: 14px;
+            bottom: 50px;
+            width: 110px;
+            padding: 8px;
+            background: #c0c0c0;
+            border: 2px solid;
+            border-color: #fff #808080 #808080 #fff;
+            font-family: Tahoma;
+            font-size: 12px;
+            text-align: center;
+            z-index: 9999;
+        }
+
+        #count {
+            margin-top: 5px;
+            font-size: 20px;
+            font-weight: bold;
+            font-family: "Courier New";
         }
 
         /* Mobile Responsiveness */
@@ -499,46 +521,59 @@
                 margin-right: 2px;
                 padding: 2px 4px;
             }
+
             .toolbar {
                 display: flex;
                 flex-direction: column;
                 align-items: flex-start;
                 padding: 5px;
             }
+
             .url-bar {
                 width: 100%;
                 margin-top: 5px;
             }
+
             .document-area {
-                height: calc(100% - 130px); /* Leave room for bottom dock */
+                height: calc(100% - 130px);
+                /* Leave room for bottom dock */
                 padding: 10px;
             }
+
             .resume-container {
                 padding: 15px;
             }
+
             .pfp {
                 width: 100px;
                 margin-right: 15px;
             }
+
             .identity-block {
                 min-height: auto;
             }
+
             .header-section h1 {
                 font-size: 16px;
             }
+
             .header-section h2 {
                 font-size: 28px;
             }
-            
+
             /* Skills Table Stacking */
-            table, tbody, tr, td {
+            table,
+            tbody,
+            tr,
+            td {
                 display: block;
                 width: 100%;
             }
+
             td {
                 margin-bottom: 20px;
             }
-            
+
             /* OS Windows */
             .game-window {
                 width: 95% !important;
@@ -564,6 +599,7 @@
                 padding: 5px 0 !important;
                 z-index: 10000;
             }
+
             #quick-launch img {
                 width: 32px !important;
                 height: 32px !important;
@@ -574,6 +610,7 @@
                 display: none;
             }
         }
+
         /* Mobile Game Overlay Styles */
         .mobile-game-overlay {
             position: absolute;
@@ -583,12 +620,14 @@
             display: flex;
             justify-content: space-between;
             z-index: 1000;
-            pointer-events: none; /* Let clicks pass through empty areas */
+            pointer-events: none;
+            /* Let clicks pass through empty areas */
         }
-        
+
         .mobile-game-overlay .dpad,
         .mobile-game-overlay .action-buttons {
-            pointer-events: auto; /* Catch touches on the controls */
+            pointer-events: auto;
+            /* Catch touches on the controls */
             display: flex;
         }
 
@@ -613,13 +652,29 @@
             align-items: center;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
             user-select: none;
-            touch-action: none; /* Prevent scrolling when pressing */
+            touch-action: none;
+            /* Prevent scrolling when pressing */
         }
 
-        .mobile-game-overlay .dbtn.up { top: 0; left: 40px; }
-        .mobile-game-overlay .dbtn.down { bottom: 0; left: 40px; }
-        .mobile-game-overlay .dbtn.left { top: 40px; left: 0; }
-        .mobile-game-overlay .dbtn.right { top: 40px; right: 0; }
+        .mobile-game-overlay .dbtn.up {
+            top: 0;
+            left: 40px;
+        }
+
+        .mobile-game-overlay .dbtn.down {
+            bottom: 0;
+            left: 40px;
+        }
+
+        .mobile-game-overlay .dbtn.left {
+            top: 40px;
+            left: 0;
+        }
+
+        .mobile-game-overlay .dbtn.right {
+            top: 40px;
+            right: 0;
+        }
 
         .mobile-game-overlay .action-buttons {
             flex-direction: column;
@@ -651,128 +706,169 @@
 
         /* 1. Base Pill Shape & Liquid Glass Setup */
         .liquid-glass-btn {
-          position: relative;
-          width: 240px;
-          height: 70px;
-          border-radius: 50px;
-          border: none;
-          background: rgba(10, 10, 15, 0.4);
-          backdrop-filter: blur(12px) contrast(1.2);
-          -webkit-backdrop-filter: blur(12px) contrast(1.2);
-          cursor: pointer;
-          outline: none;
-          box-shadow: 
-            0 20px 30px -10px rgba(0, 0, 0, 0.8),
-            0 0 20px rgba(0, 255, 255, 0.2),
-            0 0 30px rgba(255, 0, 255, 0.15),
-            inset 0 0 0 1px rgba(255, 255, 255, 0.15),
-            inset 0 1px 3px rgba(255, 255, 255, 0.5),
-            inset 0 -2px 5px rgba(255, 215, 0, 0.2);
-          animation: levitate 4s ease-in-out infinite;
-          transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            width: 240px;
+            height: 70px;
+            border-radius: 50px;
+            border: none;
+            background: rgba(10, 10, 15, 0.4);
+            backdrop-filter: blur(12px) contrast(1.2);
+            -webkit-backdrop-filter: blur(12px) contrast(1.2);
+            cursor: pointer;
+            outline: none;
+            box-shadow:
+                0 20px 30px -10px rgba(0, 0, 0, 0.8),
+                0 0 20px rgba(0, 255, 255, 0.2),
+                0 0 30px rgba(255, 0, 255, 0.15),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.15),
+                inset 0 1px 3px rgba(255, 255, 255, 0.5),
+                inset 0 -2px 5px rgba(255, 215, 0, 0.2);
+            animation: levitate 4s ease-in-out infinite;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+
         .liquid-glass-btn:hover {
-          transform: scale(1.05) translateY(-5px);
-          box-shadow: 
-            0 25px 40px -10px rgba(0, 0, 0, 0.9),
-            0 0 30px rgba(0, 255, 255, 0.4),
-            0 0 40px rgba(138, 43, 226, 0.4),
-            inset 0 0 0 1px rgba(255, 255, 255, 0.3),
-            inset 0 2px 4px rgba(255, 255, 255, 0.7);
+            transform: scale(1.05) translateY(-5px);
+            box-shadow:
+                0 25px 40px -10px rgba(0, 0, 0, 0.9),
+                0 0 30px rgba(0, 255, 255, 0.4),
+                0 0 40px rgba(138, 43, 226, 0.4),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.3),
+                inset 0 2px 4px rgba(255, 255, 255, 0.7);
         }
+
         .glitter-layer {
-          position: absolute;
-          inset: 0;
-          border-radius: 50px;
-          overflow: hidden;
-          z-index: 1;
-          pointer-events: none;
-          background: linear-gradient(
-            115deg, 
-            rgba(0, 255, 255, 0.3),
-            rgba(138, 43, 226, 0.3),
-            rgba(255, 0, 255, 0.3),
-            rgba(255, 215, 0, 0.3)
-          );
-          background-size: 300% 300%;
-          animation: iridescentFlow 6s ease infinite;
-          mix-blend-mode: color-dodge;
+            position: absolute;
+            inset: 0;
+            border-radius: 50px;
+            overflow: hidden;
+            z-index: 1;
+            pointer-events: none;
+            background: linear-gradient(115deg,
+                    rgba(0, 255, 255, 0.3),
+                    rgba(138, 43, 226, 0.3),
+                    rgba(255, 0, 255, 0.3),
+                    rgba(255, 215, 0, 0.3));
+            background-size: 300% 300%;
+            animation: iridescentFlow 6s ease infinite;
+            mix-blend-mode: color-dodge;
         }
+
         .glitter-layer::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background-image: 
-            radial-gradient(circle, #fff 1%, transparent 5%),
-            radial-gradient(circle, rgba(0, 255, 255, 0.8) 1%, transparent 4%),
-            radial-gradient(circle, rgba(255, 0, 255, 0.8) 1%, transparent 4%);
-          background-size: 10px 10px, 15px 15px, 20px 20px;
-          background-position: 0 0, 5px 5px, 10px 10px;
-          opacity: 0.6;
-          mix-blend-mode: overlay;
-          animation: sparkle 3s linear infinite;
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(circle, #fff 1%, transparent 5%),
+                radial-gradient(circle, rgba(0, 255, 255, 0.8) 1%, transparent 4%),
+                radial-gradient(circle, rgba(255, 0, 255, 0.8) 1%, transparent 4%);
+            background-size: 10px 10px, 15px 15px, 20px 20px;
+            background-position: 0 0, 5px 5px, 10px 10px;
+            opacity: 0.6;
+            mix-blend-mode: overlay;
+            animation: sparkle 3s linear infinite;
         }
+
         .glass-reflection {
-          position: absolute;
-          top: 2px;
-          left: 2px;
-          right: 2px;
-          height: 45%;
-          background: linear-gradient(
-            to bottom, 
-            rgba(255, 255, 255, 0.4) 0%, 
-            rgba(255, 255, 255, 0.05) 100%
-          );
-          border-radius: 50px 50px 10px 10px;
-          pointer-events: none;
-          z-index: 2;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            right: 2px;
+            height: 45%;
+            background: linear-gradient(to bottom,
+                    rgba(255, 255, 255, 0.4) 0%,
+                    rgba(255, 255, 255, 0.05) 100%);
+            border-radius: 50px 50px 10px 10px;
+            pointer-events: none;
+            z-index: 2;
         }
+
         .lg-star-glint {
-          position: absolute;
-          top: 8px;
-          right: 20px;
-          width: 4px;
-          height: 4px;
-          background: #fff;
-          border-radius: 50%;
-          box-shadow: 
-            0 0 10px 2px rgba(255,255,255,0.8),
-            0 0 20px 5px rgba(0, 255, 255, 0.6);
-          z-index: 3;
+            position: absolute;
+            top: 8px;
+            right: 20px;
+            width: 4px;
+            height: 4px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow:
+                0 0 10px 2px rgba(255, 255, 255, 0.8),
+                0 0 20px 5px rgba(0, 255, 255, 0.6);
+            z-index: 3;
         }
-        .lg-star-glint::before, .lg-star-glint::after {
-          content: '';
-          position: absolute;
-          background: rgba(255, 255, 255, 0.9);
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
+
+        .lg-star-glint::before,
+        .lg-star-glint::after {
+            content: '';
+            position: absolute;
+            background: rgba(255, 255, 255, 0.9);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
-        .lg-star-glint::before { width: 20px; height: 1px; }
-        .lg-star-glint::after { width: 1px; height: 20px; }
+
+        .lg-star-glint::before {
+            width: 20px;
+            height: 1px;
+        }
+
+        .lg-star-glint::after {
+            width: 1px;
+            height: 20px;
+        }
+
         .lg-btn-text {
-          position: relative;
-          z-index: 4;
-          color: #ffffff;
-          font-size: 14px;
-          font-weight: 600;
-          letter-spacing: 4px;
-          text-transform: uppercase;
-          text-shadow: 0 0 10px rgba(0, 255, 255, 0.8), 0 0 20px rgba(255, 0, 255, 0.5);
+            position: relative;
+            z-index: 4;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.8), 0 0 20px rgba(255, 0, 255, 0.5);
         }
+
         @keyframes levitate {
-          0%, 100% { transform: translateY(0) rotateX(0deg); }
-          50% { transform: translateY(-8px) rotateX(2deg); }
+
+            0%,
+            100% {
+                transform: translateY(0) rotateX(0deg);
+            }
+
+            50% {
+                transform: translateY(-8px) rotateX(2deg);
+            }
         }
+
         @keyframes iridescentFlow {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
+
         @keyframes sparkle {
-          0% { transform: translateY(0px) scale(1); opacity: 0.5; }
-          50% { transform: translateY(-2px) scale(1.1); opacity: 0.8; }
-          100% { transform: translateY(0px) scale(1); opacity: 0.5; }
+            0% {
+                transform: translateY(0px) scale(1);
+                opacity: 0.5;
+            }
+
+            50% {
+                transform: translateY(-2px) scale(1.1);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: translateY(0px) scale(1);
+                opacity: 0.5;
+            }
         }
 
         /* Dark Matter Glass Button */
@@ -781,6 +877,7 @@
             animation: levitate 6s ease-in-out infinite;
             transform-style: preserve-3d;
         }
+
         .button-shadow {
             position: absolute;
             bottom: -35px;
@@ -793,10 +890,21 @@
             animation: shadow-pulse 6s ease-in-out infinite;
             pointer-events: none;
         }
+
         @keyframes shadow-pulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(0.85); opacity: 0.3; }
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+
+            50% {
+                transform: scale(0.85);
+                opacity: 0.3;
+            }
         }
+
         .dm-button {
             position: relative;
             width: 320px;
@@ -809,13 +917,16 @@
             transform-style: preserve-3d;
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+
         .dm-button:hover {
             transform: scale(1.04) rotateX(5deg);
         }
+
         .dm-button:active {
             transform: scale(0.97) translateY(5px);
             transition: transform 0.1s ease;
         }
+
         .dm-inner {
             position: absolute;
             inset: 0;
@@ -825,9 +936,10 @@
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             box-shadow: inset 0 0 30px 10px rgba(0, 0, 0, 0.9),
-                        inset 0 15px 15px -10px rgba(255, 255, 255, 0.15);
+                inset 0 15px 15px -10px rgba(255, 255, 255, 0.15);
             z-index: 1;
         }
+
         .dm-filaments {
             position: absolute;
             inset: -50%;
@@ -838,24 +950,33 @@
             mix-blend-mode: hard-light;
             animation: drift 30s linear infinite;
         }
+
         .dm-filaments.deep {
             opacity: 0.5;
             filter: blur(5px);
             transform: scale(1.3) rotate(15deg);
             animation: drift 45s linear infinite reverse;
         }
+
         @keyframes drift {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            100% { transform: translate(-10%, -10%) rotate(5deg); }
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(-10%, -10%) rotate(5deg);
+            }
         }
+
         .dm-mist {
             position: absolute;
             inset: 0;
             background: radial-gradient(circle at 50% 120%, transparent 40%, rgba(5, 5, 8, 0.9) 90%),
-                        radial-gradient(circle at 20% -20%, rgba(20, 20, 25, 0.4) 0%, transparent 60%);
+                radial-gradient(circle at 20% -20%, rgba(20, 20, 25, 0.4) 0%, transparent 60%);
             mix-blend-mode: multiply;
             z-index: 2;
         }
+
         .dm-glitter {
             position: absolute;
             inset: 0;
@@ -865,24 +986,27 @@
             opacity: 0.45;
             z-index: 3;
         }
+
         .dm-diffraction {
             position: absolute;
             inset: 0;
-            background: conic-gradient(from 135deg at 50% 50%, 
-                transparent 0deg, rgba(0, 255, 255, 0.4) 60deg, transparent 120deg, 
-                rgba(255, 0, 255, 0.4) 180deg, transparent 240deg, 
-                rgba(200, 200, 255, 0.3) 300deg, transparent 360deg);
+            background: conic-gradient(from 135deg at 50% 50%,
+                    transparent 0deg, rgba(0, 255, 255, 0.4) 60deg, transparent 120deg,
+                    rgba(255, 0, 255, 0.4) 180deg, transparent 240deg,
+                    rgba(200, 200, 255, 0.3) 300deg, transparent 360deg);
             mix-blend-mode: screen;
             opacity: 0.6;
             z-index: 4;
             filter: blur(8px);
             transition: opacity 0.4s ease;
         }
+
         .dm-button:hover .dm-diffraction {
             opacity: 0.85;
             transform: rotate(5deg) scale(1.1);
             transition: transform 1s ease, opacity 0.4s ease;
         }
+
         .dm-glass-highlight {
             position: absolute;
             top: 2px;
@@ -894,6 +1018,7 @@
             pointer-events: none;
             z-index: 5;
         }
+
         .dm-glass-bottom {
             position: absolute;
             bottom: 2px;
@@ -905,15 +1030,16 @@
             pointer-events: none;
             z-index: 5;
         }
+
         .dm-chrome-edge {
             position: absolute;
             inset: 0;
             border-radius: 48px;
             padding: 1.5px;
-            background: linear-gradient(115deg, 
-                rgba(255,255,255,0.9) 0%, rgba(0,255,255,0.7) 15%, 
-                rgba(10,10,10,0.5) 30%, rgba(10,10,10,0.5) 70%, 
-                rgba(255,0,255,0.7) 85%, rgba(255,255,255,0.9) 100%);
+            background: linear-gradient(115deg,
+                    rgba(255, 255, 255, 0.9) 0%, rgba(0, 255, 255, 0.7) 15%,
+                    rgba(10, 10, 10, 0.5) 30%, rgba(10, 10, 10, 0.5) 70%,
+                    rgba(255, 0, 255, 0.7) 85%, rgba(255, 255, 255, 0.9) 100%);
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
             mask-composite: exclude;
@@ -921,29 +1047,52 @@
             pointer-events: none;
             box-shadow: 0 0 15px rgba(0, 255, 255, 0.2), inset 0 0 10px rgba(255, 0, 255, 0.2);
         }
+
         .dm-star-glint {
             position: absolute;
             width: 3px;
             height: 3px;
             background: #fff;
             border-radius: 50%;
-            box-shadow: 0 0 12px 3px rgba(255, 255, 255, 0.9), 
-                        0 0 25px 8px rgba(0, 255, 255, 0.6);
+            box-shadow: 0 0 12px 3px rgba(255, 255, 255, 0.9),
+                0 0 25px 8px rgba(0, 255, 255, 0.6);
             z-index: 7;
             pointer-events: none;
         }
-        .dm-star-glint.top-right { top: 12%; right: 18%; }
-        .dm-star-glint.bottom-left { bottom: 18%; left: 15%; transform: scale(0.6); box-shadow: 0 0 10px 2px #fff, 0 0 20px 5px rgba(255, 0, 255, 0.5); }
-        .dm-star-glint::before, .dm-star-glint::after {
+
+        .dm-star-glint.top-right {
+            top: 12%;
+            right: 18%;
+        }
+
+        .dm-star-glint.bottom-left {
+            bottom: 18%;
+            left: 15%;
+            transform: scale(0.6);
+            box-shadow: 0 0 10px 2px #fff, 0 0 20px 5px rgba(255, 0, 255, 0.5);
+        }
+
+        .dm-star-glint::before,
+        .dm-star-glint::after {
             content: '';
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), transparent);
         }
-        .dm-star-glint::before { width: 45px; height: 1px; }
-        .dm-star-glint::after { width: 1px; height: 45px; background: linear-gradient(180deg, transparent, rgba(255,255,255,0.9), transparent); }
+
+        .dm-star-glint::before {
+            width: 45px;
+            height: 1px;
+        }
+
+        .dm-star-glint::after {
+            width: 1px;
+            height: 45px;
+            background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.9), transparent);
+        }
+
         .dm-text {
             position: relative;
             z-index: 8;
@@ -1109,36 +1258,231 @@
         }
 
         @media (max-width: 768px) {
+            /* Hide the desktop portal tray on mobile in favor of the floating draggable bubble */
             .portal-bay {
-                right: 8px;
-                bottom: 50px;
-                width: auto;
+                display: none !important;
             }
-            .portal-void {
-                flex-direction: row;
-                gap: 6px;
-                padding: 5px 6px 7px;
+        }
+
+        /* ── Mobile Floating Realm Bubble & Sheet Modal ── */
+        #mobile-portal-bubble {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            #mobile-portal-bubble {
+                display: flex;
+                position: fixed;
+                right: 14px;
+                bottom: 85px;
+                width: 52px;
+                height: 52px;
+                border-radius: 50%;
+                background: radial-gradient(circle at 30% 30%, #7aa8ff 0%, #1a1a2e 70%, #050510 100%);
+                border: 2px solid rgba(255, 255, 255, 0.45);
+                box-shadow: 
+                    0 8px 24px rgba(0, 0, 0, 0.6),
+                    0 0 15px rgba(122, 168, 255, 0.4),
+                    inset 0 1px 2px rgba(255, 255, 255, 0.7);
+                align-items: center;
+                justify-content: center;
+                z-index: 9999;
+                cursor: pointer;
+                touch-action: none;
+                user-select: none;
+                transition: opacity 0.28s ease, transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
             }
-            .portal-slot-dm {
-                width: 112px;
-                height: 36px;
+
+            #mobile-portal-bubble.bubble-hidden {
+                opacity: 0 !important;
+                pointer-events: none !important;
+                transform: scale(0.6);
             }
-            .portal-slot-lg {
-                width: 108px;
-                height: 36px;
+
+            #mobile-portal-bubble:active {
+                transform: scale(0.92);
             }
-            .portal-slot-vanilla {
-                width: 108px;
-                height: 32px;
+
+            .bubble-icon {
+                font-size: 20px;
+                color: #ffffff;
+                text-shadow: 0 0 8px #7aa8ff, 0 0 16px #00e5ff;
+                line-height: 1;
+                pointer-events: none;
+                animation: bubble-spin 10s linear infinite;
             }
-            .portal-scaler-dm {
-                transform: scale(0.34);
+
+            .bubble-badge {
+                position: absolute;
+                top: -2px;
+                right: -2px;
+                background: #00ff88;
+                color: #000;
+                font-size: 8px;
+                font-family: 'Pixelated', sans-serif;
+                font-weight: 700;
+                padding: 1px 4px;
+                border-radius: 6px;
+                border: 1px solid #000;
+                box-shadow: 0 0 6px #00ff88;
+                pointer-events: none;
             }
-            .portal-scaler-lg {
-                transform: scale(0.44);
+
+            @keyframes bubble-spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
             }
-            .portal-scaler-vanilla {
-                transform: scale(0.54);
+
+            /* Realm Bottom Sheet / Dialog */
+            #portal-sheet-backdrop {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.65);
+                backdrop-filter: blur(4px);
+                -webkit-backdrop-filter: blur(4px);
+                z-index: 100000;
+                opacity: 0;
+                transition: opacity 0.25s ease;
+            }
+
+            #portal-sheet-backdrop.active {
+                display: block;
+                opacity: 1;
+            }
+
+            #portal-sheet {
+                position: fixed;
+                left: 12px;
+                right: 12px;
+                bottom: 16px;
+                max-height: 82vh;
+                background: var(--os-gray, #c0c0c0);
+                border: 2px solid;
+                border-color: var(--border-light, #ffffff) #404040 #404040 var(--border-light, #ffffff);
+                box-shadow: 
+                    inset 1px 1px 0 #dfdfdf,
+                    inset -1px -1px 0 #808080,
+                    0 15px 35px rgba(0, 0, 0, 0.7);
+                border-radius: 4px;
+                padding: 4px;
+                z-index: 100001;
+                display: flex;
+                flex-direction: column;
+                transform: translateY(110%);
+                transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+
+            #portal-sheet.active {
+                transform: translateY(0);
+            }
+
+            .portal-sheet-header {
+                background: #000080;
+                color: #ffffff;
+                font-family: 'R95 Sans Serif 8pt', 'MS Sans Serif', Tahoma, sans-serif;
+                font-size: 11px;
+                font-weight: bold;
+                letter-spacing: 0.5px;
+                padding: 4px 6px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 6px;
+            }
+
+            .portal-sheet-close {
+                width: 18px;
+                height: 18px;
+                background: var(--os-gray, #c0c0c0);
+                border: 1px solid;
+                border-color: var(--border-light, #ffffff) #404040 #404040 var(--border-light, #ffffff);
+                font-family: 'Pixelated', monospace;
+                font-size: 10px;
+                font-weight: bold;
+                line-height: 16px;
+                text-align: center;
+                cursor: pointer;
+                color: #000;
+                padding: 0;
+            }
+
+            .portal-sheet-body {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                padding: 4px;
+                overflow-y: auto;
+            }
+
+            .portal-card-btn {
+                background: #ffffff;
+                border: 2px solid;
+                border-color: #dfdfdf #808080 #808080 #dfdfdf;
+                padding: 10px 12px;
+                border-radius: 3px;
+                text-align: left;
+                cursor: pointer;
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                text-decoration: none;
+                color: #171717;
+                box-shadow: 1px 1px 0 rgba(0,0,0,0.15);
+                transition: background-color 0.15s ease, transform 0.15s ease;
+            }
+
+            .portal-card-btn:active {
+                border-color: #808080 #dfdfdf #dfdfdf #808080;
+                transform: translate(1px, 1px);
+            }
+
+            .portal-card-btn.card-space {
+                background: linear-gradient(135deg, #0b0d19 0%, #171b33 100%);
+                color: #ffffff;
+                border-color: #4a5d99 #000000 #000000 #4a5d99;
+            }
+
+            .portal-card-btn.card-fintech {
+                background: linear-gradient(135deg, #081412 0%, #0d221e 100%);
+                color: #ffffff;
+                border-color: #00ff88 #000000 #000000 #00ff88;
+            }
+
+            .portal-card-btn.card-normal {
+                background: #ffffff;
+                color: #171717;
+                border: 2px solid #808080;
+            }
+
+            .card-title-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                font-family: 'Inter', -apple-system, sans-serif;
+                font-weight: 700;
+                font-size: 13px;
+                letter-spacing: 0.05em;
+                text-transform: uppercase;
+            }
+
+            .card-space .card-title-row {
+                color: #7aa8ff;
+            }
+
+            .card-fintech .card-title-row {
+                color: #00ff88;
+            }
+
+            .card-normal .card-title-row {
+                color: #171717;
+            }
+
+            .card-desc {
+                font-size: 11px;
+                line-height: 1.35;
+                opacity: 0.82;
+                font-family: system-ui, -apple-system, sans-serif;
             }
         }
 
@@ -1165,13 +1509,11 @@
 
         #dimensional-rift.warp-fintech {
             background:
-                repeating-linear-gradient(
-                    to bottom,
+                repeating-linear-gradient(to bottom,
                     rgba(0, 255, 136, 0.14) 0px,
                     rgba(0, 255, 136, 0.14) 1px,
                     rgba(5, 7, 11, 0.94) 1px,
-                    rgba(5, 7, 11, 0.94) 4px
-                );
+                    rgba(5, 7, 11, 0.94) 4px);
             animation: rift-fintech 0.38s ease-out forwards;
         }
 
@@ -1188,42 +1530,80 @@
         }
 
         @keyframes rift-space {
-            0%   { opacity: 0; transform: scale(0.85); }
-            45%  { opacity: 0.9; transform: scale(1.04); }
-            100% { opacity: 1; transform: scale(1); }
+            0% {
+                opacity: 0;
+                transform: scale(0.85);
+            }
+
+            45% {
+                opacity: 0.9;
+                transform: scale(1.04);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         @keyframes rift-fintech {
-            0%   { opacity: 0; filter: brightness(1.8); }
-            50%  { opacity: 0.92; filter: brightness(1.2); }
-            100% { opacity: 1; filter: brightness(1); }
+            0% {
+                opacity: 0;
+                filter: brightness(1.8);
+            }
+
+            50% {
+                opacity: 0.92;
+                filter: brightness(1.2);
+            }
+
+            100% {
+                opacity: 1;
+                filter: brightness(1);
+            }
         }
 
         @keyframes rift-vanilla {
-            0%   { opacity: 0; }
-            50%  { opacity: 0.85; }
-            100% { opacity: 1; }
+            0% {
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 0.85;
+            }
+
+            100% {
+                opacity: 1;
+            }
         }
     </style>
 
 </head>
+
 <body>
     <!-- Hidden SVG Definitions for Dark Matter Mesh Filter -->
     <svg style="width: 0; height: 0; position: absolute;">
         <defs>
-            <filter id="dark-matter-mesh" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
-                <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="5" result="noise" seed="12"/>
-                <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 4 -1.5" in="noise" result="alphaNoise" />
-                <feDisplacementMap in="alphaNoise" in2="noise" scale="35" xChannelSelector="R" yChannelSelector="G" result="distorted" />
-                <feColorMatrix type="matrix" values="0 0 0 0 0.05 0 0 0 0 0.06 0 0 0 0 0.08 0 0 0 2.5 0" in="distorted" result="filaments" />
-                <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -14" in="noise" result="peaks" />
-                <feColorMatrix type="matrix" values="0 0 0 0 0.2 0 0 0 0 0.8 0 0 0 0 1.0 0 0 0 2 0" in="peaks" result="energyNodes" />
+            <filter id="dark-matter-mesh" x="-20%" y="-20%" width="140%" height="140%"
+                color-interpolation-filters="sRGB">
+                <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="5" result="noise" seed="12" />
+                <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 4 -1.5" in="noise"
+                    result="alphaNoise" />
+                <feDisplacementMap in="alphaNoise" in2="noise" scale="35" xChannelSelector="R" yChannelSelector="G"
+                    result="distorted" />
+                <feColorMatrix type="matrix" values="0 0 0 0 0.05 0 0 0 0 0.06 0 0 0 0 0.08 0 0 0 2.5 0" in="distorted"
+                    result="filaments" />
+                <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -14" in="noise"
+                    result="peaks" />
+                <feColorMatrix type="matrix" values="0 0 0 0 0.2 0 0 0 0 0.8 0 0 0 0 1.0 0 0 0 2 0" in="peaks"
+                    result="energyNodes" />
                 <feGaussianBlur stdDeviation="1.5" in="energyNodes" result="glowingNodes" />
                 <feMerge result="mesh">
                     <feMergeNode in="filaments" />
                     <feMergeNode in="glowingNodes" />
                 </feMerge>
-                <feSpecularLighting in="mesh" surfaceScale="2" specularConstant="1.2" specularExponent="40" lighting-color="#ffffff" result="specular">
+                <feSpecularLighting in="mesh" surfaceScale="2" specularConstant="1.2" specularExponent="40"
+                    lighting-color="#ffffff" result="specular">
                     <fePointLight x="160" y="-30" z="150" />
                 </feSpecularLighting>
                 <feComposite in="specular" in2="mesh" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" />
@@ -1233,7 +1613,8 @@
 
     <!-- Dimensional switches moved into the Win95 Portal Containment Bay (.portal-bay) -->
 
-    <div id="boot-screen" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:black; color:#c0c0c0; z-index:9999999; font-family:'Courier New', monospace; padding:20px; box-sizing:border-box;">
+    <div id="boot-screen"
+        style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:black; color:#c0c0c0; z-index:9999999; font-family:'Courier New', monospace; padding:20px; box-sizing:border-box;">
         <div>Starting Windows 95...</div>
         <div style="margin-top:20px;">Memory Test: 32768K OK</div>
         <div style="margin-top:10px;">Loading...</div>
@@ -1268,12 +1649,14 @@
                     <a href="#contact" class="dropdown-item">Contact / Socials</a>
                     <div class="dropdown-separator"></div>
                     <a href="https://github.com/KhannaSparsh0001" target="_blank" class="dropdown-item">GitHub</a>
-                    <a href="https://www.linkedin.com/in/khannasparsh/" target="_blank" class="dropdown-item">LinkedIn</a>
+                    <a href="https://www.linkedin.com/in/khannasparsh/" target="_blank"
+                        class="dropdown-item">LinkedIn</a>
                     <a href="https://x.com/your-handle" target="_blank" class="dropdown-item">X</a>
                     <a href="https://medium.com/@khannasparsh0001" target="_blank" class="dropdown-item">Medium</a>
                     <a href="https://discord.com/users/your-user-id" target="_blank" class="dropdown-item">Discord</a>
                     <a href="mailto:khannasparsh0001@gmail.com" class="dropdown-item">Email</a>
-                    <a href="https://www.geeksforgeeks.org/user/khannasparsh0001/" target="_blank" class="dropdown-item">DSA Profile</a>
+                    <a href="https://www.geeksforgeeks.org/user/khannasparsh0001/" target="_blank"
+                        class="dropdown-item">DSA Profile</a>
                 </div>
             </div>
             <span>Go</span>
@@ -1284,10 +1667,13 @@
             <div class="menu-item-container">
                 <span id="options-menu-btn">Options</span>
                 <div class="dropdown-menu" id="options-dropdown">
-                    <a href="#send-message" class="dropdown-item" id="send-message-option"><img src="icons/send_msg.png" style="width: 16px; height: 16px; margin-right: 8px; vertical-align: middle; display: inline-block;">Send Message...</a>
-                    <a href="resume.html" class="dropdown-item">Executive Resume (Vanilla)</a>
+                    <a href="#send-message" class="dropdown-item" id="send-message-option"><img src="icons/send_msg.png"
+                            style="width: 16px; height: 16px; margin-right: 8px; vertical-align: middle; display: inline-block;">Send
+                        Message...</a>
+                    <a href="resume.html" class="dropdown-item">Executive Resume</a>
                     <div class="dropdown-separator"></div>
-                    <a href="docs\Sparsh_khanna_Resume_gndu-18.pdf" download="Sparsh-Khanna-Resume.pdf" class="dropdown-item" target="_blank">Download Resume</a>
+                    <a href="docs\Sparsh_khanna_Resume_gndu-18.pdf" download="Sparsh-Khanna-Resume.pdf"
+                        class="dropdown-item" target="_blank">Download Resume</a>
                 </div>
             </div>
             <span>Directory</span>
@@ -1301,53 +1687,59 @@
                 </div>    
             </div>
             -->
-            
+
             <div class="menu-item-container">
                 <span id="window-menu-btn">Window</span>
                 <div class="dropdown-menu" id="window-dropdown">
-                    <div onclick="openGameModal('Mahjong Solitaire', 'games_Dev/mah-main/dist/index.html')">Play Mahjong</div>
+                    <div onclick="openGameModal('Mahjong Solitaire', 'games_Dev/mah-main/dist/index.html')">Play Mahjong
+                    </div>
                     <div onclick="openGameModal('2048', 'games_Dev/2048-master/index.html')">Play 2048</div>
-                    <div onclick="openGameModal('Penny Farthing', 'games_Dev/penny-farthing-main/index.html')">Play Penny Farthing</div>
-                    <div onclick="openGameModal('Minesweeper', 'games_Dev/minesweeper/index.html?v=2', '210px', '280px')">Play Minesweeper</div>
+                    <div onclick="openGameModal('Penny Farthing', 'games_Dev/penny-farthing-main/index.html')">Play
+                        Penny Farthing</div>
+                    <div
+                        onclick="openGameModal('Minesweeper', 'games_Dev/minesweeper/index.html?v=2', '210px', '280px')">
+                        Play Minesweeper</div>
                     <div class="dropdown-separator"></div>
-                    <div onclick="openApp('MS-DOS Prompt (DOOM)', 'apps/doom/index.html', '660px', '460px', true)">Play DOOM</div>
-                    <div onclick="openApp('MS-DOS Prompt (Wolf3D)', 'apps/wolf3d/index.html', '660px', '460px', true)">Play Wolfenstein 3D</div>
+                    <div onclick="openApp('MS-DOS Prompt (DOOM)', 'apps/doom/index.html', '660px', '460px', true)">Play
+                        DOOM</div>
+                    <div onclick="openApp('MS-DOS Prompt (Wolf3D)', 'apps/wolf3d/index.html', '660px', '460px', true)">
+                        Play Wolfenstein 3D</div>
                 </div>
-        </div>
-        <span id="help-btn" style="cursor:pointer;">Help</span>
-        <div id="window-container"></div>
-    
+            </div>
+            <span id="help-btn" style="cursor:pointer;">Help</span>
+            <div id="window-container"></div>
+
         </div>
         <!-- URL Toolbar -->
         <div class="toolbar">
             <span class="location-label">Location:</span>
-            <input type="text" class="url-bar" value="file:///C:/Users/Administrator/Documents/Resume_Final.html" readonly>
+            <input type="text" class="url-bar" value="file:///C:/Users/Administrator/Documents/Resume_Final.html"
+                readonly>
         </div>
 
         <hr class="chrome-divider">
 
         <div id="quick-launch">
-            <img src="icons/notepad.png"
-                onclick="openApp('Notepad','apps/notepad/index.html', '600px', '450px')" title="Notepad">
-            <img src="icons/paint.png"
-                onclick="openApp('Paint','apps/paint/index.html', '700px', '500px')" title="Paint">
-            <img src="icons/winamp.png"
-                onclick="openApp('Winamp','apps/winamp/index.html', '290px', '375px')" title="Winamp">
+            <img src="icons/notepad.png" onclick="openApp('Notepad','apps/notepad/index.html', '600px', '450px')"
+                title="Notepad">
+            <img src="icons/paint.png" onclick="openApp('Paint','apps/paint/index.html', '700px', '500px')"
+                title="Paint">
+            <img src="icons/winamp.png" onclick="openApp('Winamp','apps/winamp/index.html', '290px', '375px')"
+                title="Winamp">
             <img src="icons/system-monitor.png"
                 onclick="openApp('System Monitor','apps/monitor/index.html', '450px', '350px')" title="System Monitor">
-            <img src="icons/guestbook.png"
-                onclick="openApp('Guest Book','apps/guestbook/index.html', '500px', '450px')" title="Guest Book">
-            <img src="icons/doom.png"
-                onclick="openApp('Doom','apps/doom/index.html', '660px', '460px', true)" title="Play DOOM" onerror="this.src='https://win98icons.alexmeub.com/icons/png/msdos-0.png'">
-            <img src="icons/send_msg.png"
-                style="width: 48px; height: 48px; margin-left: -8px;"
+            <img src="icons/guestbook.png" onclick="openApp('Guest Book','apps/guestbook/index.html', '500px', '450px')"
+                title="Guest Book">
+            <img src="icons/doom.png" onclick="openApp('Doom','apps/doom/index.html', '660px', '460px', true)"
+                title="Play DOOM" onerror="this.src='https://win98icons.alexmeub.com/icons/png/msdos-0.png'">
+            <img src="icons/send_msg.png" style="width: 48px; height: 48px; margin-left: -8px;"
                 onclick="document.getElementById('message-dialog').showModal();" title="Send Message">
         </div>
 
         <!-- Document Area -->
         <div class="document-area">
             <div class="resume-container">
-                
+
                 <div class="header-section">
                     <img src="pfp.png" class="pfp" alt="Profile Picture">
                     <div class="identity-block">
@@ -1357,16 +1749,21 @@
                         <p class="header-note">React / Django / Agentic AI / IoT / Placement Leadership</p>
                     </div>
                 </div>
-                
+
                 <div class="clear"></div>
                 <hr class="doc-divider">
 
                 <h3 id="overview" style="margin-top: 0; margin-bottom: 5px;">Overview</h3>
-                <p><strong>Professional Summary:</strong> Systems &amp; Software Engineer specializing in Agentic AI architectures (LangGraph, Stateful RAG) and edge physical computing (ESP32). Proven track record leading GNDU placement operations&mdash;boosting drive productivity by 200% and managing 10+ recruitment drives with an official Placement Office LOR&mdash;and recognized as a State Winner in the India Skill Competition 2024.</p>
+                <p><strong>Professional Summary:</strong> Systems &amp; Software Engineer specializing in Agentic AI
+                    architectures (LangGraph, Stateful RAG) and edge physical computing (ESP32). Proven track record
+                    leading GNDU placement operations&mdash;boosting drive productivity by 200% and managing 10+
+                    recruitment drives with an official Placement Office LOR&mdash;and recognized as a State Winner in
+                    the India Skill Competition 2024.</p>
 
                 <h3 id="core-capabilities">Core Capabilities</h3>
                 <ul>
-                    <li>Engineering robust <code>Stateful RAG workflows</code> for continuous multi-modal data streams.</li>
+                    <li>Engineering robust <code>Stateful RAG workflows</code> for continuous multi-modal data streams.
+                    </li>
                     <li>Utilizing <code>LangGraph</code> for agentic orchestration and spatial context logic.</li>
                     <li>Building high-performance event-driven microservices using <code>FastAPI</code>.</li>
                     <li>Embedded <code>ESP32</code> physical computing and sensor fusion algorithms in C++.</li>
@@ -1462,7 +1859,7 @@
                 </table>
 
                 <h3 id="projects">Projects / Case Studies</h3>
-                
+
                 <h4>BLINKY</h4>
                 <p>
                     <em>Jun 2026 &ndash; Present</em><br>
@@ -1470,9 +1867,13 @@
                     <strong>Links:</strong> <a href="https://github.com/KingSahil/Blinky" target="_blank">GitHub</a>
                 </p>
                 <ul>
-                    <li><strong>Impact/Outcome:</strong> Achieved an autonomous cross-platform tutor capable of operating desktop interfaces as measured by its ability to execute safe-click loops and searches, by doing localized bounded AI inference based on screen reads.</li>
-                    <li><strong>Architecture/Execution:</strong> Orchestrated a local AI autopilot loop that interprets on-screen state to autonomously drive mouse and keyboard interactions.</li>
-                    <li><strong>Key Feature/Integration:</strong> Integrated Agent Mode capabilities to autonomously launch apps, control Spotify playback, and trigger complex system shortcuts.</li>
+                    <li><strong>Impact/Outcome:</strong> Achieved an autonomous cross-platform tutor capable of
+                        operating desktop interfaces as measured by its ability to execute safe-click loops and
+                        searches, by doing localized bounded AI inference based on screen reads.</li>
+                    <li><strong>Architecture/Execution:</strong> Orchestrated a local AI autopilot loop that interprets
+                        on-screen state to autonomously drive mouse and keyboard interactions.</li>
+                    <li><strong>Key Feature/Integration:</strong> Integrated Agent Mode capabilities to autonomously
+                        launch apps, control Spotify playback, and trigger complex system shortcuts.</li>
                 </ul>
 
                 <h4>IOT-BASED SMART HELMET</h4>
@@ -1481,45 +1882,63 @@
                     <strong>Tech Stack:</strong> IoT Protocols, C++<br>
                 </p>
                 <ul>
-                    <li><strong>Impact/Outcome:</strong> Achieved an automated emergency response system as measured by instantaneous SOS notification dispatch, by doing continuous collision detection and sensor monitoring.</li>
-                    <li><strong>Architecture/Execution:</strong> Designed physical computing edge logic to detect accidents and transmit emergency data via IoT protocols.</li>
-                    <li><strong>Key Feature/Integration:</strong> Integrated Strava data syncing capabilities alongside primary safety features.</li>
+                    <li><strong>Impact/Outcome:</strong> Achieved an automated emergency response system as measured by
+                        instantaneous SOS notification dispatch, by doing continuous collision detection and sensor
+                        monitoring.</li>
+                    <li><strong>Architecture/Execution:</strong> Designed physical computing edge logic to detect
+                        accidents and transmit emergency data via IoT protocols.</li>
+                    <li><strong>Key Feature/Integration:</strong> Integrated Strava data syncing capabilities alongside
+                        primary safety features.</li>
                 </ul>
 
                 <h4>WORDPRESS PROJECTS</h4>
                 <p>
                     <em>Aug 2025 &ndash; Present</em><br>
                     <strong>Tech Stack:</strong> WordPress, UI/UX Design<br>
-                    <strong>Links:</strong> <a href="https://phenomenal-gnome-34cb87.netlify.app/" target="_blank">Tharoor Reimagined</a> | <a href="https://pyramid-realty-collective.netlify.app/" target="_blank">Pyramid Realty</a>
+                    <strong>Links:</strong> <a href="https://phenomenal-gnome-34cb87.netlify.app/"
+                        target="_blank">Tharoor Reimagined</a> | <a
+                        href="https://pyramid-realty-collective.netlify.app/" target="_blank">Pyramid Realty</a>
                 </p>
                 <ul>
-                    <li><strong>Impact/Outcome:</strong> Achieved engaging web presences for diverse clients as measured by rapid deployment of highly customized sites, by doing end-to-end CMS configuration.</li>
-                    <li><strong>Architecture/Execution:</strong> Deployed and styled scalable WordPress architectures to host political fiction content and a real estate collective.</li>
-                    <li><strong>Key Feature/Integration:</strong> Optimized site rendering and media assets for maximum responsiveness across devices.</li>
+                    <li><strong>Impact/Outcome:</strong> Achieved engaging web presences for diverse clients as measured
+                        by rapid deployment of highly customized sites, by doing end-to-end CMS configuration.</li>
+                    <li><strong>Architecture/Execution:</strong> Deployed and styled scalable WordPress architectures to
+                        host political fiction content and a real estate collective.</li>
+                    <li><strong>Key Feature/Integration:</strong> Optimized site rendering and media assets for maximum
+                        responsiveness across devices.</li>
                 </ul>
 
                 <h4>Women SOS Portal</h4>
                 <p>
                     <em>Aug 2024 &ndash; Sep 2024</em><br>
                     <strong>Tech Stack:</strong> Next.js, Node.js, HTML/CSS, SQL, Git<br>
-                    <strong>Links:</strong> <a href="https://github.com/KhannaSparsh0001/women-sos-portal" target="_blank">GitHub</a>
+                    <strong>Links:</strong> <a href="https://github.com/KhannaSparsh0001/women-sos-portal"
+                        target="_blank">GitHub</a>
                 </p>
                 <ul>
-                    <li><strong>Impact/Outcome:</strong> Achieved a rapid-response safety application as measured by successful deployment during Statusbrew SkillSprint v2, by doing real-time location sharing and emergency alert implementation.</li>
-                    <li><strong>Architecture/Execution:</strong> Built a full-stack Next.js web application backed by Node.js and SQL for handling geospatial user data.</li>
-                    <li><strong>Key Feature/Integration:</strong> Developed a real-time instant emergency alert system to immediately dispatch user coordinates.</li>
+                    <li><strong>Impact/Outcome:</strong> Achieved a rapid-response safety application as measured by
+                        successful deployment during Statusbrew SkillSprint v2, by doing real-time location sharing and
+                        emergency alert implementation.</li>
+                    <li><strong>Architecture/Execution:</strong> Built a full-stack Next.js web application backed by
+                        Node.js and SQL for handling geospatial user data.</li>
+                    <li><strong>Key Feature/Integration:</strong> Developed a real-time instant emergency alert system
+                        to immediately dispatch user coordinates.</li>
                 </ul>
 
                 <h4>webNote</h4>
                 <p>
                     <em>Jul 2025 &ndash; Aug 2025</em><br>
                     <strong>Tech Stack:</strong> ReactJS, Django REST Framework, PostgreSQL, JWT<br>
-                    <strong>Links:</strong> <a href="https://github.com/KhannaSparsh0001/webnote" target="_blank">GitHub</a>
+                    <strong>Links:</strong> <a href="https://github.com/KhannaSparsh0001/webnote"
+                        target="_blank">GitHub</a>
                 </p>
                 <ul>
-                    <li><strong>Impact/Outcome:</strong> Achieved a secure organizational tool for users as measured by robust session persistence, by doing full CRUD integration with token-based authentication.</li>
-                    <li><strong>Architecture/Execution:</strong> Engineered a decoupled React frontend and Django REST API backend, utilizing PostgreSQL for storage and Coro for CI/CD pipelines.</li>
-                    <li><strong>Key Feature/Integration:</strong> Implemented JWT authentication for secure login and encrypted session management.</li>
+                    <li><strong>Impact/Outcome:</strong> Achieved a secure organizational tool for users as measured by
+                        robust session persistence, by doing full CRUD integration with token-based authentication.</li>
+                    <li><strong>Architecture/Execution:</strong> Engineered a decoupled React frontend and Django REST
+                        API backend, utilizing PostgreSQL for storage and Coro for CI/CD pipelines.</li>
+                    <li><strong>Key Feature/Integration:</strong> Implemented JWT authentication for secure login and
+                        encrypted session management.</li>
                 </ul>
 
                 <h4>AirPulse: Japan Edition</h4>
@@ -1528,33 +1947,45 @@
                     <strong>Tech Stack:</strong> PowerBI, Data Modeling, CSV<br>
                 </p>
                 <ul>
-                    <li><strong>Impact/Outcome:</strong> Achieved actionable public health insights as measured by comprehensive hotspot mapping of the Kanto and Chubu regions, by doing analytical visualization of synthetic Kaggle datasets.</li>
-                    <li><strong>Architecture/Execution:</strong> Processed and joined multiple CSV data sources to graph the correlation between PM2.5 pollution spikes and respiratory hospital admissions.</li>
-                    <li><strong>Key Feature/Integration:</strong> Built an interactive dashboard that tracked the time-lag behavior between environmental shifts and economic activity.</li>
+                    <li><strong>Impact/Outcome:</strong> Achieved actionable public health insights as measured by
+                        comprehensive hotspot mapping of the Kanto and Chubu regions, by doing analytical visualization
+                        of synthetic Kaggle datasets.</li>
+                    <li><strong>Architecture/Execution:</strong> Processed and joined multiple CSV data sources to graph
+                        the correlation between PM2.5 pollution spikes and respiratory hospital admissions.</li>
+                    <li><strong>Key Feature/Integration:</strong> Built an interactive dashboard that tracked the
+                        time-lag behavior between environmental shifts and economic activity.</li>
                 </ul>
 
                 <h4>Cinematic Verse</h4>
                 <p>
                     <em>Jul 2025 &ndash; Jul 2025</em><br>
                     <strong>Tech Stack:</strong> React, Vite, React Router, Context API<br>
-                    <strong>Links:</strong> <a href="https://react-movie-ui.vercel.app" target="_blank">Live Demo</a> | <a href="https://github.com/KhannaSparsh0001/reactMovieUI" target="_blank">GitHub</a>
+                    <strong>Links:</strong> <a href="https://react-movie-ui.vercel.app" target="_blank">Live Demo</a> |
+                    <a href="https://github.com/KhannaSparsh0001/reactMovieUI" target="_blank">GitHub</a>
                 </p>
                 <ul>
-                    <li><strong>Impact/Outcome:</strong> Achieved a seamless media discovery platform as measured by instantaneous movie querying, by doing client-side routing and external API integration.</li>
-                    <li><strong>Architecture/Execution:</strong> Developed a responsive single-page application using React DOM Router and Context API for global state management.</li>
-                    <li><strong>Key Feature/Integration:</strong> Integrated a dynamic bookmarking system to manage a personalized favorites list.</li>
+                    <li><strong>Impact/Outcome:</strong> Achieved a seamless media discovery platform as measured by
+                        instantaneous movie querying, by doing client-side routing and external API integration.</li>
+                    <li><strong>Architecture/Execution:</strong> Developed a responsive single-page application using
+                        React DOM Router and Context API for global state management.</li>
+                    <li><strong>Key Feature/Integration:</strong> Integrated a dynamic bookmarking system to manage a
+                        personalized favorites list.</li>
                 </ul>
 
                 <h4>Task Management System</h4>
                 <p>
                     <em>Feb 2022 &ndash; Mar 2022</em><br>
                     <strong>Tech Stack:</strong> Python, Pandas, NumPy, Matplotlib<br>
-                    <strong>Links:</strong> <a href="https://github.com/KhannaSparsh0001/TimeManagementSystem" target="_blank">GitHub</a>
+                    <strong>Links:</strong> <a href="https://github.com/KhannaSparsh0001/TimeManagementSystem"
+                        target="_blank">GitHub</a>
                 </p>
                 <ul>
-                    <li><strong>Impact/Outcome:</strong> Achieved a data-driven productivity tracker as measured by visual task analytics, by doing local CSV logging and statistical aggregation.</li>
-                    <li><strong>Architecture/Execution:</strong> Created a CLI-based Python tool utilizing Pandas for data wrangling and Matplotlib for generating graphical insights.</li>
-                    <li><strong>Key Feature/Integration:</strong> Implemented visual charting to help users track time allocation over custom periods.</li>
+                    <li><strong>Impact/Outcome:</strong> Achieved a data-driven productivity tracker as measured by
+                        visual task analytics, by doing local CSV logging and statistical aggregation.</li>
+                    <li><strong>Architecture/Execution:</strong> Created a CLI-based Python tool utilizing Pandas for
+                        data wrangling and Matplotlib for generating graphical insights.</li>
+                    <li><strong>Key Feature/Integration:</strong> Implemented visual charting to help users track time
+                        allocation over custom periods.</li>
                 </ul>
 
                 <h4>IoT-Based Smart Parking System</h4>
@@ -1563,9 +1994,13 @@
                     <strong>Tech Stack:</strong> ESP32, IR/Ultrasonic Sensors, Servo Motors, C++<br>
                 </p>
                 <ul>
-                    <li><strong>Impact/Outcome:</strong> Achieved optimized parking lot utilization as measured by real-time slot availability metrics, by doing sensor data processing and cloud synchronization.</li>
-                    <li><strong>Architecture/Execution:</strong> Programmed an ESP32 microcontroller to interface with IR and ultrasonic sensors for precise spatial detection.</li>
-                    <li><strong>Key Feature/Integration:</strong> Actuated physical servo barriers conditionally based on cloud-based telemetry data.</li>
+                    <li><strong>Impact/Outcome:</strong> Achieved optimized parking lot utilization as measured by
+                        real-time slot availability metrics, by doing sensor data processing and cloud synchronization.
+                    </li>
+                    <li><strong>Architecture/Execution:</strong> Programmed an ESP32 microcontroller to interface with
+                        IR and ultrasonic sensors for precise spatial detection.</li>
+                    <li><strong>Key Feature/Integration:</strong> Actuated physical servo barriers conditionally based
+                        on cloud-based telemetry data.</li>
                 </ul>
 
                 <h4>Hackerwrath Hackathon</h4>
@@ -1588,20 +2023,28 @@
                 <h4>Placement Head, Electronics Forum, GNDU</h4>
                 <p>
                     <em>Apr 2024 &ndash; Present</em><br>
-                    Boosted placement productivity by <strong>200%</strong> through better delegation, interviews, and recruiter outreach. Coordinated <strong>10+ recruitment drives</strong> for firms including TCS, KPMG, and Nagarro. Managed 6 teams ranging from 4 to 50 members, interviewed <strong>45+ candidates</strong> for team selection, and earned a Letter of Recommendation from The Placement Office for leadership and performance.
+                    Boosted placement productivity by <strong>200%</strong> through better delegation, interviews, and
+                    recruiter outreach. Coordinated <strong>10+ recruitment drives</strong> for firms including TCS,
+                    KPMG, and Nagarro. Managed 6 teams ranging from 4 to 50 members, interviewed <strong>45+
+                        candidates</strong> for team selection, and earned a Letter of Recommendation from The Placement
+                    Office for leadership and performance.
                     <br><br>
-                    <strong>Document Link:</strong> <a href="https://drive.google.com/drive/folders/1dt9hjfUmlBzcIeVf16jTz26QtQQYuks-?usp=sharing" target="_blank">Placement Office LOR</a>
+                    <strong>Document Link:</strong> <a
+                        href="https://drive.google.com/drive/folders/1dt9hjfUmlBzcIeVf16jTz26QtQQYuks-?usp=sharing"
+                        target="_blank">Placement Office LOR</a>
                 </p>
 
                 <h4>Java Intern, ApTech Institute</h4>
                 <p>
                     <em>Jun 2024 &ndash; Jul 2024</em><br>
-                    Completed training-cum-internship work and developed a Tender Management System using HTML, CSS, SQL, and Java.
+                    Completed training-cum-internship work and developed a Tender Management System using HTML, CSS,
+                    SQL, and Java.
                 </p>
 
                 <h4>TCS Leadership Connect</h4>
                 <p>
-                    As Event Lead, spearheaded logistics and team coordination for a TCS event involving <strong>32 members</strong>. Managed schedules, communication, and documentation through Google Suite.
+                    As Event Lead, spearheaded logistics and team coordination for a TCS event involving <strong>32
+                        members</strong>. Managed schedules, communication, and documentation through Google Suite.
                 </p>
 
                 <h3 id="achievements">Volunteering &amp; Competitions</h3>
@@ -1623,19 +2066,27 @@
                     <li>Prompt Engineering by OpenAI.</li>
                     <li>FlexBox by Unstop.</li>
                     <li>Start-Up Guide by MLSA.</li>
-                    <li>Microsoft Learn ID: <a href="https://learn.microsoft.com/en-us/users/SparshKhanna-2209" target="_blank">SparshKhanna-2209</a></li>
+                    <li>Microsoft Learn ID: <a href="https://learn.microsoft.com/en-us/users/SparshKhanna-2209"
+                            target="_blank">SparshKhanna-2209</a></li>
                 </ul>
 
                 <hr class="doc-divider">
                 <h3 id="contact">Contact &amp; Socials</h3>
                 <ul>
-                    <li><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/khannasparsh/" target="_blank">KhannaSparsh</a></li>
-                    <li><strong>GitHub:</strong> <a href="https://github.com/khannasparsh0001" target="_blank">KhannaSparsh0001</a></li>
-                    <li><strong>X:</strong> <a href="https://x.com/your-handle" target="_blank">x.com/your-handle</a></li>
-                    <li><strong>Medium:</strong> <a href="https://medium.com/@khannasparsh0001" target="_blank">medium.com/@khannasparsh0001</a></li>
-                    <li><strong>Discord:</strong> <a href="https://discord.com/users/your-user-id" target="_blank">discord.com/users/your-user-id</a></li>
-                    <li><strong>DSA:</strong> <a href="https://www.geeksforgeeks.org/user/khannasparsh0001/" target="_blank">geeksforgeeks.org/user/khannasparsh0001</a></li>
-                    <li><strong>Email:</strong> <a href="mailto:khannasparsh0001@gmail.com">khannasparsh0001@gmail.com</a></li>
+                    <li><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/khannasparsh/"
+                            target="_blank">KhannaSparsh</a></li>
+                    <li><strong>GitHub:</strong> <a href="https://github.com/khannasparsh0001"
+                            target="_blank">KhannaSparsh0001</a></li>
+                    <li><strong>X:</strong> <a href="https://x.com/your-handle" target="_blank">x.com/your-handle</a>
+                    </li>
+                    <li><strong>Medium:</strong> <a href="https://medium.com/@khannasparsh0001"
+                            target="_blank">medium.com/@khannasparsh0001</a></li>
+                    <li><strong>Discord:</strong> <a href="https://discord.com/users/your-user-id"
+                            target="_blank">discord.com/users/your-user-id</a></li>
+                    <li><strong>DSA:</strong> <a href="https://www.geeksforgeeks.org/user/khannasparsh0001/"
+                            target="_blank">geeksforgeeks.org/user/khannasparsh0001</a></li>
+                    <li><strong>Email:</strong> <a
+                            href="mailto:khannasparsh0001@gmail.com">khannasparsh0001@gmail.com</a></li>
                 </ul>
 
             </div>
@@ -1653,10 +2104,15 @@
                 <div class="portal-scaler-dm">
                     <div class="button-wrapper">
                         <div class="button-shadow"></div>
-                        <button class="dm-button" onclick="enterDimension('space-theme.html', 'space')" title="Enter Space Dimension">
+                        <button class="dm-button" onclick="enterDimension('space-theme.html', 'space')"
+                            title="Enter Space Dimension">
                             <div class="dm-inner">
-                                <svg class="dm-filaments deep" preserveAspectRatio="none"><rect width="100%" height="100%" filter="url(#dark-matter-mesh)" /></svg>
-                                <svg class="dm-filaments" preserveAspectRatio="none"><rect width="100%" height="100%" filter="url(#dark-matter-mesh)" /></svg>
+                                <svg class="dm-filaments deep" preserveAspectRatio="none">
+                                    <rect width="100%" height="100%" filter="url(#dark-matter-mesh)" />
+                                </svg>
+                                <svg class="dm-filaments" preserveAspectRatio="none">
+                                    <rect width="100%" height="100%" filter="url(#dark-matter-mesh)" />
+                                </svg>
                                 <div class="dm-diffraction"></div>
                                 <div class="dm-glitter"></div>
                                 <div class="dm-mist"></div>
@@ -1674,7 +2130,8 @@
 
             <div class="portal-slot-lg">
                 <div class="portal-scaler-lg">
-                    <button class="liquid-glass-btn" onclick="enterDimension('modern-fintech.html', 'fintech')" title="Enter FinTech Dimension">
+                    <button class="liquid-glass-btn" onclick="enterDimension('modern-fintech.html', 'fintech')"
+                        title="Enter FinTech Dimension">
                         <span class="glitter-layer"></span>
                         <span class="glass-reflection"></span>
                         <span class="lg-btn-text">Fintech</span>
@@ -1685,7 +2142,8 @@
 
             <div class="portal-slot-vanilla">
                 <div class="portal-scaler-vanilla">
-                    <button class="vanilla-pill-btn" onclick="enterDimension('resume.html', 'vanilla')" title="Enter Executive Resume (Normal Mode)">
+                    <button class="vanilla-pill-btn" onclick="enterDimension('resume.html', 'vanilla')"
+                        title="Enter Executive Resume (Normal Mode)">
                         <span class="vanilla-pill-icon">≡</span>
                         <span class="vanilla-pill-text">Normal</span>
                     </button>
@@ -1694,9 +2152,48 @@
         </div>
     </aside>
 
+    <!-- Mobile Floating Draggable Bubble & Realm Sheet -->
+    <div id="mobile-portal-bubble" aria-label="Open Dimensional Portals" role="button" tabindex="0">
+        <span class="bubble-icon">✦</span>
+        <span class="bubble-badge">PORTAL</span>
+    </div>
+
+    <div id="portal-sheet-backdrop" aria-hidden="true"></div>
+    <div id="portal-sheet" role="dialog" aria-modal="true" aria-labelledby="portal-sheet-title">
+        <div class="portal-sheet-header">
+            <span id="portal-sheet-title">PORTALS.SYS // SELECT REALM</span>
+            <button class="portal-sheet-close" id="portal-sheet-close-btn" aria-label="Close dialog">X</button>
+        </div>
+        <div class="portal-sheet-body">
+            <button class="portal-card-btn card-space" onclick="enterDimension('space-theme.html', 'space')">
+                <div class="card-title-row">
+                    <span>✦ SPACE OBSERVATORY</span>
+                    <span>→</span>
+                </div>
+                <div class="card-desc">Deep-space cosmic canvas, real-time orbital telemetry, and celestial flight logs.</div>
+            </button>
+
+            <button class="portal-card-btn card-fintech" onclick="enterDimension('modern-fintech.html', 'fintech')">
+                <div class="card-title-row">
+                    <span>◈ FINTECH TERMINAL</span>
+                    <span>→</span>
+                </div>
+                <div class="card-desc">High-frequency Bloomberg/Stripe-style dashboard with live tickers and equity metrics.</div>
+            </button>
+
+            <button class="portal-card-btn card-normal" onclick="enterDimension('resume.html', 'vanilla')">
+                <div class="card-title-row">
+                    <span>≡ NORMAL RESUME</span>
+                    <span>→</span>
+                </div>
+                <div class="card-desc">Zero-cognitive-load, high-contrast ATS minimal web resume optimized for recruiters.</div>
+            </button>
+        </div>
+    </div>
+
     <div id="visitor-counter">Visitors<div id="count">Loading...</div>
 
-</div>
+    </div>
 
     <div id="dimensional-rift" aria-hidden="true"></div>
 
@@ -1739,13 +2236,13 @@
             const docArea = document.querySelector('.document-area');
             const winGameBtn = document.getElementById('window-menu-btn');
             const winGameDropdown = document.getElementById('window-dropdown');
-            
+
             const dropdowns = [
                 { btn: fileBtn, menu: fileDropdown },
                 { btn: viewBtn, menu: viewDropdown },
                 { btn: bookmarksBtn, menu: bookmarksDropdown },
                 { btn: winGameBtn, menu: winGameDropdown },
-                { btn: optionsBtn, menu : optionsDropdown }
+                { btn: optionsBtn, menu: optionsDropdown }
             ];
             function closeAllDropdowns() {
                 dropdowns.forEach(({ btn, menu }) => {
@@ -1834,9 +2331,9 @@
             optionsBtn.addEventListener('click', (e) => {
                 toggleDropdown(optionsBtn, optionsDropdown, e);
             });
-            
+
             winGameBtn.addEventListener('click', (e) => toggleDropdown(winGameBtn, winGameDropdown, e));
-            
+
             sendMessageOption.addEventListener('click', (e) => {
                 e.preventDefault();
                 closeAllDropdowns();
@@ -1862,7 +2359,7 @@
                 messageDialog.close();
                 messageForm.reset();
             });
-            
+
             // ── REAL VISITOR COUNTER via Firebase Realtime Database (free, no backend) ──
             // SETUP (one-time, ~10 mins):
             //   1. Go to https://console.firebase.google.com → create a project
@@ -1948,7 +2445,7 @@
                 const bootScreen = document.getElementById('boot-screen');
                 bootScreen.style.display = 'block';
                 document.body.style.overflow = 'hidden';
-                
+
                 // Try to play startup sound (may be blocked by browser autoplay rules)
                 setTimeout(() => {
                     if (window.SystemAPI) window.SystemAPI.playSound('startup');
@@ -1967,7 +2464,7 @@
         });
         let highestZ = 100;
 
-        window.openGameModal = function(title, url, width, height, requiresOverlay){
+        window.openGameModal = function (title, url, width, height, requiresOverlay) {
             const isMobile = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || navigator.maxTouchPoints > 0 || window.matchMedia("(pointer: coarse)").matches || ('ontouchstart' in window);
 
             const win = document.createElement("div");
@@ -1976,7 +2473,7 @@
             win.style.left = "180px";
             win.style.top = "120px";
             win.style.zIndex = ++highestZ;
-            
+
             if (width) {
                 win.style.width = width;
                 win.style.minWidth = width;
@@ -2019,13 +2516,13 @@
             document
                 .getElementById("window-container")
                 .appendChild(win);
-            
+
             if (isMobile && requiresOverlay) {
                 const iframe = win.querySelector('iframe');
                 const dispatchKey = (keyName, type) => {
                     if (iframe.contentWindow && iframe.contentWindow.document) {
                         let keyCode;
-                        switch(keyName) {
+                        switch (keyName) {
                             case 'ArrowUp': keyCode = 38; break;
                             case 'ArrowDown': keyCode = 40; break;
                             case 'ArrowLeft': keyCode = 37; break;
@@ -2058,8 +2555,8 @@
                         dispatchKey(key, 'keyup');
                         btn.classList.remove('active');
                     };
-                    btn.addEventListener('touchstart', startEvt, {passive: false});
-                    btn.addEventListener('touchend', endEvt, {passive: false});
+                    btn.addEventListener('touchstart', startEvt, { passive: false });
+                    btn.addEventListener('touchend', endEvt, { passive: false });
                     // Fallback for mouse testing
                     btn.addEventListener('mousedown', startEvt);
                     btn.addEventListener('mouseup', endEvt);
@@ -2098,40 +2595,40 @@
         }
         window.openApp = window.openGameModal;
 
-        function makeDraggable(win){
+        function makeDraggable(win) {
 
-        const header = win.querySelector(".retro-window-header");
+            const header = win.querySelector(".retro-window-header");
 
-        let dragging = false;
-        let x = 0;
-        let y = 0;
+            let dragging = false;
+            let x = 0;
+            let y = 0;
 
-        header.onmousedown = (e)=>{
+            header.onmousedown = (e) => {
 
-            dragging = true;
+                dragging = true;
 
-            win.style.zIndex = ++highestZ;
+                win.style.zIndex = ++highestZ;
 
-            x = e.clientX - win.offsetLeft;
-            y = e.clientY - win.offsetTop;
+                x = e.clientX - win.offsetLeft;
+                y = e.clientY - win.offsetTop;
 
-            document.body.classList.add("dragging");
-        };
+                document.body.classList.add("dragging");
+            };
 
-        document.onmousemove = (e)=>{
+            document.onmousemove = (e) => {
 
-            if(!dragging) return;
+                if (!dragging) return;
 
-            win.style.left = (e.clientX - x) + "px";
-            win.style.top = (e.clientY - y) + "px";
-        };
+                win.style.left = (e.clientX - x) + "px";
+                win.style.top = (e.clientY - y) + "px";
+            };
 
-        document.onmouseup = ()=>{
+            document.onmouseup = () => {
 
-            dragging = false;
-            document.body.classList.remove("dragging");
-        };
-    }
+                dragging = false;
+                document.body.classList.remove("dragging");
+            };
+        }
 
         (function initPortalBaySnapDrag() {
             const portalBay = document.querySelector(".portal-bay");
@@ -2186,7 +2683,7 @@
                         if (portalBay.hasPointerCapture && portalBay.hasPointerCapture(activePointerId)) {
                             portalBay.releasePointerCapture(activePointerId);
                         }
-                    } catch (_) {}
+                    } catch (_) { }
                 }
                 activePointerId = null;
                 document.body.classList.remove("dragging");
@@ -2226,7 +2723,7 @@
 
                 try {
                     portalBay.setPointerCapture(e.pointerId);
-                } catch (_) {}
+                } catch (_) { }
             });
         })();
 
@@ -2257,6 +2754,156 @@
             }, 380);
         }
 
+        /* ── Mobile Floating Bubble & Sheet Logic ── */
+        (() => {
+            const bubble = document.getElementById("mobile-portal-bubble");
+            const sheet = document.getElementById("portal-sheet");
+            const backdrop = document.getElementById("portal-sheet-backdrop");
+            const closeBtn = document.getElementById("portal-sheet-close-btn");
+            if (!bubble || !sheet || !backdrop) return;
+
+            let isDragging = false;
+            let hasMoved = false;
+            let startPointerX = 0;
+            let startPointerY = 0;
+            let currentLeft = null;
+            let currentTop = null;
+            let activePointerId = null;
+
+            function openSheet() {
+                backdrop.classList.add("active");
+                sheet.classList.add("active");
+                if (window.SystemAPI) window.SystemAPI.playSound("open");
+            }
+
+            function closeSheet() {
+                backdrop.classList.remove("active");
+                sheet.classList.remove("active");
+                if (window.SystemAPI) window.SystemAPI.playSound("close");
+            }
+
+            if (closeBtn) closeBtn.addEventListener("click", closeSheet);
+            backdrop.addEventListener("click", closeSheet);
+
+            // Hide/Show Bubble when other OS Windows open or close
+            function checkWindowVisibility() {
+                // Check if any retro modals or game windows are visible
+                const openGameWins = document.querySelectorAll(".game-window");
+                const messageDialog = document.getElementById("message-dialog");
+                const isMsgOpen = messageDialog && messageDialog.open;
+
+                let hasOpenWindow = isMsgOpen || openGameWins.length > 0;
+                if (!hasOpenWindow && window.WindowManager) {
+                    const wins = window.WindowManager.getWindows ? window.WindowManager.getWindows() : [];
+                    hasOpenWindow = wins.some(w => w.state === 'open');
+                }
+
+                if (hasOpenWindow) {
+                    bubble.classList.add("bubble-hidden");
+                    closeSheet();
+                } else {
+                    bubble.classList.remove("bubble-hidden");
+                }
+            }
+
+            // Monitor window changes periodically and via DOM mutation
+            setInterval(checkWindowVisibility, 350);
+            const winContainer = document.getElementById("window-container");
+            if (winContainer) {
+                const obs = new MutationObserver(checkWindowVisibility);
+                obs.observe(winContainer, { childList: true, subtree: true });
+            }
+
+            // Dragging & Magnetic Wall-Snap Physics
+            function onPointerMove(e) {
+                if (!isDragging) return;
+                if (e.pointerId !== activePointerId) return;
+
+                const dx = e.clientX - startPointerX;
+                const dy = e.clientY - startPointerY;
+                if (Math.hypot(dx, dy) > 6) {
+                    hasMoved = true;
+                }
+
+                const bubbleW = bubble.offsetWidth || 52;
+                const bubbleH = bubble.offsetHeight || 52;
+                const minX = 6;
+                const maxX = window.innerWidth - bubbleW - 6;
+                const minY = 6;
+                const maxY = window.innerHeight - bubbleH - 45; // keep above quick-launch
+
+                const newX = Math.min(maxX, Math.max(minX, currentLeft + dx));
+                const newY = Math.min(maxY, Math.max(minY, currentTop + dy));
+
+                bubble.style.transition = "none";
+                bubble.style.left = `${newX}px`;
+                bubble.style.top = `${newY}px`;
+                bubble.style.right = "auto";
+                bubble.style.bottom = "auto";
+            }
+
+            function onPointerUp(e) {
+                if (!isDragging) return;
+                if (e.pointerId !== activePointerId) return;
+
+                isDragging = false;
+                window.removeEventListener("pointermove", onPointerMove);
+                window.removeEventListener("pointerup", onPointerUp);
+                window.removeEventListener("pointercancel", onPointerUp);
+
+                try {
+                    if (bubble.hasPointerCapture && bubble.hasPointerCapture(activePointerId)) {
+                        bubble.releasePointerCapture(activePointerId);
+                    }
+                } catch (_) {}
+                activePointerId = null;
+
+                if (!hasMoved) {
+                    // It was a tap! Open sheet
+                    openSheet();
+                    return;
+                }
+
+                // Snap to nearest wall (Left vs Right)
+                const bubbleW = bubble.offsetWidth || 52;
+                const rect = bubble.getBoundingClientRect();
+                const centerX = rect.left + bubbleW / 2;
+                const snapLeft = centerX < window.innerWidth / 2;
+
+                const targetX = snapLeft ? 10 : (window.innerWidth - bubbleW - 10);
+                bubble.style.transition = "left 0.34s cubic-bezier(0.34, 1.56, 0.64, 1), top 0.2s ease";
+                bubble.style.left = `${targetX}px`;
+            }
+
+            bubble.addEventListener("pointerdown", (e) => {
+                if (e.pointerType === "mouse" && e.button !== 0) return;
+                e.preventDefault();
+
+                isDragging = true;
+                hasMoved = false;
+                activePointerId = e.pointerId;
+                startPointerX = e.clientX;
+                startPointerY = e.clientY;
+
+                const rect = bubble.getBoundingClientRect();
+                currentLeft = rect.left;
+                currentTop = rect.top;
+
+                bubble.style.left = `${currentLeft}px`;
+                bubble.style.top = `${currentTop}px`;
+                bubble.style.right = "auto";
+                bubble.style.bottom = "auto";
+
+                window.addEventListener("pointermove", onPointerMove);
+                window.addEventListener("pointerup", onPointerUp);
+                window.addEventListener("pointercancel", onPointerUp);
+
+                try {
+                    bubble.setPointerCapture(e.pointerId);
+                } catch (_) {}
+            });
+        })();
+
         window.addEventListener("pageshow", () => {
             const rift = document.getElementById("dimensional-rift");
             const osWin = document.querySelector(".window");
@@ -2271,4 +2918,5 @@
     <script src="shared/dimensionalAudio.js"></script>
     <script src="shared/system.js?v=2"></script>
 </body>
+
 </html>

@@ -14,13 +14,13 @@
 
     <!-- Executive Action Bar: Print & Download PDF -->
     <aside class="action-bar" aria-label="Resume Actions">
-        <a href="docs/Sparsh_khanna_Resume_gndu-18.pdf" download="Sparsh_Khanna_Resume.pdf" class="btn-primary" title="Download PDF Resume">
+        <a href="docs/Sparsh_khanna_Resume_gndu-18.pdf" download="Sparsh_Khanna_Resume.pdf" class="btn-primary" title="Download Resume">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                 <polyline points="7 10 12 15 17 10"/>
                 <line x1="12" y1="15" x2="12" y2="3"/>
             </svg>
-            Download PDF
+            <span class="btn-text">Download</span>
         </a>
         <button type="button" onclick="window.print()" class="btn-secondary" title="Print this document">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -28,17 +28,24 @@
                 <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
                 <rect x="6" y="14" width="12" height="8"/>
             </svg>
-            Print
+            <span class="btn-text">Print</span>
         </button>
-        <button type="button" id="theme-toggle" class="btn-ghost" aria-label="Toggle dark mode" title="Toggle dark mode">
+        <button type="button" id="theme-toggle" class="btn-ghost" aria-label="Toggle dark mode" title="Toggle dark mode" onclick="toggleThemeNow(event)">
             <span id="theme-icon">◐</span>
         </button>
-        <div class="action-portal-links">
-            <a href="index.html" class="subtle-link">Win95 OS</a>
-            <span>·</span>
-            <a href="space-theme.html" class="subtle-link">Space</a>
-            <span>·</span>
-            <a href="modern-fintech.html" class="subtle-link">FinTech</a>
+
+        <!-- Realms Native Switcher (Clean, robust, bulletproof on all mobile touchscreens) -->
+        <div class="realms-menu-container">
+            <label for="realms-native-select" class="sr-only">Switch Theme Realm</label>
+            <div class="realms-select-wrapper">
+                <span class="realms-select-label">Realms ▾</span>
+                <select id="realms-native-select" class="realms-native-select" aria-label="Switch Theme Realm" onchange="if(this.value) window.location.href=this.value;">
+                    <option value="" disabled selected hidden>Realms ▾</option>
+                    <option value="index.html">⊞ Win95 OS</option>
+                    <option value="space-theme.html">✦ Space Mode</option>
+                    <option value="modern-fintech.html">◈ FinTech Terminal</option>
+                </select>
+            </div>
         </div>
     </aside>
 
@@ -230,32 +237,41 @@
 
     <!-- Minimal Functional Theme Toggle Script (Zero-Dependency) -->
     <script>
-        (function() {
-            const toggle = document.getElementById('theme-toggle');
+        function applyTheme(isDark) {
             const icon = document.getElementById('theme-icon');
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-            
-            function setTheme(isDark) {
-                if (isDark) {
-                    document.documentElement.setAttribute('data-theme', 'dark');
-                    if (icon) icon.textContent = '☼';
-                } else {
-                    document.documentElement.removeAttribute('data-theme');
-                    if (icon) icon.textContent = '◐';
-                }
+            if (isDark) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.body.setAttribute('data-theme', 'dark');
+                if (icon) icon.textContent = '☼';
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                document.body.removeAttribute('data-theme');
+                if (icon) icon.textContent = '◐';
             }
+        }
 
-            const saved = localStorage.getItem('executive_resume_theme');
-            if (saved === 'dark' || (!saved && prefersDark.matches)) {
-                setTheme(true);
+        function toggleThemeNow(e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
             }
+            const currentIsDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const next = !currentIsDark;
+            applyTheme(next);
+            try {
+                localStorage.setItem('executive_resume_theme', next ? 'dark' : 'light');
+            } catch (_) {}
+        }
 
-            if (toggle) {
-                toggle.addEventListener('click', function() {
-                    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-                    setTheme(!isDark);
-                    localStorage.setItem('executive_resume_theme', !isDark ? 'dark' : 'light');
-                });
+        (function() {
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            let saved = null;
+            try {
+                saved = localStorage.getItem('executive_resume_theme');
+            } catch (_) {}
+
+            if (saved === 'dark' || (!saved && prefersDark)) {
+                applyTheme(true);
             }
         })();
     </script>

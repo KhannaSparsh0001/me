@@ -20,18 +20,20 @@
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
-[data-theme="dark"] {
-    --bg-page: #09090B;
-    --text-primary: #F8FAFC;
-    --text-secondary: #CBD5E1;
-    --text-muted: #94A3B8;
-    --border-color: #27272A;
-    --border-dark: #F8FAFC;
-    --accent-btn: #F8FAFC;
-    --accent-btn-text: #09090B;
-    --accent-btn-hover: #E2E8F0;
-    --code-bg: #18181B;
-    --code-text: #F4F4F5;
+[data-theme="dark"],
+body[data-theme="dark"],
+html[data-theme="dark"] {
+    --bg-page: #09090B !important;
+    --text-primary: #F8FAFC !important;
+    --text-secondary: #CBD5E1 !important;
+    --text-muted: #94A3B8 !important;
+    --border-color: #27272A !important;
+    --border-dark: #F8FAFC !important;
+    --accent-btn: #F8FAFC !important;
+    --accent-btn-text: #09090B !important;
+    --accent-btn-hover: #E2E8F0 !important;
+    --code-bg: #18181B !important;
+    --code-text: #F4F4F5 !important;
 }
 
 /* ── Reset & Baseline ── */
@@ -85,6 +87,12 @@ a:hover {
     border: 1px solid var(--border-color);
     border-radius: 4px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.action-bar-top {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .btn-primary {
@@ -148,6 +156,15 @@ a:hover {
     color: var(--text-muted);
 }
 
+.portal-links-label {
+    display: none;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+}
+
 .subtle-link {
     text-decoration: none;
     color: var(--text-secondary);
@@ -156,6 +173,59 @@ a:hover {
 
 .subtle-link:hover {
     text-decoration: underline;
+}
+
+/* ── Realms Native Dropdown Selector ── */
+.realms-menu-container {
+    position: relative;
+    display: inline-flex;
+}
+
+.realms-select-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--border-color);
+    background: transparent;
+    border-radius: 3px;
+    padding: 0.4rem 0.65rem;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.realms-select-wrapper:hover {
+    background-color: var(--code-bg);
+}
+
+.realms-select-label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    pointer-events: none;
+    user-select: none;
+}
+
+.realms-native-select {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    font-size: 16px; /* Prevents auto-zoom on iOS Safari */
+    -webkit-appearance: menulist;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }
 
 /* ── Document Shell ── */
@@ -378,18 +448,44 @@ code {
 /* ── Responsive Refinements ── */
 @media (max-width: 768px) {
     body {
-        padding: 4.5rem 1rem 3rem;
+        padding: 4.2rem 1rem 3rem;
     }
 
     .action-bar {
-        top: 0.75rem;
+        top: 0.6rem;
         right: 0.75rem;
         left: 0.75rem;
-        justify-content: space-between;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.35rem 0.5rem;
     }
 
-    .action-portal-links {
+    .action-bar .btn-primary {
+        flex: 1;
+        justify-content: center;
+        padding: 0.45rem 0.6rem;
+    }
+
+    .action-bar .btn-secondary {
+        padding: 0.45rem 0.55rem;
+    }
+
+    .action-bar .btn-secondary .btn-text {
         display: none;
+    }
+
+    .action-bar .btn-ghost {
+        padding: 0.4rem 0.55rem;
+    }
+
+    .realms-select-wrapper {
+        padding: 0.4rem 0.55rem;
+    }
+
+    .realms-select-label {
+        font-size: 0.78rem;
     }
 
     .skill-category {
