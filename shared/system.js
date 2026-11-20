@@ -62,7 +62,7 @@ if (!topScopeSystem.SystemAPI) {
                 if (sounds[type]) {
                     const a = new Audio(sounds[type]);
                     a.volume = this.volume;
-                    a.play().catch(() => {});
+                    return a.play();
                 }
             } catch(e) {}
         },

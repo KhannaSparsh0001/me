@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <title>Minesweeper</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@react95/sans-serif/index.min.css">
+    <script src="../../shared/system.js"></script>
     <style>
         body {
             margin: 0;
-            padding: 10px;
+            padding: 0;
             background-color: #c0c0c0;
             font-family: 'R95 Sans Serif 10pt', 'MS Sans Serif', Tahoma, sans-serif;
             font-smooth: never;
@@ -15,9 +16,11 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            width: 100vw;
             height: 100vh;
             box-sizing: border-box;
             user-select: none;
+            overflow: hidden;
         }
 
         .game-board {
@@ -30,6 +33,9 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
+            box-sizing: border-box;
+            transform-origin: center center;
+            flex-shrink: 0;
         }
 
         .header {
@@ -142,7 +148,7 @@
 </head>
 <body>
 
-<div class="game-board">
+<div class="game-board" id="game-board">
     <div class="header">
         <div class="digit-display" id="mine-count">010</div>
         <div class="smiley" id="smiley">🙂</div>
@@ -168,6 +174,39 @@
     const smileyEl = document.getElementById('smiley');
     const mineCountEl = document.getElementById('mine-count');
     const timerEl = document.getElementById('timer');
+
+    const audioCache = {
+        mine_click: new Audio('click.wav'),
+        mine_lose: new Audio('lose_minesweeper.wav')
+    };
+
+    function playMineSound(type) {
+        try {
+            let sys = null;
+            try {
+                if (window.top && window.top.SystemAPI) {
+                    sys = window.top.SystemAPI;
+                }
+            } catch (_) {}
+            if (!sys && window.SystemAPI) {
+                sys = window.SystemAPI;
+            }
+            if (sys && typeof sys.playSound === 'function') {
+                const vol = typeof sys.getVolume === 'function' ? sys.getVolume() : 0.5;
+                if (audioCache[type]) audioCache[type].volume = vol;
+                sys.playSound(type);
+                return;
+            }
+        } catch (_) {}
+
+        try {
+            const a = audioCache[type];
+            if (a) {
+                a.currentTime = 0;
+                a.play().catch(() => {});
+            }
+        } catch (_) {}
+    }
 
     function init() {
         gridEl.innerHTML = '';
@@ -239,9 +278,7 @@
 
     function handleMouseDown(e, r, c) {
         if (isGameOver) return;
-        if (window.top.SystemAPI && window.top.SystemAPI.playSound) {
-            window.top.SystemAPI.playSound('mine_click');
-        }
+        playMineSound('mine_click');
         if (e.button === 0 && !grid[r][c].isRevealed && !grid[r][c].isFlagged) {
             smileyEl.textContent = '😮';
         }
@@ -331,9 +368,7 @@
                     }
                 }
             }
-            if (window.top.SystemAPI && window.top.SystemAPI.playSound) {
-                window.top.SystemAPI.playSound('mine_lose');
-            }
+            playMineSound('mine_lose');
         }
     }
 
@@ -366,6 +401,26 @@
     window.addEventListener('contextmenu', e => e.preventDefault());
 
     init();
+
+    function fitToWindow() {
+        const board = document.getElementById('game-board');
+        if (!board) return;
+        board.style.transform = 'none';
+        const baseW = board.offsetWidth || 168;
+        const baseH = board.offsetHeight || 216;
+        const margin = 12;
+        const availW = Math.max(50, window.innerWidth - margin);
+        const availH = Math.max(50, window.innerHeight - margin);
+        const scale = Math.min(availW / baseW, availH / baseH);
+        board.style.transform = `scale(${scale})`;
+    }
+
+    window.addEventListener('resize', fitToWindow);
+    window.addEventListener('load', fitToWindow);
+    if (typeof ResizeObserver !== 'undefined') {
+        new ResizeObserver(fitToWindow).observe(document.body);
+    }
+    setTimeout(fitToWindow, 0);
 
     if (window.top && window.top.ProcessManager) {
         window.top.ProcessManager.register("Minesweeper.exe");

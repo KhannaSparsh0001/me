@@ -3,6 +3,35 @@
 
 <head>
     <meta charset="UTF-8">
+    <script>
+        (function() {
+            if (sessionStorage.getItem('booted')) {
+                document.documentElement.classList.add('already-booted');
+            }
+        })();
+    </script>
+    <style>
+        #boot-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            color: #c0c0c0;
+            z-index: 99999999;
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        html.already-booted #boot-screen {
+            display: none !important;
+        }
+        @keyframes bootBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+    </style>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@react95/sans-serif/index.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Netscape - [Resume - Systems Engineer]</title>
@@ -1613,11 +1642,11 @@
 
     <!-- Dimensional switches moved into the Win95 Portal Containment Bay (.portal-bay) -->
 
-    <div id="boot-screen"
-        style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:black; color:#c0c0c0; z-index:9999999; font-family:'Courier New', monospace; padding:20px; box-sizing:border-box;">
+    <div id="boot-screen">
         <div>Starting Windows 95...</div>
         <div style="margin-top:20px;">Memory Test: 32768K OK</div>
         <div style="margin-top:10px;">Loading...</div>
+        <div id="boot-prompt" style="margin-top:20px; color:#ffff00; display:none; animation:bootBlink 1s infinite;">[ Click anywhere or press any key to boot with sound ]</div>
     </div>
 
     <div class="window">
@@ -2443,23 +2472,56 @@
             // Boot sequence logic
             if (!sessionStorage.getItem('booted')) {
                 const bootScreen = document.getElementById('boot-screen');
-                bootScreen.style.display = 'block';
                 document.body.style.overflow = 'hidden';
 
-                // Try to play startup sound (may be blocked by browser autoplay rules)
-                setTimeout(() => {
-                    if (window.SystemAPI) window.SystemAPI.playSound('startup');
-                }, 500);
+                let soundPlayed = false;
+                const tryPlayStartup = () => {
+                    if (soundPlayed) return;
+                    if (window.SystemAPI) {
+                        const p = window.SystemAPI.playSound('startup');
+                        if (p && typeof p.then === 'function') {
+                            p.then(() => {
+                                soundPlayed = true;
+                                const prompt = document.getElementById('boot-prompt');
+                                if (prompt) prompt.style.display = 'none';
+                            }).catch(() => {
+                                // Blocked by browser autoplay policy - prompt user gesture
+                                const prompt = document.getElementById('boot-prompt');
+                                if (prompt) prompt.style.display = 'block';
+                            });
+                        } else {
+                            soundPlayed = true;
+                        }
+                    }
+                };
+
+                const userUnlock = () => {
+                    tryPlayStartup();
+                    cleanupUnlock();
+                };
+
+                const cleanupUnlock = () => {
+                    document.removeEventListener('pointerdown', userUnlock);
+                    document.removeEventListener('keydown', userUnlock);
+                };
+
+                document.addEventListener('pointerdown', userUnlock);
+                document.addEventListener('keydown', userUnlock);
+
+                // Initial attempt (executes immediately if browser permits autoplay)
+                setTimeout(tryPlayStartup, 150);
 
                 setTimeout(() => {
+                    cleanupUnlock();
                     bootScreen.style.opacity = '0';
                     bootScreen.style.transition = 'opacity 0.5s ease';
                     setTimeout(() => {
                         bootScreen.style.display = 'none';
                         document.body.style.overflow = '';
                         sessionStorage.setItem('booted', '1');
+                        document.documentElement.classList.add('already-booted');
                     }, 500);
-                }, 2500);
+                }, 2600);
             }
         });
         let highestZ = 100;
@@ -2777,6 +2839,9 @@
             }
 
             function closeSheet() {
+                if (!sheet.classList.contains("active") && !backdrop.classList.contains("active")) {
+                    return;
+                }
                 backdrop.classList.remove("active");
                 sheet.classList.remove("active");
                 if (window.SystemAPI) window.SystemAPI.playSound("close");
@@ -2800,7 +2865,9 @@
 
                 if (hasOpenWindow) {
                     bubble.classList.add("bubble-hidden");
-                    closeSheet();
+                    if (sheet.classList.contains("active") || backdrop.classList.contains("active")) {
+                        closeSheet();
+                    }
                 } else {
                     bubble.classList.remove("bubble-hidden");
                 }

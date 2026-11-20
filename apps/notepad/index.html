@@ -4,192 +4,364 @@
 <meta charset="UTF-8">
 <title>Notepad</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@react95/sans-serif/index.min.css">
-<link rel="stylesheet" href="../../style.css">
 
 <style>
-
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-body{
-    height:100vh;
-    background:#c0c0c0;
+body {
+    height: 100vh;
+    background: #c0c0c0;
     font-family: 'R95 Sans Serif 8pt', 'MS Sans Serif', Tahoma, Verdana, sans-serif;
     font-smooth: never;
     -webkit-font-smoothing: none;
-    overflow:hidden;
+    overflow: hidden;
     cursor: default;
+    display: flex;
+    flex-direction: column;
 }
 
-*{
-    cursor: default;
+/* Menu Bar */
+.menu-bar {
+    height: 26px;
+    display: flex;
+    align-items: center;
+    background: #c0c0c0;
+    border-bottom: 1px solid #808080;
+    padding: 1px 2px;
+    gap: 2px;
+    font-size: 12px;
+    user-select: none;
+    position: relative;
+    z-index: 10;
 }
 
-.menu{
-    height:28px;
-    display:flex;
-    align-items:center;
-    gap:18px;
-    padding:0 10px;
-    background:#c0c0c0;
-    border-bottom:2px solid;
-    border-color:#fff #808080 #808080 #fff;
-    font-size:13px;
+.menu-item {
+    padding: 3px 8px;
+    cursor: pointer;
+    position: relative;
+    border: 1px solid transparent;
 }
 
-textarea{
+.menu-item:hover, .menu-item.active {
+    background: #000080;
+    color: #ffffff;
+}
 
-    width:100%;
-    height:calc(100vh - 58px);
+.menu-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #c0c0c0;
+    border: 2px solid;
+    border-color: #ffffff #808080 #808080 #ffffff;
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    min-width: 140px;
+    padding: 2px;
+    z-index: 100;
+}
 
-    resize:none;
+.menu-dropdown.show {
+    display: block;
+}
 
-    border:none;
-    outline:none;
+.dropdown-entry {
+    padding: 4px 18px 4px 14px;
+    font-size: 12px;
+    color: #000000;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    white-space: nowrap;
+}
 
-    padding:10px;
+.dropdown-entry:hover {
+    background: #000080;
+    color: #ffffff;
+}
 
-    font-family: 'Fixedsys', "Courier New", monospace;
-    font-size: 15px;
-    line-height: 1.2;
+.dropdown-separator {
+    height: 1px;
+    margin: 3px 1px;
+    border-top: 1px solid #808080;
+    border-bottom: 1px solid #ffffff;
+}
 
-    background:white;
-    color:black;
+/* Quick Tool Buttons on Menu Bar */
+.menu-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding-right: 4px;
+}
+
+.btn-retro {
+    padding: 1px 8px;
+    font-size: 11px;
+    font-family: inherit;
+    border: 2px solid;
+    border-color: #ffffff #808080 #808080 #ffffff;
+    background: #c0c0c0;
+    color: #000000;
+    cursor: pointer;
+    box-shadow: inset 1px 1px #dfdfdf, inset -1px -1px #0a0a0a;
+}
+
+.btn-retro:active {
+    border-color: #808080 #ffffff #ffffff #808080;
+    box-shadow: inset 1px 1px #0a0a0a, inset -1px -1px #dfdfdf;
+    padding: 2px 7px 0 9px;
+}
+
+/* Main Textarea / Canvas */
+.editor-container {
+    flex: 1;
+    position: relative;
+    padding: 2px;
+    background: #c0c0c0;
+    display: flex;
+}
+
+textarea#editor {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    resize: none;
+    border: 2px solid;
+    border-color: #808080 #ffffff #ffffff #808080;
+    box-shadow: inset 1px 1px 0px #000000, inset -1px -1px 0px #dfdfdf;
+    outline: none;
+    padding: 6px 8px;
+    font-family: 'Lucida Console', 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.4;
+    background: #ffffff !important;
+    color: #000000 !important;
+    white-space: pre-wrap;
+    word-break: normal;
+    overflow-y: scroll;
     cursor: text !important;
 }
 
-.status{
-
-    height:30px;
-
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-
-    padding:0 10px;
-
-    background:#c0c0c0;
-
-    border-top:2px solid;
-    border-color:#fff #808080 #808080 #fff;
-
-    font-size:12px;
-
+/* Authentic Win95 Status Bar */
+.status-bar {
+    height: 24px;
+    display: flex;
+    align-items: center;
+    background: #c0c0c0;
+    padding: 2px 4px;
+    gap: 4px;
+    user-select: none;
 }
 
-button{
-
-    padding:2px 12px;
-
-    border:2px solid;
-    border-color:#fff #808080 #808080 #fff;
-
-    background:#c0c0c0;
-
-    cursor:pointer !important;
-
+.status-panel {
+    height: 18px;
+    display: flex;
+    align-items: center;
+    padding: 0 6px;
+    font-size: 11px;
+    color: #000000;
+    border: 1px solid;
+    border-color: #808080 #ffffff #ffffff #808080;
 }
 
-button:active{
-
-    border-color:#808080 #fff #fff #808080;
-
+.status-panel.main {
+    flex: 1;
 }
-
 </style>
 </head>
 
 <body>
 
-<div class="menu">
+<!-- Menu Bar -->
+<div class="menu-bar">
+    <div class="menu-item" id="menu-file">
+        File
+        <div class="menu-dropdown" id="dropdown-file">
+            <div class="dropdown-entry" id="action-new">New <span>Ctrl+N</span></div>
+            <div class="dropdown-entry" id="action-save">Save <span>Ctrl+S</span></div>
+            <div class="dropdown-entry" id="action-save-as">Save As...</div>
+            <div class="dropdown-separator"></div>
+            <div class="dropdown-entry" id="action-clear">Clear Document</div>
+        </div>
+    </div>
 
-<span>File</span>
-<span>Edit</span>
-<span>Search</span>
-<span id="help-btn">Help</span>
+    <div class="menu-item" id="menu-edit">
+        Edit
+        <div class="menu-dropdown" id="dropdown-edit">
+            <div class="dropdown-entry" id="action-select-all">Select All <span>Ctrl+A</span></div>
+            <div class="dropdown-entry" id="action-time-date">Time/Date <span>F5</span></div>
+            <div class="dropdown-separator"></div>
+            <div class="dropdown-entry" id="action-wrap">Word Wrap: ON</div>
+        </div>
+    </div>
 
-<button id="download">
-Save</button>
+    <div class="menu-item" id="menu-help">
+        Help
+        <div class="menu-dropdown" id="dropdown-help">
+            <div class="dropdown-entry" id="action-about">About Notepad</div>
+        </div>
+    </div>
 
-<button id="clear">
-Clear
-</button>
-
+    <div class="menu-actions">
+        <button class="btn-retro" id="btn-save" title="Save notes to file">Save</button>
+        <button class="btn-retro" id="btn-clear" title="Clear notepad contents">Clear</button>
+    </div>
 </div>
 
-<textarea
-id="editor"
-spellcheck="false"
-placeholder="Type something..."
-></textarea>
+<!-- Editor Workspace -->
+<div class="editor-container">
+    <textarea id="editor" spellcheck="false" placeholder="Type notes here..."></textarea>
+</div>
 
-<div class="status">
-
-<span id="chars">0 Characters</span>
-
-<span>
-Auto Saved
-</span>
-
+<!-- Status Bar -->
+<div class="status-bar">
+    <div class="status-panel main" id="status-cursor">Line 1, Col 1</div>
+    <div class="status-panel" id="status-chars">0 characters</div>
+    <div class="status-panel" id="status-encoding">Windows (CRLF)</div>
+    <div class="status-panel" id="status-autosave">Auto-Saved</div>
 </div>
 
 <script>
+const editor = document.getElementById("editor");
+const statusChars = document.getElementById("status-chars");
+const statusCursor = document.getElementById("status-cursor");
+const statusAutosave = document.getElementById("status-autosave");
 
-const editor=document.getElementById("editor");
+// Restore saved notes
+editor.value = localStorage.getItem("retro_notepad") || "";
+updateStats();
 
-const chars=document.getElementById("chars");
-
-editor.value=localStorage.getItem("retro_notepad")||"";
-
-updateCount();
-
-editor.addEventListener("input",()=>{
-
-localStorage.setItem("retro_notepad",editor.value);
-
-updateCount();
-
+editor.addEventListener("input", () => {
+    localStorage.setItem("retro_notepad", editor.value);
+    updateStats();
+    statusAutosave.textContent = "Saved";
 });
 
-function updateCount(){
+editor.addEventListener("keyup", updateCursorPos);
+editor.addEventListener("click", updateCursorPos);
 
-chars.textContent=editor.value.length+" Characters";
-
+function updateStats() {
+    const len = editor.value.length;
+    statusChars.textContent = len + (len === 1 ? " char" : " chars");
+    updateCursorPos();
 }
 
-document.getElementById("clear").onclick=()=>{
-
-if(confirm("Clear the document?")){
-
-editor.value="";
-
-localStorage.removeItem("retro_notepad");
-
-updateCount();
-
+function updateCursorPos() {
+    const text = editor.value.substring(0, editor.selectionStart);
+    const lines = text.split("\n");
+    const lineNum = lines.length;
+    const colNum = lines[lines.length - 1].length + 1;
+    statusCursor.textContent = `Ln ${lineNum}, Col ${colNum}`;
 }
 
+// Download / Save
+function saveDocument() {
+    const text = editor.value;
+    const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "notes.txt";
+    a.click();
+    URL.revokeObjectURL(a.href);
+    statusAutosave.textContent = "Downloaded";
+}
+
+document.getElementById("btn-save").onclick = saveDocument;
+document.getElementById("action-save").onclick = saveDocument;
+document.getElementById("action-save-as").onclick = saveDocument;
+
+// Clear document
+function clearDocument() {
+    if (editor.value.length === 0) return;
+    if (confirm("Clear the current document?")) {
+        editor.value = "";
+        localStorage.removeItem("retro_notepad");
+        updateStats();
+        statusAutosave.textContent = "Cleared";
+        editor.focus();
+    }
+}
+
+document.getElementById("btn-clear").onclick = clearDocument;
+document.getElementById("action-clear").onclick = clearDocument;
+document.getElementById("action-new").onclick = clearDocument;
+
+// Select All
+document.getElementById("action-select-all").onclick = () => {
+    editor.select();
+    editor.focus();
 };
 
-document.getElementById("download").onclick=()=>{
-
-const blob=new Blob([editor.value],{type:"text/plain"});
-
-const a=document.createElement("a");
-
-a.href=URL.createObjectURL(blob);
-
-a.download="notes.txt";
-
-a.click();
-
-URL.revokeObjectURL(a.href);
-
+// Insert Time / Date
+document.getElementById("action-time-date").onclick = () => {
+    const now = new Date();
+    const str = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + " " + now.toLocaleDateString();
+    const start = editor.selectionStart;
+    const end = editor.selectionEnd;
+    editor.setRangeText(str, start, end, 'end');
+    localStorage.setItem("retro_notepad", editor.value);
+    updateStats();
 };
 
+// Word Wrap Toggle
+let wordWrap = true;
+const wrapBtn = document.getElementById("action-wrap");
+wrapBtn.onclick = () => {
+    wordWrap = !wordWrap;
+    if (wordWrap) {
+        editor.style.whiteSpace = "pre-wrap";
+        wrapBtn.textContent = "Word Wrap: ON";
+    } else {
+        editor.style.whiteSpace = "pre";
+        wrapBtn.textContent = "Word Wrap: OFF";
+    }
+};
+
+// Dropdown Menu Toggling
+const menuItems = document.querySelectorAll(".menu-item");
+function closeAllMenus() {
+    document.querySelectorAll(".menu-dropdown").forEach(d => d.classList.remove("show"));
+    menuItems.forEach(m => m.classList.remove("active"));
+}
+
+menuItems.forEach(item => {
+    item.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const dropdown = item.querySelector(".menu-dropdown");
+        const isOpen = dropdown && dropdown.classList.contains("show");
+        closeAllMenus();
+        if (!isOpen && dropdown) {
+            dropdown.classList.add("show");
+            item.classList.add("active");
+            if (window.top && window.top.SystemAPI) {
+                window.top.SystemAPI.playSound('click');
+            }
+        }
+    });
+});
+
+document.addEventListener("click", closeAllMenus);
+
+// Keyboard Shortcuts
+window.addEventListener("keydown", (e) => {
+    if (e.ctrlKey && e.key.toLowerCase() === 's') {
+        e.preventDefault();
+        saveDocument();
+    } else if (e.ctrlKey && e.key.toLowerCase() === 'n') {
+        e.preventDefault();
+        clearDocument();
+    } else if (e.key === 'F5') {
+        e.preventDefault();
+        document.getElementById("action-time-date").click();
+    }
+});
 </script>
 
 <script src="../../shared/processManager.js"></script>
@@ -208,20 +380,22 @@ URL.revokeObjectURL(a.href);
         });
     }
 
-    document.getElementById("help-btn").onclick = () => {
+    const showAbout = () => {
         let topScope = window;
         try { topScope = window.top; } catch(e) {}
         if (topScope.SystemAPI && topScope.SystemAPI.showAboutDialog) {
             topScope.SystemAPI.showAboutDialog({
                 name: "Notepad",
-                version: "1.0",
-                description: "Lightweight text editor for notes and plain text editing.",
+                version: "4.0",
+                description: "Classic text editor for Microsoft Windows 95.",
                 developer: "Sparsh Khanna",
-                copyright: "2026",
+                copyright: "1995-2026",
                 icon: "../../icons/notepad.png"
             });
         }
     };
+
+    document.getElementById("action-about").onclick = showAbout;
 </script>
 </body>
 </html>
