@@ -74,31 +74,6 @@
             background: #000;
         }
 
-        /* Controls / Click-to-Play Overlay */
-        .lock-overlay {
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.75);
-            border: 2px solid #c0c0c0;
-            border-color: #dfdfdf #404040 #404040 #dfdfdf;
-            color: #ffcc00;
-            padding: 4px 12px;
-            font-size: 11px;
-            font-family: "Courier New", monospace;
-            font-weight: bold;
-            pointer-events: none;
-            transition: opacity 0.5s ease;
-            z-index: 10;
-            text-align: center;
-            letter-spacing: 0.5px;
-        }
-
-        .lock-overlay.hidden {
-            opacity: 0;
-        }
-
         /* Sunken Retro Status Bar */
         .status-bar {
             display: flex;
@@ -123,7 +98,7 @@
         }
 
         .status-mid {
-            width: 140px;
+            width: 160px;
             text-align: center;
         }
 
@@ -213,20 +188,17 @@
     <div class="menu-bar">
         <div class="menu-item" onclick="toggleHelp(true)"><u>H</u>elp</div>
         <div class="menu-item" onclick="restartQuake()"><u>R</u>eload</div>
+        <div class="menu-item" onclick="openExternal()"><u>N</u>ew Tab</div>
         <div class="menu-item" onclick="toggleFullscreen()"><u>F</u>ullscreen</div>
     </div>
 
     <!-- Viewport Container -->
     <div class="viewport-wrapper" id="viewport">
-        <div class="lock-overlay" id="hint-banner">
-            🖱️ CLICK TO CAPTURE MOUSE • PRESS [ESC] FOR MENU / UNLOCK
-        </div>
-
         <iframe 
             id="quake-frame" 
-            src="https://qwasm.m-h.org.uk" 
+            src="https://dos.zone/player/?bundleUrl=https%3A%2F%2Fcdn.dos.zone%2Fcustom%2Fdos%2Fquake.jsdos" 
             allow="autoplay; fullscreen; pointer-lock" 
-            title="Quake WASM WebGL">
+            title="Quake 1996 WASM DOS.Zone Player">
         </iframe>
     </div>
 
@@ -234,7 +206,7 @@
     <div class="status-bar">
         <div class="status-panel status-main" id="status-title">QUAKE (1996) WASM - id Software</div>
         <div class="status-panel status-mid">Episode 1: Shareware</div>
-        <div class="status-panel status-end">● WASM 60FPS</div>
+        <div class="status-panel status-end">● WASM Active</div>
     </div>
 
     <!-- Controls Guide Dialog -->
@@ -248,7 +220,7 @@
             <table>
                 <tr><td><strong>W / A / S / D</strong></td><td>Move & Strafe</td></tr>
                 <tr><td><strong>Mouse</strong></td><td>Mouselook & Aim</td></tr>
-                <tr><td><strong>Left Click</strong></td><td>Fire Weapon</td></tr>
+                <tr><td><strong>Left Click / Ctrl</strong></td><td>Fire Weapon</td></tr>
                 <tr><td><strong>Space</strong></td><td>Jump</td></tr>
                 <tr><td><strong>1 - 8</strong></td><td>Select Weapons</td></tr>
                 <tr><td><strong>Esc</strong></td><td>Main Menu / Release Mouse</td></tr>
@@ -262,24 +234,11 @@
         // Register into Windows 95 Process Manager if parent window exists
         try {
             if (window.parent && window.parent.ProcessManager) {
-                window.parent.ProcessManager.register("Quake.exe", "Active", "WASM / WebGL 3D");
+                window.parent.ProcessManager.register("Quake.exe", "Active", "WASM DOSBox");
             }
         } catch (e) {
             console.warn("ProcessManager registration:", e);
         }
-
-        // Fade hint overlay on user interaction
-        const banner = document.getElementById('hint-banner');
-        window.addEventListener('click', () => {
-            if (banner) {
-                banner.classList.add('hidden');
-            }
-        });
-
-        // Hide overlay automatically after 8 seconds
-        setTimeout(() => {
-            if (banner) banner.classList.add('hidden');
-        }, 8000);
 
         function toggleHelp(show) {
             const dialog = document.getElementById('help-dialog');
@@ -289,6 +248,10 @@
         function restartQuake() {
             const frame = document.getElementById('quake-frame');
             if (frame) frame.src = frame.src;
+        }
+
+        function openExternal() {
+            window.open("https://dos.zone/player/?bundleUrl=https%3A%2F%2Fcdn.dos.zone%2Fcustom%2Fdos%2Fquake.jsdos", "_blank");
         }
 
         function toggleFullscreen() {
