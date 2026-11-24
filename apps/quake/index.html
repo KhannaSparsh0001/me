@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows 95 - Quake (WASM)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            background-color: #c0c0c0;
+            font-family: "MS Sans Serif", Tahoma, sans-serif;
+            font-size: 11px;
+            color: #000;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Menu Bar */
+        .menu-bar {
+            display: flex;
+            background: #c0c0c0;
+            padding: 2px 4px;
+            border-bottom: 1px solid #808080;
+            gap: 12px;
+            font-size: 11px;
+        }
+
+        .menu-item {
+            cursor: pointer;
+            padding: 1px 5px;
+            position: relative;
+        }
+
+        .menu-item:hover {
+            background-color: #000080;
+            color: #ffffff;
+        }
+
+        .menu-item u {
+            text-decoration: underline;
+        }
+
+        /* Game Viewport Container */
+        .viewport-wrapper {
+            flex: 1;
+            position: relative;
+            background: #000000;
+            margin: 2px 3px;
+            border-top: 2px solid #808080;
+            border-left: 2px solid #808080;
+            border-right: 2px solid #ffffff;
+            border-bottom: 2px solid #ffffff;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        iframe#quake-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+            background: #000;
+        }
+
+        /* Controls / Click-to-Play Overlay */
+        .lock-overlay {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.75);
+            border: 2px solid #c0c0c0;
+            border-color: #dfdfdf #404040 #404040 #dfdfdf;
+            color: #ffcc00;
+            padding: 4px 12px;
+            font-size: 11px;
+            font-family: "Courier New", monospace;
+            font-weight: bold;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+            z-index: 10;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+
+        .lock-overlay.hidden {
+            opacity: 0;
+        }
+
+        /* Sunken Retro Status Bar */
+        .status-bar {
+            display: flex;
+            gap: 2px;
+            padding: 2px 3px;
+            background: #c0c0c0;
+            font-size: 11px;
+            line-height: 14px;
+        }
+
+        .status-panel {
+            padding: 1px 6px;
+            border: 1px solid;
+            border-color: #808080 #ffffff #ffffff #808080;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .status-main {
+            flex: 1;
+        }
+
+        .status-mid {
+            width: 140px;
+            text-align: center;
+        }
+
+        .status-end {
+            width: 90px;
+            text-align: right;
+            color: #008000;
+            font-weight: bold;
+        }
+
+        /* Controls Modal dialog */
+        .help-dialog {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #c0c0c0;
+            border: 2px solid;
+            border-color: #ffffff #000000 #000000 #ffffff;
+            box-shadow: 2px 2px 0 #808080;
+            width: 320px;
+            z-index: 50;
+            padding: 2px;
+        }
+
+        .dialog-title {
+            background: #000080;
+            color: #ffffff;
+            padding: 2px 4px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dialog-close {
+            background: #c0c0c0;
+            border: 1px solid;
+            border-color: #ffffff #000000 #000000 #ffffff;
+            width: 14px;
+            height: 14px;
+            font-size: 9px;
+            font-weight: bold;
+            line-height: 12px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .dialog-body {
+            padding: 12px;
+            line-height: 1.5;
+            font-size: 11px;
+        }
+
+        .dialog-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 6px;
+        }
+
+        .dialog-body td {
+            padding: 2px 4px;
+            border-bottom: 1px solid #dfdfdf;
+        }
+
+        .dialog-btn {
+            display: block;
+            margin: 8px auto 0;
+            padding: 3px 18px;
+            background: #c0c0c0;
+            border: 2px solid;
+            border-color: #ffffff #000000 #000000 #ffffff;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 11px;
+        }
+
+        .dialog-btn:active {
+            border-color: #000000 #ffffff #ffffff #000000;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Windows 95 Menu Bar -->
+    <div class="menu-bar">
+        <div class="menu-item" onclick="toggleHelp(true)"><u>H</u>elp</div>
+        <div class="menu-item" onclick="restartQuake()"><u>R</u>eload</div>
+        <div class="menu-item" onclick="toggleFullscreen()"><u>F</u>ullscreen</div>
+    </div>
+
+    <!-- Viewport Container -->
+    <div class="viewport-wrapper" id="viewport">
+        <div class="lock-overlay" id="hint-banner">
+            🖱️ CLICK TO CAPTURE MOUSE • PRESS [ESC] FOR MENU / UNLOCK
+        </div>
+
+        <iframe 
+            id="quake-frame" 
+            src="https://qwasm.m-h.org.uk" 
+            allow="autoplay; fullscreen; pointer-lock" 
+            title="Quake WASM WebGL">
+        </iframe>
+    </div>
+
+    <!-- Win95 Sunken Status Bar -->
+    <div class="status-bar">
+        <div class="status-panel status-main" id="status-title">QUAKE (1996) WASM - id Software</div>
+        <div class="status-panel status-mid">Episode 1: Shareware</div>
+        <div class="status-panel status-end">● WASM 60FPS</div>
+    </div>
+
+    <!-- Controls Guide Dialog -->
+    <div class="help-dialog" id="help-dialog">
+        <div class="dialog-title">
+            <span>Quake Controls Guide</span>
+            <div class="dialog-close" onclick="toggleHelp(false)">×</div>
+        </div>
+        <div class="dialog-body">
+            <strong>Default Keyboard & Mouse Setup:</strong>
+            <table>
+                <tr><td><strong>W / A / S / D</strong></td><td>Move & Strafe</td></tr>
+                <tr><td><strong>Mouse</strong></td><td>Mouselook & Aim</td></tr>
+                <tr><td><strong>Left Click</strong></td><td>Fire Weapon</td></tr>
+                <tr><td><strong>Space</strong></td><td>Jump</td></tr>
+                <tr><td><strong>1 - 8</strong></td><td>Select Weapons</td></tr>
+                <tr><td><strong>Esc</strong></td><td>Main Menu / Release Mouse</td></tr>
+                <tr><td><strong>~ (Tilde)</strong></td><td>Quake Console</td></tr>
+            </table>
+            <button class="dialog-btn" onclick="toggleHelp(false)">OK</button>
+        </div>
+    </div>
+
+    <script>
+        // Register into Windows 95 Process Manager if parent window exists
+        try {
+            if (window.parent && window.parent.ProcessManager) {
+                window.parent.ProcessManager.register("Quake.exe", "Active", "WASM / WebGL 3D");
+            }
+        } catch (e) {
+            console.warn("ProcessManager registration:", e);
+        }
+
+        // Fade hint overlay on user interaction
+        const banner = document.getElementById('hint-banner');
+        window.addEventListener('click', () => {
+            if (banner) {
+                banner.classList.add('hidden');
+            }
+        });
+
+        // Hide overlay automatically after 8 seconds
+        setTimeout(() => {
+            if (banner) banner.classList.add('hidden');
+        }, 8000);
+
+        function toggleHelp(show) {
+            const dialog = document.getElementById('help-dialog');
+            if (dialog) dialog.style.display = show ? 'block' : 'none';
+        }
+
+        function restartQuake() {
+            const frame = document.getElementById('quake-frame');
+            if (frame) frame.src = frame.src;
+        }
+
+        function toggleFullscreen() {
+            const viewport = document.getElementById('viewport');
+            if (!document.fullscreenElement) {
+                if (viewport.requestFullscreen) viewport.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+            }
+        }
+    </script>
+</body>
+</html>

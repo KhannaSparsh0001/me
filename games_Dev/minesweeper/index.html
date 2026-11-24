@@ -278,6 +278,9 @@
 
     function handleMouseDown(e, r, c) {
         if (isGameOver) return;
+        if (window.top.SystemAPI && window.top.SystemAPI.playSound) {
+            window.top.SystemAPI.playSound('mine_click');
+        }
         playMineSound('mine_click');
         if (e.button === 0 && !grid[r][c].isRevealed && !grid[r][c].isFlagged) {
             smileyEl.textContent = '😮';
@@ -367,6 +370,9 @@
                         cell.el.textContent = '❌';
                     }
                 }
+            }
+            if (window.top.SystemAPI && window.top.SystemAPI.playSound) {
+                window.top.SystemAPI.playSound('mine_lose');
             }
             playMineSound('mine_lose');
         }
