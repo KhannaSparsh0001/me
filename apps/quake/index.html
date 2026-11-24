@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Windows 95 - Quake (WASM)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Windows 95 - Quake (WebGL 60FPS)</title>
     <style>
         * {
             box-sizing: border-box;
@@ -33,6 +33,7 @@
             border-bottom: 1px solid #808080;
             gap: 12px;
             font-size: 11px;
+            z-index: 100;
         }
 
         .menu-item {
@@ -66,12 +67,51 @@
             justify-content: center;
         }
 
-        iframe#quake-frame {
+        canvas#mainwindow {
             width: 100%;
             height: 100%;
-            border: none;
             display: block;
-            background: #000;
+            outline: none;
+            cursor: crosshair;
+        }
+
+        #progress {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ffcc00;
+            font-family: "Courier New", monospace;
+            font-size: 13px;
+            font-weight: bold;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.85);
+            padding: 12px 24px;
+            border: 2px solid #808080;
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        .hud-hint {
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #ffcc00;
+            color: #ffcc00;
+            padding: 3px 12px;
+            font-size: 11px;
+            font-family: "Courier New", monospace;
+            font-weight: bold;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+            z-index: 15;
+            text-align: center;
+        }
+
+        .hud-hint.hidden {
+            opacity: 0;
         }
 
         /* Sunken Retro Status Bar */
@@ -103,7 +143,7 @@
         }
 
         .status-end {
-            width: 90px;
+            width: 110px;
             text-align: right;
             color: #008000;
             font-weight: bold;
@@ -121,7 +161,7 @@
             border-color: #ffffff #000000 #000000 #ffffff;
             box-shadow: 2px 2px 0 #808080;
             width: 320px;
-            z-index: 50;
+            z-index: 500;
             padding: 2px;
         }
 
@@ -180,6 +220,14 @@
         .dialog-btn:active {
             border-color: #000000 #ffffff #ffffff #000000;
         }
+
+        #end1, #end2 {
+            background-color: maroon;
+            white-space: pre;
+            color: #fff;
+            font-family: monospace;
+            font-size: 11px;
+        }
     </style>
 </head>
 <body>
@@ -187,26 +235,32 @@
     <!-- Windows 95 Menu Bar -->
     <div class="menu-bar">
         <div class="menu-item" onclick="toggleHelp(true)"><u>H</u>elp</div>
-        <div class="menu-item" onclick="restartQuake()"><u>R</u>eload</div>
-        <div class="menu-item" onclick="openExternal()"><u>N</u>ew Tab</div>
+        <div class="menu-item" onclick="location.reload()"><u>R</u>estart</div>
         <div class="menu-item" onclick="toggleFullscreen()"><u>F</u>ullscreen</div>
     </div>
 
     <!-- Viewport Container -->
     <div class="viewport-wrapper" id="viewport">
-        <iframe 
-            id="quake-frame" 
-            src="https://dos.zone/player/?bundleUrl=https%3A%2F%2Fcdn.dos.zone%2Fcustom%2Fdos%2Fquake.jsdos" 
-            allow="autoplay; fullscreen; pointer-lock" 
-            title="Quake 1996 WASM DOS.Zone Player">
-        </iframe>
+        <div class="hud-hint" id="hud-hint">
+            CLICK TO LOCK MOUSE • [ESC] FOR MENU / UNLOCK
+        </div>
+
+        <span id="progress">Loading WebGL Quake Engine...</span>
+
+        <div id="end" style="color: white; font-family: monospace; text-align: center; position: absolute; z-index: 100; display: none;">
+            <span id="end1" style="display: none;"></span>
+            <span id="end2" style="display: none;"></span>
+        </div>
+
+        <canvas id="mainwindow"></canvas>
+        <img id="loading" alt="Loading" style="display: none; position: fixed;">
     </div>
 
     <!-- Win95 Sunken Status Bar -->
     <div class="status-bar">
-        <div class="status-panel status-main" id="status-title">QUAKE (1996) WASM - id Software</div>
+        <div class="status-panel status-main">QUAKE (1996) WebGL - id Software</div>
         <div class="status-panel status-mid">Episode 1: Shareware</div>
-        <div class="status-panel status-end">● WASM Active</div>
+        <div class="status-panel status-end">● WebGL 60FPS</div>
     </div>
 
     <!-- Controls Guide Dialog -->
@@ -220,7 +274,7 @@
             <table>
                 <tr><td><strong>W / A / S / D</strong></td><td>Move & Strafe</td></tr>
                 <tr><td><strong>Mouse</strong></td><td>Mouselook & Aim</td></tr>
-                <tr><td><strong>Left Click / Ctrl</strong></td><td>Fire Weapon</td></tr>
+                <tr><td><strong>Left Click</strong></td><td>Fire Weapon</td></tr>
                 <tr><td><strong>Space</strong></td><td>Jump</td></tr>
                 <tr><td><strong>1 - 8</strong></td><td>Select Weapons</td></tr>
                 <tr><td><strong>Esc</strong></td><td>Main Menu / Release Mouse</td></tr>
@@ -230,34 +284,462 @@
         </div>
     </div>
 
+    <!-- WebQuake Engine Scripts -->
+    <script type="text/javascript" src="WebQuake/CDAudio.js"></script>
+    <script type="text/javascript" src="WebQuake/Chase.js"></script>
+    <script type="text/javascript" src="WebQuake/CL.js"></script>
+    <script type="text/javascript" src="WebQuake/Cmd.js"></script>
+    <script type="text/javascript" src="WebQuake/COM.js"></script>
+    <script type="text/javascript" src="WebQuake/Console.js"></script>
+    <script type="text/javascript" src="WebQuake/CRC.js"></script>
+    <script type="text/javascript" src="WebQuake/Cvar.js"></script>
+    <script type="text/javascript" src="WebQuake/Def.js"></script>
+    <script type="text/javascript" src="WebQuake/Draw.js"></script>
+    <script type="text/javascript" src="WebQuake/ED.js"></script>
+    <script type="text/javascript" src="WebQuake/GL.js"></script>
+    <script type="text/javascript" src="WebQuake/Host.js"></script>
+    <script type="text/javascript" src="WebQuake/IN.js"></script>
+    <script type="text/javascript" src="WebQuake/Key.js"></script>
+    <script type="text/javascript" src="WebQuake/M.js"></script>
+    <script type="text/javascript" src="WebQuake/Mod.js"></script>
+    <script type="text/javascript" src="WebQuake/MSG.js"></script>
+    <script type="text/javascript" src="WebQuake/NET.js"></script>
+    <script type="text/javascript" src="WebQuake/NET_Loop.js"></script>
+    <script type="text/javascript" src="WebQuake/NET_WEBS.js"></script>
+    <script type="text/javascript" src="WebQuake/PF.js"></script>
+    <script type="text/javascript" src="WebQuake/PR.js"></script>
+    <script type="text/javascript" src="WebQuake/Protocol.js"></script>
+    <script type="text/javascript" src="WebQuake/Q.js"></script>
+    <script type="text/javascript" src="WebQuake/R.js"></script>
+    <script type="text/javascript" src="WebQuake/S.js"></script>
+    <script type="text/javascript" src="WebQuake/Sbar.js"></script>
+    <script type="text/javascript" src="WebQuake/SCR.js"></script>
+    <script type="text/javascript" src="WebQuake/SV.js"></script>
+    <script type="text/javascript" src="WebQuake/Sys.js"></script>
+    <script type="text/javascript" src="WebQuake/SZ.js"></script>
+    <script type="text/javascript" src="WebQuake/V.js"></script>
+    <script type="text/javascript" src="WebQuake/Vec.js"></script>
+    <script type="text/javascript" src="WebQuake/VID.js"></script>
+    <script type="text/javascript" src="WebQuake/W.js"></script>
+
+    <!-- WebGL Shaders -->
+    <script type="x-shader/x-vertex" id="vshAlias">
+uniform vec3 uOrigin;
+uniform mat3 uAngles;
+uniform vec3 uViewOrigin;
+uniform mat3 uViewAngles;
+uniform mat4 uPerspective;
+uniform vec3 uLightVec;
+attribute vec3 aPosition;
+attribute vec3 aNormal;
+attribute vec2 aTexCoord;
+varying vec2 vTexCoord;
+varying float vLightDot;
+void main(void)
+{
+	vec3 position = uViewAngles * (uAngles * aPosition + uOrigin - uViewOrigin);
+	gl_Position = uPerspective * vec4(position.xz, -position.y, 1.0);
+	vTexCoord = aTexCoord;
+	vLightDot = dot(aNormal, uLightVec);
+}
+</script>
+<script type="x-shader/x-fragment" id="fshAlias">
+precision mediump float;
+uniform float uGamma;
+uniform float uAmbientLight;
+uniform float uShadeLight;
+uniform sampler2D tTexture;
+varying vec2 vTexCoord;
+varying float vLightDot;
+void main(void)
+{
+	vec4 texture = texture2D(tTexture, vTexCoord);
+	gl_FragColor = vec4(texture.rgb * mix(1.0, vLightDot * uShadeLight + uAmbientLight, texture.a), 1.0);
+	gl_FragColor.r = pow(gl_FragColor.r, uGamma);
+	gl_FragColor.g = pow(gl_FragColor.g, uGamma);
+	gl_FragColor.b = pow(gl_FragColor.b, uGamma);
+}
+</script>
+<script type="x-shader/x-vertex" id="vshBrush">
+uniform vec3 uOrigin;
+uniform mat3 uAngles;
+uniform vec3 uViewOrigin;
+uniform mat3 uViewAngles;
+uniform mat4 uPerspective;
+attribute vec3 aPosition;
+attribute vec4 aTexCoord;
+attribute vec4 aLightStyle;
+varying vec4 vTexCoord;
+varying vec4 vLightStyle;
+void main(void)
+{
+	vec3 position = uViewAngles * (uAngles * aPosition + uOrigin - uViewOrigin);
+	gl_Position = uPerspective * vec4(position.xz, -position.y, 1.0);
+	vTexCoord = aTexCoord;
+	vLightStyle = aLightStyle;
+}
+</script>
+<script type="x-shader/x-fragment" id="fshBrush">
+precision mediump float;
+uniform float uGamma;
+uniform sampler2D tTexture;
+uniform sampler2D tLightmap;
+uniform sampler2D tDlight;
+uniform sampler2D tLightStyle;
+varying vec4 vTexCoord;
+varying vec4 vLightStyle;
+void main(void)
+{
+	vec4 texture = texture2D(tTexture, vTexCoord.xy);
+	gl_FragColor = vec4(texture.rgb *
+		mix(1.0, dot(texture2D(tLightmap, vTexCoord.zw), vec4(
+			texture2D(tLightStyle, vec2(vLightStyle.x, 0.0)).a,
+			texture2D(tLightStyle, vec2(vLightStyle.y, 0.0)).a,
+			texture2D(tLightStyle, vec2(vLightStyle.z, 0.0)).a,
+			texture2D(tLightStyle, vec2(vLightStyle.w, 0.0)).a)
+		* 43.828125) + texture2D(tDlight, vTexCoord.zw).a, texture.a), 1.0);
+	gl_FragColor.r = pow(gl_FragColor.r, uGamma);
+	gl_FragColor.g = pow(gl_FragColor.g, uGamma);
+	gl_FragColor.b = pow(gl_FragColor.b, uGamma);
+}
+</script>
+<script type="x-shader/x-vertex" id="vshCharacter">
+uniform vec2 uCharacter;
+uniform vec2 uDest;
+uniform mat4 uOrtho;
+attribute vec2 aPosition;
+varying vec2 vTexCoord;
+void main(void)
+{
+	gl_Position = uOrtho * vec4(aPosition * 8.0 + uDest, 0.0, 1.0);
+	vTexCoord = (aPosition + uCharacter) * 0.0625;
+}
+</script>
+<script type="x-shader/x-fragment" id="fshCharacter">
+precision mediump float;
+uniform sampler2D tTexture;
+varying vec2 vTexCoord;
+void main(void)
+{
+	gl_FragColor = texture2D(tTexture, vTexCoord);
+}
+</script>
+<script type="x-shader/x-vertex" id="vshDlight">
+uniform vec3 uOrigin;
+uniform vec3 uViewOrigin;
+uniform mat3 uViewAngles;
+uniform mat4 uPerspective;
+uniform float uRadius;
+attribute vec3 aPosition;
+varying float vAlpha;
+void main(void)
+{
+	vec3 position = aPosition * 0.35 * uRadius + uViewAngles * (uOrigin - uViewOrigin);
+	gl_Position = uPerspective * vec4(position.xz, -position.y, 1.0);
+	vAlpha = aPosition.y * -0.2;
+}
+</script>
+<script type="x-shader/x-fragment" id="fshDlight">
+precision mediump float;
+uniform float uGamma;
+varying float vAlpha;
+void main(void)
+{
+	gl_FragColor = vec4(pow(1.0, uGamma), pow(0.5, uGamma), 0.0, vAlpha);
+}
+</script>
+<script type="x-shader/x-vertex" id="vshFill">
+uniform mat4 uOrtho;
+attribute vec2 aPosition;
+attribute vec4 aColor;
+varying vec4 vColor;
+void main(void)
+{
+	gl_Position = uOrtho * vec4(aPosition, 0.0, 1.0);
+	vColor = aColor;
+}
+</script>
+<script type="x-shader/x-fragment" id="fshFill">
+precision mediump float;
+varying vec4 vColor;
+void main(void)
+{
+	gl_FragColor = vColor;
+}
+</script>
+<script type="x-shader/x-vertex" id="vshParticle">
+uniform vec3 uViewOrigin;
+uniform mat3 uViewAngles;
+uniform mat4 uPerspective;
+uniform float uScale;
+attribute vec3 aOrigin;
+attribute vec2 aCoord;
+attribute float aScale;
+attribute vec3 aColor;
+varying vec2 vCoord;
+varying vec3 vColor;
+void main(void)
+{
+	vec2 point = aCoord * aScale;
+	vec3 position = vec3(point.x, 0.0, point.y) + uViewAngles * (aOrigin - uViewOrigin);
+	gl_Position = uPerspective * vec4(position.xz, -position.y, 1.0);
+	vCoord = aCoord;
+	vColor = aColor;
+}
+</script>
+<script type="x-shader/x-fragment" id="fshParticle">
+precision mediump float;
+uniform float uGamma;
+varying vec2 vCoord;
+varying vec3 vColor;
+void main(void)
+{
+	gl_FragColor = vec4(vColor, 1.0 - smoothstep(0.75, 1.0, length(vCoord)));
+	gl_FragColor.r = pow(gl_FragColor.r, uGamma);
+	gl_FragColor.g = pow(gl_FragColor.g, uGamma);
+	gl_FragColor.b = pow(gl_FragColor.b, uGamma);
+}
+</script>
+<script type="x-shader/x-vertex" id="vshPic">
+uniform mat4 uOrtho;
+attribute vec2 aPosition;
+attribute vec2 aTexCoord;
+varying vec2 vTexCoord;
+void main(void)
+{
+	gl_Position = uOrtho * vec4(aPosition, 0.0, 1.0);
+	vTexCoord = aTexCoord;
+}
+</script>
+<script type="x-shader/x-fragment" id="fshPic">
+precision mediump float;
+uniform sampler2D tTexture;
+varying vec2 vTexCoord;
+void main(void)
+{
+	gl_FragColor = texture2D(tTexture, vTexCoord);
+}
+</script>
+<script type="x-shader/x-vertex" id="vshPicTranslate">
+uniform mat4 uOrtho;
+attribute vec2 aPosition;
+attribute vec2 aTexCoord;
+varying vec2 vTexCoord;
+void main(void)
+{
+	gl_Position = uOrtho * vec4(aPosition, 0.0, 1.0);
+	vTexCoord = aTexCoord;
+}
+</script>
+<script type="x-shader/x-fragment" id="fshPicTranslate">
+precision mediump float;
+uniform vec3 uTop;
+uniform vec3 uBottom;
+uniform sampler2D tTexture;
+uniform sampler2D tTrans;
+varying vec2 vTexCoord;
+void main(void)
+{
+	vec4 texture = texture2D(tTexture, vTexCoord);
+	vec4 trans = texture2D(tTrans, vTexCoord);
+	gl_FragColor = vec4(mix(mix(texture.rgb, uTop * trans.x, trans.y), uBottom * trans.z, trans.w), texture.a);
+}
+</script>
+<script type="x-shader/x-vertex" id="vshPlayer">
+uniform vec3 uOrigin;
+uniform mat3 uAngles;
+uniform vec3 uViewOrigin;
+uniform mat3 uViewAngles;
+uniform mat4 uPerspective;
+uniform vec3 uLightVec;
+attribute vec3 aPosition;
+attribute vec3 aNormal;
+attribute vec2 aTexCoord;
+varying vec2 vTexCoord;
+varying float vLightDot;
+void main(void)
+{
+	vec3 position = uViewAngles * (uAngles * aPosition + uOrigin - uViewOrigin);
+	gl_Position = uPerspective * vec4(position.xz, -position.y, 1.0);
+	vTexCoord = aTexCoord;
+	vLightDot = dot(aNormal, uLightVec);
+}
+</script>
+<script type="x-shader/x-fragment" id="fshPlayer">
+precision mediump float;
+uniform float uGamma;
+uniform float uAmbientLight;
+uniform float uShadeLight;
+uniform vec3 uTop;
+uniform vec3 uBottom;
+uniform sampler2D tTexture;
+uniform sampler2D tPlayer;
+varying vec2 vTexCoord;
+varying float vLightDot;
+void main(void)
+{
+	vec4 texture = texture2D(tTexture, vTexCoord);
+	vec4 player = texture2D(tPlayer, vTexCoord);
+	gl_FragColor = vec4(
+		mix(mix(texture.rgb, uTop * (1.0 / 191.25) * player.x, player.y), uBottom * (1.0 / 191.25) * player.z, player.w)
+		* mix(1.0, vLightDot * uShadeLight + uAmbientLight, texture.a), 1.0);
+	gl_FragColor.r = pow(gl_FragColor.r, uGamma);
+	gl_FragColor.g = pow(gl_FragColor.g, uGamma);
+	gl_FragColor.b = pow(gl_FragColor.b, uGamma);
+}
+</script>
+<script type="x-shader/x-vertex" id="vshSky">
+uniform mat3 uViewAngles;
+uniform mat4 uPerspective;
+uniform vec3 uScale;
+attribute vec3 aPosition;
+varying vec2 vTexCoord;
+void main(void)
+{
+	vec3 position = uViewAngles * (aPosition * uScale * 18918.0);
+	gl_Position = uPerspective * vec4(position.xz, -position.y, 1.0);
+	vTexCoord = aPosition.xy * uScale.xy * 1.5;
+}
+</script>
+<script type="x-shader/x-fragment" id="fshSky">
+precision mediump float;
+uniform float uGamma;
+uniform vec2 uTime;
+uniform sampler2D tSolid;
+uniform sampler2D tAlpha;
+varying vec2 vTexCoord;
+void main(void)
+{
+	vec4 alpha = texture2D(tAlpha, vTexCoord + uTime.x);
+	gl_FragColor = vec4(mix(texture2D(tSolid, vTexCoord + uTime.y).rgb, alpha.rgb, alpha.a), 1.0);
+	gl_FragColor.r = pow(gl_FragColor.r, uGamma);
+	gl_FragColor.g = pow(gl_FragColor.g, uGamma);
+	gl_FragColor.b = pow(gl_FragColor.b, uGamma);
+}
+</script>
+<script type="x-shader/x-vertex" id="vshSkyChain">
+uniform vec3 uViewOrigin;
+uniform mat3 uViewAngles;
+uniform mat4 uPerspective;
+attribute vec3 aPosition;
+void main(void)
+{
+	vec3 position = uViewAngles * (aPosition - uViewOrigin);
+	gl_Position = uPerspective * vec4(position.xz, -position.y, 1.0);
+}
+</script>
+<script type="x-shader/x-fragment" id="fshSkyChain">
+precision mediump float;
+void main(void)
+{
+}
+</script>
+<script type="x-shader/x-vertex" id="vshSprite">
+uniform vec4 uRect;
+uniform vec3 uViewOrigin;
+uniform mat3 uViewAngles;
+uniform mat4 uPerspective;
+attribute vec3 aPosition;
+attribute vec2 aTexCoord;
+varying vec2 vTexCoord;
+void main(void)
+{
+	vec3 position = uViewAngles * (aPosition - uViewOrigin);
+	gl_Position = uPerspective * vec4(position.xz, -position.y, 1.0);
+	vTexCoord = aTexCoord;
+}
+</script>
+<script type="x-shader/x-fragment" id="fshSprite">
+precision mediump float;
+uniform float uGamma;
+uniform sampler2D tTexture;
+varying vec2 vTexCoord;
+void main(void)
+{
+	gl_FragColor = texture2D(tTexture, vTexCoord);
+	gl_FragColor.r = pow(gl_FragColor.r, uGamma);
+	gl_FragColor.g = pow(gl_FragColor.g, uGamma);
+	gl_FragColor.b = pow(gl_FragColor.b, uGamma);
+}
+</script>
+<script type="x-shader/x-vertex" id="vshTurbulent">
+uniform vec3 uOrigin;
+uniform mat3 uAngles;
+uniform vec3 uViewOrigin;
+uniform mat3 uViewAngles;
+uniform mat4 uPerspective;
+attribute vec3 aPosition;
+attribute vec2 aTexCoord;
+varying vec2 vTexCoord;
+void main(void)
+{
+	vec3 position = uViewAngles * (uAngles * aPosition + uOrigin - uViewOrigin);
+	gl_Position = uPerspective * vec4(position.xz, -position.y, 1.0);
+	vTexCoord = aTexCoord;
+}
+</script>
+<script type="x-shader/x-fragment" id="fshTurbulent">
+precision mediump float;
+uniform float uGamma;
+uniform float uTime;
+uniform sampler2D tTexture;
+varying vec2 vTexCoord;
+void main(void)
+{
+	gl_FragColor = vec4(texture2D(tTexture, vTexCoord + vec2(sin(vTexCoord.t * 3.141593 + uTime), sin(vTexCoord.s * 3.141593 + uTime)) * 0.125).rgb, 1.0);
+	gl_FragColor.r = pow(gl_FragColor.r, uGamma);
+	gl_FragColor.g = pow(gl_FragColor.g, uGamma);
+	gl_FragColor.b = pow(gl_FragColor.b, uGamma);
+}
+</script>
+<script type="x-shader/x-vertex" id="vshWarp">
+uniform mat4 uOrtho;
+attribute vec2 aPosition;
+attribute vec2 aTexCoord;
+varying vec2 vTexCoord;
+void main(void)
+{
+	gl_Position = uOrtho * vec4(aPosition, 0.0, 1.0);
+	vTexCoord = aTexCoord;
+}
+</script>
+<script type="x-shader/x-fragment" id="fshWarp">
+precision mediump float;
+uniform float uTime;
+uniform sampler2D tTexture;
+varying vec2 vTexCoord;
+void main(void)
+{
+	gl_FragColor = texture2D(tTexture, vTexCoord + vec2(sin(vTexCoord.t * 15.70796 + uTime) * 0.003125, sin(vTexCoord.s * 9.817477 + uTime) * 0.005));
+}
+</script>
+
     <script>
-        // Register into Windows 95 Process Manager if parent window exists
+        // Register in Win95 Process Manager
         try {
             if (window.parent && window.parent.ProcessManager) {
-                window.parent.ProcessManager.register("Quake.exe", "Active", "WASM DOSBox");
+                window.parent.ProcessManager.register("Quake.exe", "Active", "WebGL Native 3D");
             }
-        } catch (e) {
-            console.warn("ProcessManager registration:", e);
-        }
+        } catch (e) {}
+
+        // Hide hint overlay on click
+        const hint = document.getElementById('hud-hint');
+        window.addEventListener('click', () => {
+            if (hint) hint.classList.add('hidden');
+        });
+        setTimeout(() => {
+            if (hint) hint.classList.add('hidden');
+        }, 6000);
 
         function toggleHelp(show) {
             const dialog = document.getElementById('help-dialog');
             if (dialog) dialog.style.display = show ? 'block' : 'none';
         }
 
-        function restartQuake() {
-            const frame = document.getElementById('quake-frame');
-            if (frame) frame.src = frame.src;
-        }
-
-        function openExternal() {
-            window.open("https://dos.zone/player/?bundleUrl=https%3A%2F%2Fcdn.dos.zone%2Fcustom%2Fdos%2Fquake.jsdos", "_blank");
-        }
-
         function toggleFullscreen() {
-            const viewport = document.getElementById('viewport');
+            const vp = document.getElementById('viewport');
             if (!document.fullscreenElement) {
-                if (viewport.requestFullscreen) viewport.requestFullscreen();
+                if (vp.requestFullscreen) vp.requestFullscreen();
             } else {
                 if (document.exitFullscreen) document.exitFullscreen();
             }
