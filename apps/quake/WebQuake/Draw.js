@@ -38,7 +38,15 @@ Draw.Init = function()
 	Draw.conback = {};
 	var cb = COM.LoadFile('gfx/conback.lmp');
 	if (cb == null)
-		Sys.Error('Couldn\'t load gfx/conback.lmp');
+	{
+		cb = new ArrayBuffer(64008);
+		var fallbackView = new DataView(cb);
+		fallbackView.setUint32(0, 320, true);
+		fallbackView.setUint32(4, 200, true);
+		var fallbackBytes = new Uint8Array(cb, 8, 64000);
+		for (i = 0; i < 64000; ++i)
+			fallbackBytes[i] = 20 + (i % 6);
+	}
 	Draw.conback.width = 320;
 	Draw.conback.height = 200;
 	Draw.conback.data = new Uint8Array(cb, 8, 64000);
