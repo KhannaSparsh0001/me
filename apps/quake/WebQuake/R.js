@@ -118,7 +118,7 @@ R.PushDlights = function()
 	if (R.flashblend.value !== 0)
 		return;
 	var i;
-	for (i = 0; i <= 1023; ++i)
+	for (i = 0; i <= 4095; ++i)
 		R.lightmap_modified[i] = false;
 
 	var l, bit = 1, j, ent;
@@ -152,16 +152,16 @@ R.PushDlights = function()
 	}
 
 	GL.Bind(0, R.dlightmap_texture);
-	for (i = 0; i <= 1023; ++i)
+	for (i = 0; i <= 4095; ++i)
 	{
 		if (R.lightmap_modified[i] !== true)
 			continue;
-		for (j = 1023; j >= i; --j)
+		for (j = 4095; j >= i; --j)
 		{
 			if (R.lightmap_modified[j] !== true)
 				continue;
-			gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, i, 1024, j - i + 1, gl.ALPHA, gl.UNSIGNED_BYTE,
-				R.dlightmaps.subarray(i << 10, (j + 1) << 10));
+			gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, i, 4096, j - i + 1, gl.ALPHA, gl.UNSIGNED_BYTE,
+				R.dlightmaps.subarray(i << 12, (j + 1) << 12));
 			break;
 		}
 		break;
@@ -1266,10 +1266,10 @@ R.NewMap = function()
 	R.ClearParticles();
 	R.BuildLightmaps();
 
-	for (i = 0; i <= 1048575; ++i)
+	for (i = 0; i <= 16777215; ++i)
 		R.dlightmaps[i] = 0;
 	GL.Bind(0, R.dlightmap_texture);
-	gl.texImage2D(gl.TEXTURE_2D, 0, gl.ALPHA, 1024, 1024, 0, gl.ALPHA, gl.UNSIGNED_BYTE, null);
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.ALPHA, 4096, 4096, 0, gl.ALPHA, gl.UNSIGNED_BYTE, null);
 };
 
 R.TimeRefresh_f = function()
@@ -1753,8 +1753,8 @@ R.AllocParticles = function(count)
 // surf
 
 R.lightmap_modified = [];
-R.lightmaps = new Uint8Array(new ArrayBuffer(4194304));
-R.dlightmaps = new Uint8Array(new ArrayBuffer(1048576));
+R.lightmaps = new Uint8Array(new ArrayBuffer(67108864));
+R.dlightmaps = new Uint8Array(new ArrayBuffer(16777216));
 
 R.AddDynamicLights = function(surf)
 {
@@ -1812,7 +1812,7 @@ R.AddDynamicLights = function(surf)
 	for (t = 0; t < tmax; ++t)
 	{
 		R.lightmap_modified[surf.light_t + t] = true;
-		dest = ((surf.light_t + t) << 10) + surf.light_s;
+		dest = ((surf.light_t + t) << 12) + surf.light_s;
 		for (s = 0; s < smax; ++s)
 		{
 			bl = blocklights[i++] >> 7;
@@ -1831,7 +1831,7 @@ R.RemoveDynamicLights = function(surf)
 	for (t = 0; t < tmax; ++t)
 	{
 		R.lightmap_modified[surf.light_t + t] = true;
-		dest = ((surf.light_t + t) << 10) + surf.light_s;
+		dest = ((surf.light_t + t) << 12) + surf.light_s;
 		for (s = 0; s < smax; ++s)
 			R.dlightmaps[dest + s] = 0;
 	}
@@ -1847,23 +1847,23 @@ R.BuildLightMap = function(surf)
 	var maps;
 	for (maps = 0; maps < surf.styles.length; ++maps)
 	{
-		dest = (surf.light_t << 12) + (surf.light_s << 2) + maps;
+		dest = (surf.light_t << 14) + (surf.light_s << 2) + maps;
 		for (i = 0; i < tmax; ++i)
 		{
 			for (j = 0; j < smax; ++j)
 				R.lightmaps[dest + (j << 2)] = R.currentmodel.lightdata[lightmap + j];
 			lightmap += smax;
-			dest += 4096;
+			dest += 16384;
 		}
 	}
 	for (; maps <= 3; ++maps)
 	{
-		dest = (surf.light_t << 12) + (surf.light_s << 2) + maps;
+		dest = (surf.light_t << 14) + (surf.light_s << 2) + maps;
 		for (i = 0; i < tmax; ++i)
 		{
 			for (j = 0; j < smax; ++j)
 				R.lightmaps[dest + (j << 2)] = 0;
-			dest += 4096;
+			dest += 16384;
 		}
 	}
 };
@@ -2101,8 +2101,8 @@ R.MarkLeaves = function()
 R.AllocBlock = function(surf)
 {
 	var w = (surf.extents[0] >> 4) + 1, h = (surf.extents[1] >> 4) + 1;
-	var x, y, i, j, best = 1024, best2;
-	for (i = 0; i < (1024 - w); ++i)
+	var x, y, i, j, best = 4096, best2;
+	for (i = 0; i < (4096 - w); ++i)
 	{
 		best2 = 0;
 		for (j = 0; j < w; ++j)
@@ -2119,8 +2119,12 @@ R.AllocBlock = function(surf)
 		}
 	}
 	best += h;
-	if (best > 1024)
-		Sys.Error('AllocBlock: full');
+	if (best > 4096)
+	{
+		surf.light_s = 0;
+		surf.light_t = 0;
+		return;
+	}
 	for (i = 0; i < w; ++i)
 		R.allocated[x + i] = best;
 	surf.light_s = x;
@@ -2152,8 +2156,8 @@ R.BuildSurfaceDisplayList = function(fa)
 			vert[4] = t / texture.height;
 			if (fa.turbulent !== true)
 			{
-				vert[5] = (s - fa.texturemins[0] + (fa.light_s << 4) + 8.0) / 16384.0;
-				vert[6] = (t - fa.texturemins[1] + (fa.light_t << 4) + 8.0) / 16384.0;
+				vert[5] = (s - fa.texturemins[0] + (fa.light_s << 4) + 8.0) / 65536.0;
+				vert[6] = (t - fa.texturemins[1] + (fa.light_t << 4) + 8.0) / 65536.0;
 			}
 		}
 		if (i >= 3)
@@ -2170,7 +2174,7 @@ R.BuildLightmaps = function()
 	var i, j;
 
 	R.allocated = [];
-	for (i = 0; i < 1024; ++i)
+	for (i = 0; i < 4096; ++i)
 		R.allocated[i] = 0;
 
 	var surf;
@@ -2200,7 +2204,7 @@ R.BuildLightmaps = function()
 	}
 
 	GL.Bind(0, R.lightmap_texture);
-	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1024, 1024, 0, gl.RGBA, gl.UNSIGNED_BYTE, R.lightmaps);
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 4096, 4096, 0, gl.RGBA, gl.UNSIGNED_BYTE, R.lightmaps);
 };
 
 // scan

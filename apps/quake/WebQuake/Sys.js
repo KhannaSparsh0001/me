@@ -97,6 +97,7 @@ Sys.InitEngine = function()
 		if (text.length !== 0)
 			argv[argv.length] = text;
 	}
+	argv.push('-nocdaudio');
 	COM.InitArgv(argv);
 
 	var elem = document.documentElement;

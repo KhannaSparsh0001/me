@@ -734,92 +734,104 @@ S.LoadSound = function(s)
 	}
 
 	var view = new DataView(data);
-	if ((view.getUint32(0, true) !== 0x46464952) || (view.getUint32(8, true) !== 0x45564157))
+	try
 	{
-		Con.Print('Missing RIFF/WAVE chunks\n');
-		return;
-	}
-	var p, fmt, dataofs, datalen, cue, loopstart, samples;
-	for (p = 12; p < data.byteLength; )
-	{
-		switch (view.getUint32(p, true))
+		if ((view.getUint32(0, true) !== 0x46464952) || (view.getUint32(8, true) !== 0x45564157))
 		{
-		case 0x20746d66: // fmt
-			if (view.getInt16(p + 8, true) !== 1)
-			{
-				Con.Print('Microsoft PCM format only\n');
-				return;
-			}
-			fmt = {
-				channels: view.getUint16(p + 10, true),
-				samplesPerSec: view.getUint32(p + 12, true),
-				avgBytesPerSec: view.getUint32(p + 16, true),
-				blockAlign: view.getUint16(p + 20, true),
-				bitsPerSample: view.getUint16(p + 22, true)
-			};
-			break;
-		case 0x61746164: // data
-			dataofs = p + 8;
-			datalen = view.getUint32(p + 4, true);
-			break;
-		case 0x20657563: // cue
-			cue = true;
-			loopstart = view.getUint32(p + 32, true);
-			break;
-		case 0x5453494c: // LIST
-			if (cue !== true)
-				break;
-			cue = false;
-			if (view.getUint32(p + 28, true) === 0x6b72616d)
-				samples = loopstart + view.getUint32(p + 24, true);
-			break;
+			Con.Print('Missing RIFF/WAVE chunks\n');
+			return;
 		}
-		p += view.getUint32(p + 4, true) + 8;
-		if ((p & 1) !== 0)
-			++p;
-	}
+		var p, fmt, dataofs, datalen, cue, loopstart, samples;
+		for (p = 12; p < data.byteLength; )
+		{
+			switch (view.getUint32(p, true))
+			{
+			case 0x20746d66: // fmt
+				if (view.getInt16(p + 8, true) !== 1)
+				{
+					Con.Print('Microsoft PCM format only\n');
+					return;
+				}
+				fmt = {
+					channels: view.getUint16(p + 10, true),
+					samplesPerSec: view.getUint32(p + 12, true),
+					avgBytesPerSec: view.getUint32(p + 16, true),
+					blockAlign: view.getUint16(p + 20, true),
+					bitsPerSample: view.getUint16(p + 22, true)
+				};
+				break;
+			case 0x61746164: // data
+				dataofs = p + 8;
+				datalen = view.getUint32(p + 4, true);
+				break;
+			case 0x20657563: // cue
+				cue = true;
+				if ((p + 36) <= data.byteLength)
+					loopstart = view.getUint32(p + 32, true);
+				break;
+			case 0x5453494c: // LIST
+				if (cue !== true)
+					break;
+				cue = false;
+				if ((p + 32) <= data.byteLength)
+				{
+					if (view.getUint32(p + 28, true) === 0x6b72616d)
+						samples = loopstart + view.getUint32(p + 24, true);
+				}
+				break;
+			}
+			p += view.getUint32(p + 4, true) + 8;
+			if ((p & 1) !== 0)
+				++p;
+		}
 
-	if (fmt == null)
+		if (fmt == null)
+		{
+			Con.Print('Missing fmt chunk\n');
+			return;
+		}
+		if (dataofs == null)
+		{
+			Con.Print('Missing data chunk\n');
+			return;
+		}
+		if (loopstart != null)
+			sc.loopstart = loopstart * fmt.blockAlign / fmt.samplesPerSec;
+		if (samples != null)
+			sc.length = samples / fmt.samplesPerSec;
+		else
+			sc.length = datalen / fmt.avgBytesPerSec;
+
+		sc.size = datalen + 44;
+		if ((sc.size & 1) !== 0)
+			++sc.size;
+		var out = new ArrayBuffer(sc.size);
+		view = new DataView(out);
+		view.setUint32(0, 0x46464952, true); // RIFF
+		view.setUint32(4, sc.size - 8, true);
+		view.setUint32(8, 0x45564157, true); // WAVE
+		view.setUint32(12, 0x20746d66, true); // fmt
+		view.setUint32(16, 16, true);
+		view.setUint16(20, 1, true);
+		view.setUint16(22, fmt.channels, true);
+		view.setUint32(24, fmt.samplesPerSec, true);
+		view.setUint32(28, fmt.avgBytesPerSec, true);
+		view.setUint16(32, fmt.blockAlign, true);
+		view.setUint16(34, fmt.bitsPerSample, true);
+		view.setUint32(36, 0x61746164, true); // data
+		view.setUint32(40, datalen, true);
+		(new Uint8Array(out, 44, datalen)).set(new Uint8Array(data, dataofs, datalen));
+		if (S.context != null)
+			sc.data = S.context.createBuffer(out, true);
+		else
+			sc.data = new Audio('data:audio/wav;base64,' + Q.btoa(new Uint8Array(out)));
+
+		s.cache = sc;
+		return true;
+	}
+	catch (err)
 	{
-		Con.Print('Missing fmt chunk\n');
-		return;
+		Con.Print('Warning: Failed to parse sound/' + s.name + ': ' + err + '\n');
+		return false;
 	}
-	if (dataofs == null)
-	{
-		Con.Print('Missing data chunk\n');
-		return;
-	}
-	if (loopstart != null)
-		sc.loopstart = loopstart * fmt.blockAlign / fmt.samplesPerSec;
-	if (samples != null)
-		sc.length = samples / fmt.samplesPerSec;
-	else
-		sc.length = datalen / fmt.avgBytesPerSec;
-
-	sc.size = datalen + 44;
-	if ((sc.size & 1) !== 0)
-		++sc.size;
-	var out = new ArrayBuffer(sc.size);
-	view = new DataView(out);
-	view.setUint32(0, 0x46464952, true); // RIFF
-	view.setUint32(4, sc.size - 8, true);
-	view.setUint32(8, 0x45564157, true); // WAVE
-	view.setUint32(12, 0x20746d66, true); // fmt
-	view.setUint32(16, 16, true);
-	view.setUint16(20, 1, true);
-	view.setUint16(22, fmt.channels, true);
-	view.setUint32(24, fmt.samplesPerSec, true);
-	view.setUint32(28, fmt.avgBytesPerSec, true);
-	view.setUint16(32, fmt.blockAlign, true);
-	view.setUint16(34, fmt.bitsPerSample, true);
-	view.setUint32(36, 0x61746164, true); // data
-	view.setUint32(40, datalen, true);
-	(new Uint8Array(out, 44, datalen)).set(new Uint8Array(data, dataofs, datalen));
-	if (S.context != null)
-		sc.data = S.context.createBuffer(out, true);
-	else
-		sc.data = new Audio('data:audio/wav;base64,' + Q.btoa(new Uint8Array(out)));
-
-	s.cache = sc;
-	return true;
 };

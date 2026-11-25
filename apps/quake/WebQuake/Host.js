@@ -261,26 +261,35 @@ Host.timetotal = 0.0;
 Host.timecount = 0;
 Host.Frame = function()
 {
-	if (Host.serverprofile.value === 0)
+	try
 	{
+		if (Host.serverprofile.value === 0)
+		{
+			Host._Frame();
+			return;
+		}
+		var time1 = Sys.FloatTime();
 		Host._Frame();
-		return;
+		Host.timetotal += Sys.FloatTime() - time1;
+		if (++Host.timecount <= 999)
+			return;
+		var m = (Host.timetotal * 1000.0 / Host.timecount) >> 0;
+		Host.timecount = 0;
+		Host.timetotal = 0.0;
+		var i, c = 0;
+		for (i = 0; i < SV.svs.maxclients; ++i)
+		{
+			if (SV.svs.clients[i].active === true)
+				++c;
+		}
+		Con.Print('serverprofile: ' + (c <= 9 ? ' ' : '') + c + ' clients ' + (m <= 9 ? ' ' : '') + m + ' msec\n');
 	}
-	var time1 = Sys.FloatTime();
-	Host._Frame();
-	Host.timetotal += Sys.FloatTime() - time1;
-	if (++Host.timecount <= 999)
-		return;
-	var m = (Host.timetotal * 1000.0 / Host.timecount) >> 0;
-	Host.timecount = 0;
-	Host.timetotal = 0.0;
-	var i, c = 0;
-	for (i = 0; i < SV.svs.maxclients; ++i)
+	catch (e)
 	{
-		if (SV.svs.clients[i].active === true)
-			++c;
+		if (e === 'Host.abortserver' || (e && e.message === 'Host.abortserver'))
+			return;
+		Con.Print('Host.Frame exception: ' + (e.stack || e) + '\n');
 	}
-	Con.Print('serverprofile: ' + (c <= 9 ? ' ' : '') + c + ' clients ' + (m <= 9 ? ' ' : '') + m + ' msec\n');
 };
 
 Host.Init = function()
