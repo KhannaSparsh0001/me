@@ -211,8 +211,11 @@ window.onload = function()
 
 	progress.innerText = 'Checking local asset cache...';
 
-	Sys.GetCachedPak('id1/pak0.pak').then(function(cached) {
-		if (cached != null)
+	var cacheKey = 'id1/pak0_v3.pak';
+	var expectedSize = 18689235;
+
+	Sys.GetCachedPak(cacheKey).then(function(cached) {
+		if (cached != null && cached.byteLength === expectedSize)
 		{
 			progress.innerText = 'Loaded from local cache! Starting 3D World...';
 			COM.packBuffers = { 'id1/pak0.pak': cached };
@@ -226,7 +229,7 @@ window.onload = function()
 			.then(function(response) {
 				if (!response.ok)
 					throw new Error('HTTP ' + response.status + ' ' + response.statusText);
-				var total = parseInt(response.headers.get('content-length'), 10) || 94730968;
+				var total = parseInt(response.headers.get('content-length'), 10) || expectedSize;
 				var loaded = 0;
 				var reader = response.body.getReader();
 				var chunks = [];
@@ -242,7 +245,7 @@ window.onload = function()
 							}
 							chunks = null;
 							COM.packBuffers = { 'id1/pak0.pak': all.buffer };
-							Sys.SaveCachedPak('id1/pak0.pak', all.buffer);
+							Sys.SaveCachedPak(cacheKey, all.buffer);
 							progress.innerText = 'Starting 3D World...';
 							setTimeout(Sys.InitEngine, 30);
 							return;

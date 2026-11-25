@@ -240,7 +240,15 @@ SV.CheckForNewClients = function()
 				break;
 		}
 		if (i === SV.svs.maxclients)
-			Sys.Error('SV.CheckForNewClients: no free clients');
+		{
+			if (SV.svs.maxclients === 1)
+			{
+				i = 0;
+				SV.svs.clients[0].active = false;
+			}
+			else
+				Sys.Error('SV.CheckForNewClients: no free clients');
+		}
 		SV.svs.clients[i].netconnection = ret;
 		SV.ConnectClient(i);
 		++NET.activeconnections;
