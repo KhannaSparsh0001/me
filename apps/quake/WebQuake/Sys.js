@@ -5,7 +5,12 @@ Sys.events = ['onbeforeunload', 'oncontextmenu', 'onfocus', 'onkeydown', 'onkeyu
 Sys.Quit = function()
 {
 	if (Sys.frame != null)
-		clearInterval(Sys.frame);
+	{
+		if (typeof cancelAnimationFrame !== 'undefined')
+			cancelAnimationFrame(Sys.frame);
+		else
+			clearInterval(Sys.frame);
+	}
 	var i;
 	for (i = 0; i < Sys.events.length; ++i)
 		window[Sys.events[i]] = null;
@@ -146,7 +151,12 @@ Sys.InitEngine = function()
 	for (i = 0; i < Sys.events.length; ++i)
 		window[Sys.events[i]] = Sys[Sys.events[i]];
 
-	Sys.frame = setInterval(Host.Frame, 1000.0 / 60.0);
+	function loop()
+	{
+		Host.Frame();
+		Sys.frame = requestAnimationFrame(loop);
+	}
+	Sys.frame = requestAnimationFrame(loop);
 };
 
 Sys.GetCachedPak = function(key) {

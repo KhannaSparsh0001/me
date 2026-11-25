@@ -272,6 +272,11 @@ COM.LoadFile = function(filename)
 				break;
 			}
 		}
+		if (COM.packBuffers != null)
+		{
+			// Assets are in memory - skip synchronous network requests
+			continue;
+		}
 		xhr.open('GET', netpath, false);
 		xhr.send();
 		if ((xhr.status >= 200) && (xhr.status <= 299))
