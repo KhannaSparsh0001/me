@@ -286,6 +286,13 @@ Sys.onfocus = function()
 
 Sys.onkeydown = function(e)
 {
+	if (e.keyCode === 13 && e.altKey) {
+		e.preventDefault();
+		if (typeof toggleFullscreen === 'function') {
+			toggleFullscreen();
+		}
+		return;
+	}
 	var key = Sys.scantokey[e.keyCode];
 	if (key == null)
 		return;

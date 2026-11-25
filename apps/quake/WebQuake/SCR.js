@@ -281,9 +281,13 @@ SCR.UpdateScreen = function()
 		Con.Print('load failed.\n');
 	}
 
-	var elem = document.documentElement;
-	var width = (elem.clientWidth <= 320) ? 320 : elem.clientWidth;
-	var height = (elem.clientHeight <= 200) ? 200 : elem.clientHeight;
+	var elem = (VID.mainwindow && VID.mainwindow.parentElement) ? VID.mainwindow.parentElement : document.documentElement;
+	var width = elem.clientWidth || window.innerWidth;
+	var height = elem.clientHeight || window.innerHeight;
+	if (width <= 320)
+		width = 320;
+	if (height <= 200)
+		height = 200;
 	var pixelRatio;
 	if (window.devicePixelRatio >= 1.0)
 		pixelRatio = window.devicePixelRatio;
@@ -295,8 +299,8 @@ SCR.UpdateScreen = function()
 		VID.height = height;
 		VID.mainwindow.width = (width * pixelRatio) >> 0;
 		VID.mainwindow.height = (height * pixelRatio) >> 0;
-		VID.mainwindow.style.width = width + 'px';
-		VID.mainwindow.style.height = height + 'px';
+		VID.mainwindow.style.width = '100%';
+		VID.mainwindow.style.height = '100%';
 		SCR.devicePixelRatio = pixelRatio;
 		SCR.recalc_refdef = true;
 	}

@@ -67,12 +67,34 @@
             justify-content: center;
         }
 
+        :fullscreen, :-webkit-full-screen {
+            background-color: #000000 !important;
+        }
+
+        :fullscreen .viewport-wrapper, :-webkit-full-screen .viewport-wrapper,
+        .viewport-wrapper:fullscreen, .viewport-wrapper:-webkit-full-screen {
+            margin: 0 !important;
+            border: none !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            max-width: 100vw !important;
+            max-height: 100vh !important;
+        }
+
         canvas#mainwindow {
-            width: 100%;
-            height: 100%;
-            display: block;
+            width: 100% !important;
+            height: 100% !important;
+            display: block !important;
             outline: none;
             cursor: crosshair;
+            object-fit: contain;
+        }
+
+        :fullscreen canvas#mainwindow, :-webkit-full-screen canvas#mainwindow,
+        .viewport-wrapper:fullscreen canvas#mainwindow, .viewport-wrapper:-webkit-full-screen canvas#mainwindow {
+            width: 100vw !important;
+            height: 100vh !important;
+            object-fit: contain !important;
         }
 
         #progress {
@@ -234,9 +256,11 @@
 
     <!-- Windows 95 Menu Bar -->
     <div class="menu-bar">
-        <div class="menu-item" onclick="toggleHelp(true)"><u>H</u>elp</div>
+        <div class="menu-item" onclick="toggleMenu()"><u>M</u>enu [Esc]</div>
+        <div class="menu-item" onclick="startNewGame()"><u>N</u>ew Game</div>
+        <div class="menu-item" onclick="toggleFullscreen()"><u>F</u>ullscreen [Alt+Enter]</div>
         <div class="menu-item" onclick="location.reload()"><u>R</u>estart</div>
-        <div class="menu-item" onclick="toggleFullscreen()"><u>F</u>ullscreen</div>
+        <div class="menu-item" onclick="toggleHelp(true)"><u>H</u>elp</div>
     </div>
 
     <!-- Viewport Container -->
@@ -736,14 +760,69 @@ void main(void)
             if (dialog) dialog.style.display = show ? 'block' : 'none';
         }
 
-        function toggleFullscreen() {
-            const vp = document.getElementById('viewport');
-            if (!document.fullscreenElement) {
-                if (vp.requestFullscreen) vp.requestFullscreen();
-            } else {
-                if (document.exitFullscreen) document.exitFullscreen();
+        function toggleMenu() {
+            if (window.M && typeof M.ToggleMenu_f === 'function') {
+                M.ToggleMenu_f();
             }
         }
+
+        function startNewGame() {
+            if (window.Cmd) {
+                Cmd.text = 'maxplayers 1\nchangelevel start\n' + Cmd.text;
+                if (window.Key && window.Key.dest) {
+                    Key.dest.value = Key.dest.game;
+                }
+            }
+        }
+
+        function toggleFullscreen() {
+            const vp = document.getElementById('viewport');
+            const isFull = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement);
+            if (!isFull) {
+                if (vp.requestFullscreen) {
+                    vp.requestFullscreen();
+                } else if (vp.webkitRequestFullscreen) {
+                    vp.webkitRequestFullscreen();
+                } else if (vp.mozRequestFullScreen) {
+                    vp.mozRequestFullScreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                }
+            }
+            if (window.SCR) {
+                SCR.recalc_refdef = true;
+            }
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.altKey) {
+                e.preventDefault();
+                toggleFullscreen();
+            }
+        });
+
+        window.addEventListener('resize', () => {
+            if (window.SCR) {
+                SCR.recalc_refdef = true;
+            }
+        });
+
+        document.addEventListener('fullscreenchange', () => {
+            if (window.SCR) {
+                SCR.recalc_refdef = true;
+            }
+        });
+        document.addEventListener('webkitfullscreenchange', () => {
+            if (window.SCR) {
+                SCR.recalc_refdef = true;
+            }
+        });
     </script>
 </body>
 </html>

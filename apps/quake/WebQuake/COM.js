@@ -225,8 +225,6 @@ COM.WriteTextFile = function(filename, data)
 COM.LoadFile = function(filename)
 {
 	filename = filename.toLowerCase();
-	var xhr = new XMLHttpRequest();
-	xhr.overrideMimeType('text/plain; charset=x-user-defined');
 	var i, j, k, search, netpath, pak, file, data;
 	Draw.BeginDisc();
 	for (i = COM.searchpaths.length - 1; i >= 0; --i)
@@ -260,12 +258,14 @@ COM.LoadFile = function(filename)
 					Draw.EndDisc();
 					return pbuf.slice(file.filepos, file.filepos + file.filelen);
 				}
+				var xhr = new XMLHttpRequest();
+				xhr.overrideMimeType('text/plain; charset=x-user-defined');
 				xhr.open('GET', search.filename + '/pak' + j + '.pak', false);
 				xhr.setRequestHeader('Range', 'bytes=' + file.filepos + '-' + (file.filepos + file.filelen - 1));
 				xhr.send();
 				if ((xhr.status >= 200) && (xhr.status <= 299) && (xhr.responseText.length === file.filelen))
 				{
-					Sys.Print('PackFile: ' + search.filename + '/pak' + j + '.pak : ' + filename + '\n')
+					Sys.Print('PackFile: ' + search.filename + '/pak' + j + '.pak : ' + filename + '\n');
 					Draw.EndDisc();
 					return Q.strmem(xhr.responseText);
 				}
@@ -277,13 +277,15 @@ COM.LoadFile = function(filename)
 			// Assets are in memory - skip synchronous network requests
 			continue;
 		}
-		xhr.open('GET', netpath, false);
-		xhr.send();
-		if ((xhr.status >= 200) && (xhr.status <= 299))
+		var xhrNet = new XMLHttpRequest();
+		xhrNet.overrideMimeType('text/plain; charset=x-user-defined');
+		xhrNet.open('GET', netpath, false);
+		xhrNet.send();
+		if ((xhrNet.status >= 200) && (xhrNet.status <= 299))
 		{
 			Sys.Print('FindFile: ' + netpath + '\n');
 			Draw.EndDisc();
-			return Q.strmem(xhr.responseText);
+			return Q.strmem(xhrNet.responseText);
 		}
 	}
 	Sys.Print('FindFile: can\'t find ' + filename + '\n');
@@ -329,6 +331,12 @@ COM.LoadPackFile = function(packfile)
 		}
 		Con.Print('Added packfile ' + packfile + ' (' + numpackfiles + ' files)\n');
 		return pack;
+	}
+
+	if (COM.packBuffers != null)
+	{
+		// In in-memory/stream mode, missing packs should not cause blocking synchronous network XHRs
+		return null;
 	}
 
 	var xhr = new XMLHttpRequest();

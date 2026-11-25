@@ -1366,7 +1366,7 @@ Host.Startdemos_f = function()
 	var i;
 	for (i = 1; i < Cmd.argv.length; ++i)
 		CL.cls.demos[i - 1] = Cmd.argv[i];
-	if ((CL.cls.demonum !== -1) && (CL.cls.demoplayback !== true))
+	if (CL.cls.demoplayback !== true)
 	{
 		CL.cls.demonum = 0;
 		if (Host.framecount !== 0)

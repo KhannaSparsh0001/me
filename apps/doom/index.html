@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -248,13 +249,14 @@
         }
     </style>
 </head>
+
 <body>
 
     <!-- Windows 95 Menu Bar -->
     <div class="menu-bar">
         <div class="menu-item" onclick="toggleHelp(true)"><u>H</u>elp</div>
         <div class="menu-item" onclick="location.reload()"><u>R</u>estart</div>
-        <div class="menu-item" onclick="toggleFullscreen()"><u>F</u>ullscreen [Alt+Enter]</div>
+        <div class="menu-item" onclick="toggleFullscreen()"><u>F</u>ullscreen</div>
     </div>
 
     <!-- Viewport Container -->
@@ -280,14 +282,38 @@
         <div class="dialog-body">
             <strong>Default MS-DOS Controls:</strong>
             <table>
-                <tr><td><strong>Arrow Keys / WASD</strong></td><td>Move & Turn</td></tr>
-                <tr><td><strong>Ctrl / Left Click</strong></td><td>Fire Weapon</td></tr>
-                <tr><td><strong>Space</strong></td><td>Open Door / Activate</td></tr>
-                <tr><td><strong>Alt + Arrow Keys</strong></td><td>Strafe Left / Right</td></tr>
-                <tr><td><strong>1 - 7</strong></td><td>Select Weapons</td></tr>
-                <tr><td><strong>Shift</strong></td><td>Speed / Run</td></tr>
-                <tr><td><strong>Esc</strong></td><td>Main Menu</td></tr>
-                <tr><td><strong>Alt + Enter</strong></td><td>Toggle Fullscreen</td></tr>
+                <tr>
+                    <td><strong>Arrow Keys / WASD</strong></td>
+                    <td>Move & Turn</td>
+                </tr>
+                <tr>
+                    <td><strong>Ctrl / Left Click</strong></td>
+                    <td>Fire Weapon</td>
+                </tr>
+                <tr>
+                    <td><strong>Space</strong></td>
+                    <td>Open Door / Activate</td>
+                </tr>
+                <tr>
+                    <td><strong>Alt + Arrow Keys</strong></td>
+                    <td>Strafe Left / Right</td>
+                </tr>
+                <tr>
+                    <td><strong>1 - 7</strong></td>
+                    <td>Select Weapons</td>
+                </tr>
+                <tr>
+                    <td><strong>Shift</strong></td>
+                    <td>Speed / Run</td>
+                </tr>
+                <tr>
+                    <td><strong>Esc</strong></td>
+                    <td>Main Menu</td>
+                </tr>
+                <tr>
+                    <td><strong>Alt + Enter</strong></td>
+                    <td>Toggle Fullscreen</td>
+                </tr>
             </table>
             <button class="dialog-btn" onclick="toggleHelp(false)">OK</button>
         </div>
@@ -299,7 +325,7 @@
             if (window.parent && window.parent.ProcessManager) {
                 window.parent.ProcessManager.register("Doom.exe", "Active", "MS-DOS");
             }
-        } catch (e) {}
+        } catch (e) { }
 
         function toggleHelp(show) {
             const dialog = document.getElementById('help-dialog');
@@ -342,4 +368,5 @@
     </script>
 
 </body>
+
 </html>
