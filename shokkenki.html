@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPARSH KHANNA // 食券 PORTFOLIO (SHOKKENKI VENDING MACHINE)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Share+Tech+Mono&family=Space+Grotesk:wght@600;700;900&family=VT323&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --steel-light: #E0E2E6;
+            --steel-mid: #A5A9B0;
+            --steel-dark: #6C717A;
+            --steel-charcoal: #252830;
+            --steel-shadow: #14161B;
+            --chassis-metal: linear-gradient(135deg, #CFD3D9 0%, #B8BCC4 45%, #9DA2AC 70%, #828792 100%);
+            --bezel-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.45), inset -2px -2px 6px rgba(0, 0, 0, 0.55);
+            --led-green: #3AF86B;
+            --led-green-bg: #0C1E12;
+            --led-amber: #FFB300;
+            --receipt-bg: #F7F5EE;
+            --receipt-ink: #111113;
+            --receipt-ink-faint: #44474D;
+            --button-ivory: #FFF9E6;
+            --button-amber: #FFA726;
+            --button-red: #EF5350;
+            --font-jap: 'DotGothic16', sans-serif;
+            --font-thermal: 'Share Tech Mono', monospace;
+            --font-led: 'VT323', monospace;
+            --font-industrial: 'Space Grotesk', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #121418;
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 80%),
+                linear-gradient(rgba(0, 0, 0, 0.4) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 0, 0, 0.4) 1px, transparent 1px);
+            background-size: 100% 100%, 20px 20px, 20px 20px;
+            color: #fff;
+            font-family: var(--font-industrial);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 16px;
+            user-select: none;
+            overflow-x: hidden;
+        }
+
+        /* ── Top Theme Switcher Bar ── */
+        .top-nav-bar {
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            font-family: var(--font-thermal);
+            font-size: 0.75rem;
+            color: #8C929D;
+            letter-spacing: 0.1em;
+        }
+
+        .theme-links {
+            display: flex;
+            gap: 10px;
+        }
+
+        .theme-pill-btn {
+            background: #1E222A;
+            border: 1px solid #333842;
+            color: #A0A6B2;
+            padding: 5px 12px;
+            text-decoration: none;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            transition: all 0.2s ease;
+        }
+
+        .theme-pill-btn:hover {
+            border-color: #7AA8FF;
+            color: #fff;
+            background: #282E3A;
+        }
+
+        /* ── Master Shokkenki Cabinet Frame ── */
+        .shokkenki-cabinet {
+            width: 100%;
+            max-width: 1080px;
+            min-height: 720px;
+            background: var(--chassis-metal);
+            border: 3px solid #585C66;
+            border-radius: 12px;
+            box-shadow: 
+                0 30px 80px rgba(0, 0, 0, 0.85),
+                inset 2px 2px 5px rgba(255, 255, 255, 0.6),
+                inset -3px -3px 8px rgba(0, 0, 0, 0.7);
+            display: grid;
+            grid-template-columns: 460px 1fr;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Industrial Chassis Rivets */
+        .rivet {
+            position: absolute;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #737882;
+            box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 0.6), 1px 1px 2px rgba(0, 0, 0, 0.8);
+            z-index: 5;
+        }
+        .rivet.top-left { top: 12px; left: 12px; }
+        .rivet.top-right { top: 12px; right: 12px; }
+        .rivet.bottom-left { bottom: 12px; left: 12px; }
+        .rivet.bottom-right { bottom: 12px; right: 12px; }
+        .rivet.mid-divider-top { top: 12px; left: 456px; }
+        .rivet.mid-divider-bottom { bottom: 12px; left: 456px; }
+
+        /* ── Left Side: Hardware Control Panel ── */
+        .control-panel {
+            background: linear-gradient(180deg, #C2C6CE 0%, #AAB0BA 50%, #8F95A1 100%);
+            border-right: 3px solid #555A64;
+            box-shadow: inset -2px 0 6px rgba(0, 0, 0, 0.35);
+            padding: 24px 20px;
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 18px;
+            position: relative;
+        }
+
+        /* Vertical Milky-White Acrylic Signage */
+        .acrylic-vertical-sign {
+            background: #F8F9FA;
+            border: 2px solid #5C616B;
+            border-radius: 6px;
+            box-shadow: 
+                inset 0 0 16px rgba(255, 255, 255, 0.9),
+                0 0 18px rgba(255, 255, 255, 0.35),
+                2px 2px 4px rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 6px;
+            color: #121417;
+            text-align: center;
+            height: 100%;
+        }
+
+        .acrylic-kanji {
+            font-family: var(--font-jap);
+            font-size: 3.2rem;
+            line-height: 1.1;
+            font-weight: 900;
+            letter-spacing: 0.05em;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+        }
+
+        .acrylic-eng {
+            font-family: var(--font-industrial);
+            font-size: 1.35rem;
+            font-weight: 900;
+            letter-spacing: 0.18em;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            transform: rotate(180deg);
+            margin-top: 18px;
+            color: #1A1D24;
+        }
+
+        /* Right Sub-Column of Control Panel */
+        .hardware-interface {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        /* Retro LED Matrix Display */
+        .led-bezel {
+            background: #15181E;
+            border: 3px solid #525660;
+            border-radius: 5px;
+            padding: 8px 14px;
+            box-shadow: 
+                inset 2px 2px 6px #000,
+                1px 1px 2px rgba(255, 255, 255, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .led-screen {
+            font-family: var(--font-led);
+            font-size: 2.1rem;
+            color: var(--led-green);
+            text-shadow: 0 0 10px rgba(58, 248, 107, 0.65);
+            letter-spacing: 0.12em;
+            line-height: 1;
+        }
+
+        /* Hardware Slots (Coin Insert & Ticket Eject Label) */
+        .hardware-slots-row {
+            display: grid;
+            grid-template-columns: 85px 1fr;
+            gap: 16px;
+            align-items: center;
+        }
+
+        /* Mechanical Rotary Coin Mechanism */
+        .coin-mech {
+            text-align: center;
+        }
+
+        .coin-dial {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #FFFFFF 0%, #B0B5BD 55%, #60646D 100%);
+            border: 2px solid #484C55;
+            box-shadow: 
+                2px 3px 6px rgba(0, 0, 0, 0.6),
+                inset -1px -1px 3px rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.15s ease;
+        }
+
+        .coin-dial:active {
+            transform: scale(0.96);
+        }
+
+        .coin-slot-vertical {
+            width: 5px;
+            height: 38px;
+            background: #111316;
+            border-radius: 2px;
+            box-shadow: inset 1px 1px 2px #000;
+        }
+
+        .mech-label {
+            font-family: var(--font-jap);
+            font-size: 0.62rem;
+            color: #2F333C;
+            margin-top: 4px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .mech-label small {
+            display: block;
+            font-family: var(--font-thermal);
+            font-size: 0.58rem;
+            color: #4C5260;
+        }
+
+        /* Ejection Bezel Slot */
+        .ejector-slot-bezel {
+            background: #1E222A;
+            border: 2px solid #585D67;
+            border-radius: 4px;
+            padding: 10px 12px;
+            box-shadow: inset 2px 2px 5px #000;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .slot-title-jp {
+            font-family: var(--font-jap);
+            font-size: 0.72rem;
+            color: #9EA4B0;
+            text-align: center;
+            letter-spacing: 0.1em;
+        }
+
+        .slot-cutout {
+            height: 12px;
+            background: #090A0D;
+            border-radius: 2px;
+            border: 1px solid #3A3E47;
+            box-shadow: inset 0 2px 5px #000;
+        }
+
+        /* ── Push-Button Grid (2 Rows x 3 Cols) ── */
+        .button-matrix {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 6px;
+        }
+
+        /* Tactile Mechanical Illuminated Push-Button */
+        .shokkenki-btn {
+            aspect-ratio: 1 / 0.95;
+            border-radius: 6px;
+            border: 2px solid #4B505B;
+            position: relative;
+            cursor: pointer;
+            outline: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 4px;
+            text-align: center;
+            transition: all 0.12s ease;
+            box-shadow: 
+                0 6px 0 #3E424B,
+                0 8px 10px rgba(0, 0, 0, 0.45),
+                inset 1px 1px 3px rgba(255, 255, 255, 0.8);
+        }
+
+        .shokkenki-btn:active, .shokkenki-btn.pressed {
+            transform: translateY(4px);
+            box-shadow: 
+                0 2px 0 #3E424B,
+                0 3px 5px rgba(0, 0, 0, 0.5),
+                inset 1px 1px 2px rgba(255, 255, 255, 0.4);
+        }
+
+        /* Ivory Plastic Backlit */
+        .shokkenki-btn.ivory {
+            background: linear-gradient(180deg, #FFFFF2 0%, #FFF2CC 60%, #EBD59B 100%);
+            color: #1A1D24;
+        }
+
+        .shokkenki-btn.ivory.active {
+            background: #FFFCE6;
+            box-shadow: 
+                0 2px 0 #3E424B,
+                0 0 16px rgba(255, 242, 179, 0.9),
+                inset 0 0 8px rgba(255, 255, 255, 1);
+        }
+
+        /* Amber Plastic Backlit */
+        .shokkenki-btn.amber {
+            background: linear-gradient(180deg, #FFD580 0%, #FFA726 65%, #DB7800 100%);
+            color: #1F1500;
+        }
+
+        .shokkenki-btn.amber.active {
+            background: #FFB74D;
+            box-shadow: 
+                0 2px 0 #3E424B,
+                0 0 20px rgba(255, 167, 38, 0.9),
+                inset 0 0 10px rgba(255, 230, 180, 0.9);
+        }
+
+        /* Signal Red Backlit */
+        .shokkenki-btn.signal-red {
+            background: linear-gradient(180deg, #FF8A80 0%, #EF5350 65%, #C62828 100%);
+            color: #FFFFFF;
+        }
+
+        .shokkenki-btn.signal-red.active {
+            background: #FF5252;
+            box-shadow: 
+                0 2px 0 #3E424B,
+                0 0 20px rgba(239, 83, 80, 0.95),
+                inset 0 0 10px rgba(255, 180, 180, 0.9);
+        }
+
+        .btn-num {
+            font-family: var(--font-industrial);
+            font-size: 0.85rem;
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 2px;
+        }
+
+        .btn-main-label {
+            font-family: var(--font-industrial);
+            font-size: 0.72rem;
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        .btn-sub-label {
+            font-family: var(--font-thermal);
+            font-size: 0.52rem;
+            opacity: 0.85;
+            letter-spacing: -0.02em;
+            margin-top: 1px;
+        }
+
+        /* ── Right Side: Thermal Paper Dispenser Area ── */
+        .dispenser-side {
+            background: radial-gradient(circle at 60% 40%, #767B86 0%, #4A4E58 100%);
+            padding: 30px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Metallic Recessed Dispenser Slot with Serrated Teeth */
+        .serrated-slot-housing {
+            width: 100%;
+            max-width: 440px;
+            background: #1C1F26;
+            border: 3px solid #383D47;
+            border-radius: 6px;
+            padding: 8px 14px;
+            box-shadow: 
+                inset 0 4px 10px #000,
+                0 4px 12px rgba(0, 0, 0, 0.55);
+            position: relative;
+            z-index: 10;
+        }
+
+        .serrated-mouth {
+            height: 14px;
+            background: #090A0C;
+            border-radius: 2px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 2px 6px #000;
+        }
+
+        /* Serrated Metal Teeth along Lower Lip */
+        .serrated-teeth {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: repeating-linear-gradient(
+                45deg,
+                #4B505A,
+                #4B505A 3px,
+                #1C1F26 3px,
+                #1C1F26 6px
+            );
+        }
+
+        /* ── Physical Thermal Paper Roll ── */
+        .receipt-scroll-container {
+            width: 100%;
+            max-width: 410px;
+            position: relative;
+            margin-top: -6px;
+            z-index: 4;
+            filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.65));
+        }
+
+        .thermal-receipt {
+            background-color: var(--receipt-bg);
+            background-image: 
+                radial-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 0),
+                linear-gradient(180deg, rgba(0, 0, 0, 0.05) 0%, transparent 6%);
+            background-size: 16px 16px, 100% 100%;
+            color: var(--receipt-ink);
+            font-family: var(--font-thermal);
+            font-size: 0.82rem;
+            line-height: 1.45;
+            padding: 24px 20px 28px;
+            position: relative;
+            transform-origin: top center;
+            animation: dispenseSlide 0.4s cubic-bezier(0.18, 0.9, 0.25, 1);
+        }
+
+        @keyframes dispenseSlide {
+            0% {
+                transform: translateY(-80px) scaleY(0.4);
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(0) scaleY(1);
+                opacity: 1;
+            }
+        }
+
+        /* Serrated Cut Edge at Bottom of Paper */
+        .receipt-tear-edge {
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: repeating-linear-gradient(
+                -45deg,
+                transparent,
+                transparent 5px,
+                var(--receipt-bg) 5px,
+                var(--receipt-bg) 10px
+            );
+        }
+
+        /* 1-Bit Dithered Halftone Avatar */
+        .dither-avatar-frame {
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 16px;
+            border: 2px solid #111;
+            position: relative;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .dither-avatar-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(220%) brightness(95%);
+            image-rendering: pixelated;
+        }
+
+        /* Dot-Matrix Dither Overlay Simulation */
+        .dither-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background-image: radial-gradient(#000 28%, transparent 32%);
+            background-size: 3px 3px;
+            mix-blend-mode: multiply;
+            opacity: 0.45;
+        }
+
+        /* Thermal Printing Typographic Elements */
+        .receipt-header-center {
+            text-align: center;
+            border-bottom: 2px dashed #111;
+            padding-bottom: 12px;
+            margin-bottom: 12px;
+        }
+
+        .receipt-header-center h2 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .receipt-header-center .receipt-meta {
+            font-size: 0.72rem;
+            color: var(--receipt-ink-faint);
+            margin-top: 3px;
+        }
+
+        .receipt-body {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .receipt-row {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .receipt-section-title {
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .receipt-dotted-sep {
+            border-bottom: 1px dotted #222;
+            margin: 4px 0;
+        }
+
+        .receipt-list {
+            list-style: none;
+            padding-left: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .receipt-list li::before {
+            content: "- ";
+        }
+
+        /* Barcode Footer */
+        .barcode-wrap {
+            margin-top: 18px;
+            border-top: 2px dashed #111;
+            padding-top: 14px;
+            text-align: center;
+        }
+
+        .barcode-bars {
+            height: 48px;
+            width: 82%;
+            margin: 0 auto;
+            background: repeating-linear-gradient(
+                90deg,
+                #111,
+                #111 2px,
+                transparent 2px,
+                transparent 5px,
+                #111 5px,
+                #111 9px,
+                transparent 9px,
+                transparent 11px,
+                #111 11px,
+                #111 15px,
+                transparent 15px,
+                transparent 19px,
+                #111 19px,
+                #111 24px,
+                transparent 24px,
+                transparent 26px
+            );
+        }
+
+        .barcode-caption {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            margin-top: 6px;
+        }
+
+        @media (max-width: 900px) {
+            .shokkenki-cabinet {
+                grid-template-columns: 1fr;
+            }
+            .control-panel {
+                border-right: none;
+                border-bottom: 3px solid #555A64;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Top Theme Navigation -->
+    <header class="top-nav-bar">
+        <div>// SHOKKENKI VENDING INTERFACE [SK-2026]</div>
+        <nav class="theme-links">
+            <a href="interstellar-transit-hud.html" class="theme-pill-btn">✦ WARP HUD</a>
+            <a href="jyotish-ephemeris.html" class="theme-pill-btn">☉ JYOTISH</a>
+            <a href="modern-fintech.html" class="theme-pill-btn">⚡ FINTECH</a>
+            <a href="index.html" class="theme-pill-btn">⊞ WIN95</a>
+        </nav>
+    </header>
+
+    <!-- Main Shokkenki Ticket Vending Machine Cabinet -->
+    <main class="shokkenki-cabinet">
+        
+        <!-- Rivet Corner Accents -->
+        <div class="rivet top-left"></div>
+        <div class="rivet top-right"></div>
+        <div class="rivet bottom-left"></div>
+        <div class="rivet bottom-right"></div>
+        <div class="rivet mid-divider-top"></div>
+        <div class="rivet mid-divider-bottom"></div>
+
+        <!-- ── LEFT: Control Panel & Button Grid ── -->
+        <section class="control-panel">
+            
+            <!-- Vertical Acrylic Japanese Signage -->
+            <div class="acrylic-vertical-sign">
+                <div class="acrylic-kanji">食<br>券</div>
+                <div class="acrylic-eng">PORTFOLIO</div>
+            </div>
+
+            <!-- Hardware Interaction Column -->
+            <div class="hardware-interface">
+                
+                <!-- Retro Green LED Status Screen -->
+                <div class="led-bezel">
+                    <div class="led-screen" id="led-readout">ONLINE // 2026</div>
+                </div>
+
+                <!-- Coin Mech & Eject Bezel -->
+                <div class="hardware-slots-row">
+                    
+                    <div class="coin-mech" onclick="triggerCoinSound()" title="Click to insert 100¥ coin">
+                        <div class="coin-dial">
+                            <div class="coin-slot-vertical"></div>
+                        </div>
+                        <div class="mech-label">
+                            コインコイン
+                            <small>insert coin</small>
+                        </div>
+                    </div>
+
+                    <div class="ejector-slot-bezel">
+                        <div class="slot-title-jp">出入表明 // PRINT</div>
+                        <div class="slot-cutout"></div>
+                        <div class="mech-label" style="text-align: right;">
+                            押込ボタウン
+                            <small>push button</small>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Illuminated Push-Button Navigation Matrix (2 Rows x 3 Cols) -->
+                <div class="button-matrix">
+                    
+                    <!-- 01 IDENTITY -->
+                    <button class="shokkenki-btn ivory active" id="btn-1" onclick="dispenseTicket(1)">
+                        <span class="btn-num">01</span>
+                        <span class="btn-main-label">IDENTITY</span>
+                        <span class="btn-sub-label">SUMMARY</span>
+                    </button>
+
+                    <!-- 02 EXPERIENCE (GNDU) -->
+                    <button class="shokkenki-btn amber" id="btn-2" onclick="dispenseTicket(2)">
+                        <span class="btn-num">02</span>
+                        <span class="btn-main-label">EXPERIENCE</span>
+                        <span class="btn-sub-label">(GNDU)</span>
+                    </button>
+
+                    <!-- 03 PROJECTS (REV / BLINKY) -->
+                    <button class="shokkenki-btn signal-red" id="btn-3" onclick="dispenseTicket(3)">
+                        <span class="btn-num">03</span>
+                        <span class="btn-main-label">PROJECTS</span>
+                        <span class="btn-sub-label">(REV / BLINKY)</span>
+                    </button>
+
+                    <!-- 04 TECH STACK -->
+                    <button class="shokkenki-btn ivory" id="btn-4" onclick="dispenseTicket(4)">
+                        <span class="btn-num">04</span>
+                        <span class="btn-main-label">TECH</span>
+                        <span class="btn-sub-label">STACK</span>
+                    </button>
+
+                    <!-- 05 EDUCATION -->
+                    <button class="shokkenki-btn amber" id="btn-5" onclick="dispenseTicket(5)">
+                        <span class="btn-num">05</span>
+                        <span class="btn-main-label">EDUCATION</span>
+                        <span class="btn-sub-label">ACADEMIC</span>
+                    </button>
+
+                    <!-- 06 DOWNLOAD LOR / RESUME -->
+                    <button class="shokkenki-btn signal-red" id="btn-6" onclick="dispenseTicket(6)">
+                        <span class="btn-num">06</span>
+                        <span class="btn-main-label">DOWNLOAD</span>
+                        <span class="btn-sub-label">LOR / RESUME</span>
+                    </button>
+
+                </div>
+
+                <div style="font-family: var(--font-thermal); font-size: 0.62rem; color: #4B515C; display: flex; justify-content: space-between; margin-top: 6px;">
+                    <span>チシボタン // push button</span>
+                    <span>押しボタン // push button</span>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ── RIGHT: Thermal Receipt Paper Dispenser ── -->
+        <section class="dispenser-side">
+            
+            <!-- Recessed Serrated Dispenser Mouth -->
+            <div class="serrated-slot-housing">
+                <div class="serrated-mouth">
+                    <div class="serrated-teeth"></div>
+                </div>
+            </div>
+
+            <!-- Downward Hanging Thermal Paper Receipt -->
+            <div class="receipt-scroll-container">
+                <article class="thermal-receipt" id="receipt-paper">
+                    
+                    <!-- 1-Bit Dithered Halftone Portrait -->
+                    <div class="dither-avatar-frame">
+                        <img src="pfp.png" alt="Sparsh Khanna" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\'><rect width=\'100\' height=\'100\' fill=\'%23fff\'/><text x=\'50\' y=\'55\' fill=\'%23000\' font-size=\'32\' text-anchor=\'middle\' font-family=\'monospace\'>SK</text></svg>'">
+                        <div class="dither-overlay"></div>
+                    </div>
+
+                    <!-- Header Stamping -->
+                    <div class="receipt-header-center">
+                        <h2 id="receipt-headline">SPARSH KHANNA // SYSTEMS &amp; AI ENGINEER</h2>
+                        <div class="receipt-meta">DATE: <span id="receipt-date">26 NOV 2026</span> • LOC: AMRITSAR, IN</div>
+                    </div>
+
+                    <!-- Dynamic Printed Content Body -->
+                    <div class="receipt-body" id="receipt-content">
+                        
+                        <div>
+                            <span class="receipt-section-title">EXPERIENCE:</span> GNDU PLACEMENT HEAD
+                            <ul class="receipt-list">
+                                <li>+200% PRODUCTIVITY SURGE</li>
+                                <li>10+ CORPORATE DRIVES DIRECTED</li>
+                                <li>OFFICIAL LETTER OF RECOMMENDATION</li>
+                            </ul>
+                        </div>
+
+                        <div class="receipt-dotted-sep"></div>
+
+                        <div>
+                            <span class="receipt-section-title">PROJECTS:</span>
+                            <div style="margin-top: 2px;">REV (RUST DAG ENGINE), BLINKY (VOICE OS)</div>
+                        </div>
+
+                        <div class="receipt-dotted-sep"></div>
+
+                        <div>
+                            <span class="receipt-section-title">SKILLS:</span>
+                            <div style="margin-top: 2px;">RUST, PYTHON, LANGGRAPH, FASTAPI, ESP32</div>
+                        </div>
+
+                        <div class="receipt-dotted-sep"></div>
+
+                        <div>
+                            <span class="receipt-section-title">EDUCATION:</span>
+                            <div style="margin-top: 2px;">B.TECH ELECTRONICS &amp; COMPUTER ENGINEERING (GNDU)</div>
+                        </div>
+
+                    </div>
+
+                    <!-- Thermal Barcode Footer -->
+                    <div class="barcode-wrap">
+                        <div class="barcode-bars"></div>
+                        <div class="barcode-caption" id="barcode-text">THANK YOU // VERIFIED</div>
+                    </div>
+
+                    <div class="receipt-tear-edge"></div>
+                </article>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- ── Audio & Ticket Dispensing Logic ── -->
+    <script>
+        // Web Audio Synthesizer for Heavy Mechanical Push-Button & Thermal Motor
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (AudioContext) audioCtx = new AudioContext();
+            }
+        }
+
+        // Mechanical Chunk Clunk
+        function playButtonClunk() {
+            initAudio();
+            if (!audioCtx) return;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(140, now);
+            osc.frequency.exponentialRampToValueAtTime(30, now + 0.05);
+
+            gain.gain.setValueAtTime(0.12, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+
+            osc.start(now);
+            osc.stop(now + 0.05);
+        }
+
+        // Thermal Printer Step Motor Buzz
+        function playPrinterBuzz() {
+            initAudio();
+            if (!audioCtx) return;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(380, now);
+            osc.frequency.linearRampToValueAtTime(420, now + 0.25);
+
+            gain.gain.setValueAtTime(0.05, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+
+            osc.start(now);
+            osc.stop(now + 0.28);
+        }
+
+        // Metallic Coin Clink
+        function triggerCoinSound() {
+            initAudio();
+            if (!audioCtx) return;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(2400, now);
+            osc.frequency.exponentialRampToValueAtTime(3200, now + 0.08);
+
+            gain.gain.setValueAtTime(0.15, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+
+            osc.start(now);
+            osc.stop(now + 0.12);
+
+            const led = document.getElementById('led-readout');
+            led.innerText = "COIN INSERTED ¥";
+            setTimeout(() => {
+                led.innerText = "SELECT ITEM";
+            }, 1000);
+        }
+
+        // Data Payloads for the 6 Push Buttons
+        const ticketPayloads = {
+            1: {
+                led: "PRINT // IDENTITY",
+                headline: "SPARSH KHANNA // SYSTEMS & AI ENGINEER",
+                content: `
+                    <div>
+                        <span class="receipt-section-title">EXECUTIVE PROFILE:</span>
+                        <p style="margin-top: 4px;">
+                            Advanced Systems &amp; Software Architect specializing in deterministic LangGraph multi-agent orchestration, stateful RAG with vector re-ranking, and low-power ESP32 edge sensory computing.
+                        </p>
+                    </div>
+                    <div class="receipt-dotted-sep"></div>
+                    <div>
+                        <span class="receipt-section-title">RECOGNITION:</span>
+                        <ul class="receipt-list">
+                            <li>STATE WINNER - INDIA SKILLS 2024</li>
+                            <li>GNDU CHIEF PLACEMENT COORDINATOR</li>
+                        </ul>
+                    </div>
+                `,
+                barcode: "ITEM 01 // ID VERIFIED"
+            },
+            2: {
+                led: "PRINT // EXPERIENCE",
+                headline: "OFFICIAL EXPERIENCE // PLACEMENT HEAD",
+                content: `
+                    <div>
+                        <span class="receipt-section-title">GNDU PLACEMENT DEPARTMENT:</span>
+                        <div style="font-size: 0.76rem; color: #555; margin-bottom: 4px;">HEAD COORDINATOR (2024–PRESENT)</div>
+                        <ul class="receipt-list">
+                            <li>SCALED OPERATIONAL THROUGHPUT BY +200%</li>
+                            <li>COORDINATED 10+ FORTUNE 500 RECRUITMENT DRIVES</li>
+                            <li>AWARDED OFFICIAL LETTER OF RECOMMENDATION (LOR)</li>
+                            <li>AUTOMATED CANDIDATE PROFILE SCREENING PIPELINE</li>
+                        </ul>
+                    </div>
+                `,
+                barcode: "ITEM 02 // GNDU-LOR-VERIFIED"
+            },
+            3: {
+                led: "PRINT // PROJECTS",
+                headline: "FLAGSHIP ENGINEERING PROJECTS",
+                content: `
+                    <div>
+                        <span class="receipt-section-title">01. REV (RUST DAG ENGINE):</span>
+                        <p style="margin-top: 2px;">
+                            High-concurrency directed acyclic graph execution engine written in Rust for parallel AI task scheduling.
+                        </p>
+                    </div>
+                    <div class="receipt-dotted-sep"></div>
+                    <div>
+                        <span class="receipt-section-title">02. BLINKY (VOICE OS):</span>
+                        <p style="margin-top: 2px;">
+                            Low-latency offline voice assistant operating on embedded edge hardware with sub-100ms response cycles.
+                        </p>
+                    </div>
+                    <div class="receipt-dotted-sep"></div>
+                    <div>
+                        <span class="receipt-section-title">03. LANGGRAPH RESEARCH SWARMS:</span>
+                        <p style="margin-top: 2px;">
+                            Multi-agent autonomous research network with tool execution loops via MCP protocol adapters.
+                        </p>
+                    </div>
+                `,
+                barcode: "ITEM 03 // ARCHITECTURE BUILDS"
+            },
+            4: {
+                led: "PRINT // TECH STACK",
+                headline: "QUANTITATIVE TECHNICAL PROFICIENCY",
+                content: `
+                    <div class="receipt-row">
+                        <span class="receipt-section-title">LANGGRAPH / AGENTIC</span>
+                        <span>[EXALTED]</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-section-title">PYTHON / FASTAPI / DRF</span>
+                        <span>[PRODUCTION]</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-section-title">RUST &amp; C++</span>
+                        <span>[HIGH SPEED]</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-section-title">ESP32 EMBEDDED IOT</span>
+                        <span>[STATE WINNER]</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-section-title">POSTGRESQL &amp; REDIS</span>
+                        <span>[99.9% RELIABLE]</span>
+                    </div>
+                `,
+                barcode: "ITEM 04 // STACK COMPILED"
+            },
+            5: {
+                led: "PRINT // EDUCATION",
+                headline: "ACADEMIC INSTITUTION & CREDENTIALS",
+                content: `
+                    <div>
+                        <span class="receipt-section-title">GURU NANAK DEV UNIVERSITY (GNDU):</span>
+                        <div style="margin-top: 3px;">B.TECH ELECTRONICS &amp; COMPUTER ENGINEERING (2022–2026)</div>
+                    </div>
+                    <div class="receipt-dotted-sep"></div>
+                    <div>
+                        <span class="receipt-section-title">HONORS &amp; ELECTIVES:</span>
+                        <ul class="receipt-list">
+                            <li>EMBEDDED SYSTEMS &amp; MICROCONTROLLERS</li>
+                            <li>DISTRIBUTED COMPUTING &amp; CLOUD SYSTEMS</li>
+                            <li>HIGH-PERFORMANCE DATA STRUCTURES</li>
+                        </ul>
+                    </div>
+                `,
+                barcode: "ITEM 05 // DEGREE TRACK 2026"
+            },
+            6: {
+                led: "DISPENSE // LOR PDF",
+                headline: "OFFICIAL RESUME & RECOMMENDATION",
+                content: `
+                    <div style="text-align: center; padding: 10px 0;">
+                        <span class="receipt-section-title" style="font-size: 0.95rem;">[TICKET DISPENSED]</span>
+                        <p style="margin-top: 8px;">
+                            Official verified resume and Letter of Recommendation (LOR) bundle ready for download.
+                        </p>
+                        <div style="margin-top: 12px;">
+                            <a href="docs/Sparsh_khanna_Resume_gndu-18.pdf" target="_blank" style="display: inline-block; background: #111; color: #fff; padding: 6px 14px; text-decoration: none; font-weight: 700; border-radius: 2px;">
+                                ↓ OPEN PDF RESUME
+                            </a>
+                        </div>
+                    </div>
+                `,
+                barcode: "ITEM 06 // DOWNLOAD GRANTED"
+            }
+        };
+
+        function dispenseTicket(id) {
+            playButtonClunk();
+            setTimeout(playPrinterBuzz, 60);
+
+            // Toggle active visual state on push-buttons
+            document.querySelectorAll('.shokkenki-btn').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.getElementById(`btn-${id}`);
+            if (activeBtn) activeBtn.classList.add('active');
+
+            const payload = ticketPayloads[id];
+            if (!payload) return;
+
+            // Update Green LED Display
+            const led = document.getElementById('led-readout');
+            led.innerText = payload.led;
+
+            // Trigger physical paper slide down animation
+            const paper = document.getElementById('receipt-paper');
+            paper.style.animation = 'none';
+            paper.offsetHeight; // trigger reflow
+            paper.style.animation = 'dispenseSlide 0.38s cubic-bezier(0.18, 0.9, 0.25, 1)';
+
+            // Populate Thermal Receipt Content
+            document.getElementById('receipt-headline').innerText = payload.headline;
+            document.getElementById('receipt-content').innerHTML = payload.content;
+            document.getElementById('barcode-text').innerText = payload.barcode;
+
+            // If button 6 (Download), automatically trigger resume download in new tab
+            if (id === 6) {
+                setTimeout(() => {
+                    window.open('docs/Sparsh_khanna_Resume_gndu-18.pdf', '_blank');
+                }, 400);
+            }
+        }
+    </script>
+</body>
+
+</html>

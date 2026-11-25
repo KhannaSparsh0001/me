@@ -1,0 +1,1655 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPARSH KHANNA // SCHEDULING INTERSTELLAR TRANSIT (WARP DECK 2.0)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700;800&family=Cinzel:wght@600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --canvas-bg: #020307;
+            --hud-frame: #0F1422;
+            --hud-panel-bg: rgba(6, 11, 20, 0.82);
+            --hud-border: rgba(90, 130, 200, 0.32);
+            --hud-border-bright: rgba(122, 168, 255, 0.75);
+            --ion-blue: #7AA8FF;
+            --ion-glow: rgba(122, 168, 255, 0.45);
+            --solar-amber: #E8A85A;
+            --solar-glow: rgba(232, 168, 90, 0.55);
+            --gold-bright: #F5D38A;
+            --alert-red: #FF3B30;
+            --text-main: #E2ECFF;
+            --text-muted: #7A8EAF;
+            --font-head: 'Space Grotesk', sans-serif;
+            --font-serif: 'Cinzel', serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--canvas-bg);
+            color: var(--text-main);
+            font-family: var(--font-head);
+            width: 100vw;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            user-select: none;
+        }
+
+        /* ── Fullscreen Radial Warp Starfield ── */
+        #warp-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ── Curved CRT Glass Scanlines, Glare & Vignette ── */
+        .crt-overlay-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 50;
+            pointer-events: none;
+            background: 
+                radial-gradient(circle at 50% 50%, transparent 55%, rgba(1, 2, 6, 0.78) 95%),
+                linear-gradient(rgba(18, 28, 48, 0) 50%, rgba(0, 0, 0, 0.38) 50%),
+                linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+            background-size: 100% 100%, 100% 3px, 6px 100%;
+        }
+
+        /* Diagonal Glass Glare Sweep */
+        .glass-glare {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 51;
+            pointer-events: none;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.035) 0%, rgba(255, 255, 255, 0) 40%, rgba(122, 168, 255, 0.025) 70%, transparent 100%);
+        }
+
+        /* ── Master Cockpit Enclosure Frame with Subtle CRT Bulge ── */
+        .cockpit-enclosure {
+            position: relative;
+            z-index: 10;
+            width: 98vw;
+            max-width: 1720px;
+            margin: 10px auto;
+            border: 1px solid var(--hud-border);
+            border-radius: 10px;
+            background: rgba(4, 8, 16, 0.82);
+            backdrop-filter: blur(14px);
+            box-shadow: 
+                0 0 50px rgba(0, 0, 0, 0.95), 
+                inset 0 0 35px rgba(122, 168, 255, 0.06),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* ── Top Flight Command Strip ── */
+        .top-flight-bar {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 1px solid var(--hud-border);
+            padding-bottom: 8px;
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            letter-spacing: 0.1em;
+        }
+
+        .flight-brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .flight-brand span.callsign {
+            color: var(--solar-amber);
+            font-weight: 700;
+        }
+
+        .flight-telemetry-mid {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            color: var(--text-muted);
+        }
+
+        .telemetry-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .highlight-amber {
+            color: var(--solar-amber);
+            font-weight: 600;
+        }
+
+        .highlight-blue {
+            color: var(--ion-blue);
+            font-weight: 600;
+        }
+
+        /* Interactive Warp Throttle Control */
+        .warp-throttle-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(122, 168, 255, 0.08);
+            border: 1px solid var(--hud-border);
+            padding: 2px 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .warp-throttle-toggle:hover {
+            border-color: var(--solar-amber);
+            background: rgba(232, 168, 90, 0.18);
+            box-shadow: 0 0 10px var(--solar-glow);
+        }
+
+        .top-deck-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .icon-deck-btn {
+            background: rgba(122, 168, 255, 0.06);
+            border: 1px solid var(--hud-border);
+            color: var(--ion-blue);
+            padding: 4px 10px;
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            cursor: pointer;
+            text-decoration: none;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+
+        .icon-deck-btn:hover, .icon-deck-btn.active {
+            border-color: var(--solar-amber);
+            color: var(--solar-amber);
+            background: rgba(232, 168, 90, 0.18);
+        }
+
+        /* ── Authentic Aviation Heading Indicator & Pitch Tape ── */
+        .heading-tape-strip {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(8, 14, 26, 0.7);
+            border: 1px solid rgba(122, 168, 255, 0.2);
+            border-radius: 3px;
+            padding: 4px 18px;
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            letter-spacing: 0.12em;
+        }
+
+        .heading-center-target {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--solar-amber);
+            font-weight: 700;
+        }
+
+        .heading-arrow {
+            color: var(--solar-amber);
+            font-size: 0.75rem;
+            animation: pulseArrow 1.5s infinite ease-in-out;
+        }
+
+        @keyframes pulseArrow {
+            0%, 100% { transform: translateY(0); opacity: 1; }
+            50% { transform: translateY(2px); opacity: 0.6; }
+        }
+
+        /* ── Sub Navigation Tabs Bar ── */
+        .subnav-tabs-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+        }
+
+        .nav-pill {
+            background: rgba(18, 28, 48, 0.65);
+            border: 1px solid var(--hud-border);
+            color: var(--text-muted);
+            padding: 5px 14px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            letter-spacing: 0.08em;
+        }
+
+        .nav-pill:hover, .nav-pill.active {
+            background: rgba(122, 168, 255, 0.16);
+            border-color: var(--ion-blue);
+            color: #fff;
+            box-shadow: 0 0 12px var(--ion-glow);
+        }
+
+        /* ── Master Tri-Column Workspace ── */
+        .flight-deck-grid {
+            display: grid;
+            grid-template-columns: 280px 1fr 310px;
+            gap: 14px;
+            min-height: 680px;
+        }
+
+        /* Standard Cockpit Card */
+        .cockpit-panel {
+            background: var(--hud-panel-bg);
+            border: 1px solid var(--hud-border);
+            border-radius: 5px;
+            padding: 14px;
+            position: relative;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .panel-tag {
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            color: var(--ion-blue);
+            letter-spacing: 0.15em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(122, 168, 255, 0.15);
+            padding-bottom: 6px;
+        }
+
+        /* ── LEFT COLUMN: Biometrics & Identity ── */
+        .left-col {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .biometric-reticle-box {
+            position: relative;
+            width: 210px;
+            height: 210px;
+            margin: 8px auto 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .reticle-outer-dial {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 1px dashed var(--ion-blue);
+            border-radius: 50%;
+            animation: spinReticle 45s linear infinite;
+        }
+
+        .reticle-inner-ring {
+            position: absolute;
+            width: 82%;
+            height: 82%;
+            border: 1px solid rgba(122, 168, 255, 0.35);
+            border-radius: 50%;
+        }
+
+        @keyframes spinReticle {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .pilot-pfp-frame {
+            width: 142px;
+            height: 142px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid var(--solar-amber);
+            box-shadow: 0 0 24px rgba(232, 168, 90, 0.45);
+            background: #000;
+            position: relative;
+            z-index: 2;
+        }
+
+        .pilot-pfp-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .pilot-title-block {
+            text-align: center;
+            margin-bottom: 2px;
+        }
+
+        .pilot-title-block .rank {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--solar-amber);
+            letter-spacing: 0.18em;
+        }
+
+        .pilot-title-block .role {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            letter-spacing: 0.12em;
+        }
+
+        .profile-excerpt-card {
+            border: 1px solid var(--hud-border);
+            border-radius: 4px;
+            background: rgba(10, 16, 30, 0.6);
+            padding: 12px;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            color: var(--text-main);
+        }
+
+        .excerpt-heading {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 0.12em;
+            margin-bottom: 6px;
+        }
+
+        /* ── CENTER COLUMN: 3D Pitched Orbit Trajectory Map ── */
+        .center-col {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+            perspective: 1200px;
+        }
+
+        /* Pilot Header in Center Viewport */
+        .center-pilot-banner {
+            padding-left: 6px;
+        }
+
+        .center-pilot-banner h1 {
+            font-family: var(--font-serif);
+            font-size: 2.1rem;
+            font-weight: 700;
+            color: var(--gold-bright);
+            letter-spacing: 0.12em;
+            text-shadow: 0 0 16px rgba(245, 211, 138, 0.4);
+            line-height: 1.1;
+        }
+
+        .center-pilot-banner .banner-sub {
+            font-family: var(--font-mono);
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--solar-amber);
+            letter-spacing: 0.22em;
+            margin-top: 3px;
+        }
+
+        .center-pilot-banner .banner-coords {
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            letter-spacing: 0.15em;
+            margin-top: 2px;
+        }
+
+        /* 3D Pitched Stage Container */
+        .trajectory-stage-box {
+            position: relative;
+            flex: 1;
+            min-height: 520px;
+            border: 1px solid var(--hud-border);
+            border-radius: 6px;
+            background: radial-gradient(ellipse at center, rgba(14, 25, 48, 0.5) 0%, rgba(3, 6, 12, 0.92) 80%);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform-style: preserve-3d;
+            transition: transform 0.2s cubic-bezier(0.1, 0.8, 0.2, 1);
+        }
+
+        .trajectory-hud-svg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        /* Target Lock Reticle around Selected Planet */
+        #target-lock-bracket {
+            pointer-events: none;
+            transition: all 0.35s cubic-bezier(0.18, 0.9, 0.25, 1);
+        }
+
+        /* Waypoint Hover & Glow */
+        .waypoint-pin {
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .waypoint-pin circle.planet {
+            transition: all 0.3s ease;
+        }
+
+        .waypoint-pin:hover circle.planet, .waypoint-pin.active circle.planet {
+            filter: drop-shadow(0 0 12px var(--solar-amber));
+            stroke: #fff;
+            stroke-width: 2.4;
+        }
+
+        .waypoint-pin text {
+            font-family: var(--font-mono);
+            font-size: 10.5px;
+            fill: var(--text-main);
+            pointer-events: none;
+        }
+
+        .waypoint-pin text.tag {
+            font-size: 9px;
+            fill: var(--text-muted);
+        }
+
+        .waypoint-pin text.highlight {
+            fill: var(--solar-amber);
+            font-weight: 700;
+        }
+
+        /* Dynamic Detail Overlay when clicking a Waypoint */
+        .waypoint-overlay-card {
+            position: absolute;
+            bottom: 14px;
+            left: 14px;
+            right: 14px;
+            background: rgba(6, 12, 24, 0.94);
+            border: 1px solid var(--hud-border-bright);
+            border-radius: 4px;
+            backdrop-filter: blur(14px);
+            padding: 14px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+            box-shadow: 0 0 24px rgba(0, 0, 0, 0.85);
+        }
+
+        .wp-modal-left {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            max-width: 75%;
+        }
+
+        .wp-modal-title {
+            font-family: var(--font-mono);
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--solar-amber);
+            letter-spacing: 0.1em;
+        }
+
+        .wp-modal-desc {
+            font-size: 0.84rem;
+            color: var(--text-main);
+            line-height: 1.45;
+        }
+
+        .wp-modal-tags {
+            display: flex;
+            gap: 8px;
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            color: var(--ion-blue);
+            align-items: center;
+        }
+
+        /* ── Fullscreen Screens for Nav Pills ── */
+        .deck-view-screen {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            right: 14px;
+            bottom: 14px;
+            background: rgba(4, 9, 20, 0.96);
+            border: 1px solid var(--hud-border-bright);
+            border-radius: 5px;
+            padding: 24px;
+            z-index: 20;
+            display: none;
+            flex-direction: column;
+            gap: 16px;
+            overflow-y: auto;
+        }
+
+        .deck-view-screen.active {
+            display: flex;
+        }
+
+        .deck-view-screen h2 {
+            font-family: var(--font-serif);
+            font-size: 1.4rem;
+            color: var(--gold-bright);
+            border-bottom: 1px solid var(--hud-border);
+            padding-bottom: 8px;
+        }
+
+        /* ── RIGHT COLUMN: Propulsion Stack & Telemetry ── */
+        .right-col {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* Interactive Terminal Console */
+        .terminal-panel {
+            padding: 10px;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .terminal-stream {
+            font-family: var(--font-mono);
+            font-size: 0.64rem;
+            color: var(--ion-blue);
+            line-height: 1.45;
+            height: 125px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .stream-line {
+            display: flex;
+            gap: 6px;
+        }
+
+        .stream-ts {
+            color: var(--text-muted);
+        }
+
+        .stream-msg.amber {
+            color: var(--solar-amber);
+        }
+
+        .terminal-prompt-box {
+            display: flex;
+            align-items: center;
+            border-top: 1px solid rgba(122, 168, 255, 0.15);
+            padding-top: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+        }
+
+        .terminal-prompt-box span {
+            color: var(--solar-amber);
+            margin-right: 4px;
+        }
+
+        .terminal-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            outline: none;
+        }
+
+        /* Thrust & Propulsion Card */
+        .propulsion-stack-card {
+            padding: 12px;
+        }
+
+        .prop-unit {
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .prop-unit:hover {
+            transform: translateX(3px);
+        }
+
+        .prop-unit:last-child {
+            margin-bottom: 0;
+        }
+
+        .prop-meta {
+            display: flex;
+            justify-content: space-between;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            margin-bottom: 4px;
+        }
+
+        .prop-name {
+            color: var(--text-main);
+        }
+
+        .prop-blocks {
+            display: flex;
+            gap: 3px;
+        }
+
+        .prop-block {
+            width: 14px;
+            height: 6px;
+            background: rgba(122, 168, 255, 0.15);
+            border-radius: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .prop-block.amber {
+            background: var(--solar-amber);
+            box-shadow: 0 0 5px var(--solar-glow);
+        }
+
+        .prop-block.blue {
+            background: var(--ion-blue);
+            box-shadow: 0 0 5px var(--ion-glow);
+        }
+
+        /* Flight Tracking Curve Graph */
+        .flight-curve-card {
+            padding: 10px 12px;
+        }
+
+        .curve-header {
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            color: var(--solar-amber);
+            letter-spacing: 0.1em;
+            margin-bottom: 6px;
+        }
+
+        .curve-svg {
+            width: 100%;
+            height: 64px;
+            background: rgba(2, 6, 14, 0.6);
+            border: 1px solid rgba(122, 168, 255, 0.15);
+            border-radius: 2px;
+        }
+
+        /* Panchang / Ephemeris Coordinates */
+        .panchang-card {
+            padding: 10px 12px;
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+        }
+
+        .panchang-row {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px dotted rgba(122, 168, 255, 0.15);
+            padding: 3px 0;
+        }
+
+        .panchang-val {
+            color: var(--solar-amber);
+        }
+
+        /* Bottom HUD Calibration Wheel */
+        .calibration-deck {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+        }
+
+        .calib-dial {
+            width: 44px;
+            height: 44px;
+            border: 1px dashed var(--ion-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: spinReticle 20s linear infinite reverse;
+        }
+
+        .calib-inner {
+            width: 24px;
+            height: 24px;
+            border: 1px solid var(--solar-amber);
+            border-radius: 50%;
+        }
+
+        /* ── 4. Bottom Warp Progression Dock ── */
+        .bottom-warp-bar {
+            border-top: 1px solid var(--hud-border);
+            padding-top: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+        }
+
+        .warp-stage-sequence {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--solar-amber);
+        }
+
+        .stage-label {
+            color: var(--text-muted);
+        }
+
+        .stage-active {
+            color: #fff;
+            background: rgba(232, 168, 90, 0.18);
+            border: 1px solid var(--solar-amber);
+            padding: 2px 8px;
+            border-radius: 2px;
+            box-shadow: 0 0 10px var(--solar-glow);
+        }
+
+        @media (max-width: 1280px) {
+            .flight-deck-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 3D Warp Velocity Canvas -->
+    <canvas id="warp-canvas"></canvas>
+
+    <!-- CRT Scanlines, Phosphor Noise & Curved Glass Glare -->
+    <div class="crt-overlay-layer"></div>
+    <div class="glass-glare"></div>
+
+    <!-- Master Cockpit Enclosure Frame -->
+    <div class="cockpit-enclosure">
+
+        <!-- ── 1. Top Integrated Flight Telemetry Bar ── -->
+        <header class="top-flight-bar">
+            <div class="flight-brand">
+                <span>SPARSH KHANNA</span>
+                <span>//</span>
+                <span class="callsign">SCHEDULING INTERSTELLAR TRANSIT</span>
+            </div>
+
+            <div class="flight-telemetry-mid">
+                <span class="telemetry-pill">
+                    <span>MISSION TIME:</span>
+                    <span class="highlight-amber">[ACTIVE // WARP_ENGAGED]</span>
+                </span>
+                <span>•</span>
+                
+                <!-- Interactive Velocity Throttle -->
+                <div class="warp-throttle-toggle" onclick="cycleWarpThrottle()" title="Click to cycle warp velocity">
+                    <span>CURRENT VELOCITY:</span>
+                    <span class="highlight-blue" id="velocity-readout">0.82c</span>
+                    <span style="font-size: 0.6rem; color: var(--solar-amber);">[THROTTLE]</span>
+                </div>
+
+                <span>•</span>
+                <span class="telemetry-pill">
+                    <span>WARP STATUS:</span>
+                    <span class="highlight-amber" id="warp-status-lbl">ACTIVE</span>
+                </span>
+            </div>
+
+            <div class="top-deck-actions">
+                <button class="icon-deck-btn" id="audio-btn" onclick="toggleAudio()" title="Toggle Web Audio HUD Drone & Chirps">🔊 AUDIO: ON</button>
+                <a href="shokkenki.html" class="icon-deck-btn" title="Japanese Ticket Vending Theme">食券 SHOKKENKI</a>
+                <a href="jyotish-ephemeris.html" class="icon-deck-btn" title="Vedic Ephemeris Theme">☉ JYOTISH</a>
+                <a href="modern-fintech.html" class="icon-deck-btn" title="Fintech High Frequency Terminal">⚡ FINTECH</a>
+                <a href="index.html" class="icon-deck-btn" title="Retro Windows 95">⊞ WIN95</a>
+            </div>
+        </header>
+
+        <!-- ── 2. Authentic Aviation Heading Tape Strip ── -->
+        <div class="heading-tape-strip">
+            <span>RADAR COMPASS: 280° AZ</span>
+            <div class="heading-center-target">
+                <span>160</span>
+                <span>170</span>
+                <span class="heading-arrow">▼ 180°</span>
+                <span>190</span>
+                <span>200</span>
+            </div>
+            <span>PITCH: +02.4° // ATTITUDE: LEVEL</span>
+        </div>
+
+        <!-- ── 3. Sub Navigation Tabs Bar ── -->
+        <nav class="subnav-tabs-bar" aria-label="Deck controls">
+            <button class="nav-pill active" onclick="setDeckTab(this, 'mission-log')">MISSION LOG</button>
+            <button class="nav-pill" onclick="setDeckTab(this, 'telemetry')">TELEMETRY</button>
+            <button class="nav-pill" onclick="setDeckTab(this, 'crew-data')">CREW DATA</button>
+            <button class="nav-pill" onclick="setDeckTab(this, 'faction-comm')">FACTION COMM</button>
+            <button class="nav-pill" onclick="setDeckTab(this, 'systems')">SYSTEMS</button>
+        </nav>
+
+        <!-- ── 4. Master Tri-Column Workspace ── -->
+        <main class="flight-deck-grid">
+
+            <!-- ── LEFT COLUMN: Biometrics & Identity ── -->
+            <aside class="left-col">
+                <div class="cockpit-panel">
+                    <div class="panel-tag">
+                        <span>CRITICAL STATUS // BIOMETRICS</span>
+                        <span style="color: var(--solar-amber);">[CALIBRATED]</span>
+                    </div>
+
+                    <!-- Reticle Frame Around Profile Picture -->
+                    <div class="biometric-reticle-box">
+                        <div class="reticle-outer-dial"></div>
+                        <div class="reticle-inner-ring"></div>
+                        <div class="pilot-pfp-frame">
+                            <img src="pfp.png" alt="Sparsh Khanna" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\'><rect width=\'100\' height=\'100\' fill=\'%230e1828\'/><text x=\'50\' y=\'55\' fill=\'%23e8a85a\' font-size=\'32\' text-anchor=\'middle\' font-family=\'sans-serif\'>SK</text></svg>'">
+                        </div>
+                    </div>
+
+                    <div class="pilot-title-block">
+                        <div class="rank">PILOT</div>
+                        <div class="role">// SYSTEM ENGINEER</div>
+                    </div>
+
+                    <!-- Identity & Profile Excerpt -->
+                    <div class="profile-excerpt-card">
+                        <div class="excerpt-heading">IDENTITY &amp; PROFILE EXCERPT</div>
+                        <p>
+                            Advanced Systems &amp; Software Architect mastering Agentic AI workflows (LangGraph, Stateful RAG) &amp; ESP32-based hardware telemetry. Mission operator managing high-velocity teams and complex systems.
+                        </p>
+                    </div>
+
+                    <div style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 4px; padding-top: 4px;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>CLEARANCE:</span>
+                            <span style="color: var(--solar-amber); font-weight: 700;">STATE WINNER (INDIA SKILLS '24)</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>INSTITUTION:</span>
+                            <span style="color: var(--ion-blue);">GNDU CSE (2022–2026)</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- ── CENTER COLUMN: 3D Pitched Orbit Trajectory Map ── -->
+            <section class="center-col" id="center-viewport">
+                
+                <!-- Center Pilot Banner -->
+                <div class="center-pilot-banner">
+                    <h1>SPARSH KHANNA</h1>
+                    <div class="banner-sub">FLIGHT ENGINEER</div>
+                    <div class="banner-coords">COORDINATES: GURU NANAK DEV UNIVERSITY / AMRITSAR, IN</div>
+                </div>
+
+                <!-- 3D Gyroscopic Trajectory Planetary Stage -->
+                <div class="trajectory-stage-box" id="trajectory-stage">
+                    
+                    <svg class="trajectory-hud-svg" id="trajectory-svg" viewBox="0 0 880 520">
+                        <defs>
+                            <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#FFF2A8" />
+                                <stop offset="40%" stop-color="#E8A85A" />
+                                <stop offset="100%" stop-color="#E8A85A" stop-opacity="0" />
+                            </radialGradient>
+                            <radialGradient id="planetBlue" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#BEE0FF" />
+                                <stop offset="70%" stop-color="#4A7FD9" />
+                                <stop offset="100%" stop-color="#122752" />
+                            </radialGradient>
+                            <radialGradient id="planetPurple" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#E8B8FF" />
+                                <stop offset="70%" stop-color="#8E4BD9" />
+                                <stop offset="100%" stop-color="#28114A" />
+                            </radialGradient>
+                        </defs>
+
+                        <!-- Polar Grid & Compass Circles -->
+                        <circle cx="440" cy="280" r="340" fill="none" stroke="rgba(122, 168, 255, 0.08)" stroke-dasharray="2 6" />
+                        <circle cx="440" cy="280" r="260" fill="none" stroke="rgba(122, 168, 255, 0.12)" />
+                        <circle cx="440" cy="280" r="180" fill="none" stroke="rgba(122, 168, 255, 0.1)" stroke-dasharray="4 8" />
+                        <circle cx="440" cy="280" r="100" fill="none" stroke="rgba(122, 168, 255, 0.15)" />
+
+                        <!-- Degree Radial Lines -->
+                        <line x1="440" y1="20" x2="440" y2="500" stroke="rgba(122, 168, 255, 0.08)" />
+                        <line x1="100" y1="280" x2="780" y2="280" stroke="rgba(122, 168, 255, 0.08)" />
+
+                        <!-- 3D Angled Orbital Ellipses -->
+                        <ellipse cx="430" cy="280" rx="360" ry="140" fill="none" stroke="rgba(122, 168, 255, 0.35)" stroke-width="1.4" transform="rotate(-16 430 280)" />
+                        <ellipse cx="430" cy="280" rx="280" ry="105" fill="none" stroke="rgba(122, 168, 255, 0.25)" stroke-width="1" stroke-dasharray="3 5" transform="rotate(-24 430 280)" />
+
+                        <!-- Active Golden Trajectory Flight Vector -->
+                        <path id="trajectory-path" d="M 210 295 Q 360 380 430 270 T 570 190 T 700 240" fill="none" stroke="#E8A85A" stroke-width="1.8" stroke-dasharray="4 6" />
+
+                        <!-- Central Star / Solar Anchor -->
+                        <circle cx="430" cy="270" r="28" fill="url(#sunGlow)" opacity="0.4" />
+                        <circle cx="430" cy="270" r="13" fill="#E8A85A" />
+                        <circle cx="430" cy="270" r="7" fill="#FFF2A8" />
+
+                        <!-- Continuous Traveling Ship Beacon along Flight Path -->
+                        <g id="traveling-beacon">
+                            <polygon points="0,-7 6,7 -6,7" fill="#FFF" transform="translate(430,270) scale(0.9)" />
+                            <circle cx="430" cy="270" r="14" fill="none" stroke="rgba(255, 255, 255, 0.4)" stroke-dasharray="2 3" />
+                        </g>
+
+                        <!-- Dynamic Target Lock Bracket (moves over selected planet) -->
+                        <g id="target-lock-bracket" transform="translate(585, 190)">
+                            <circle cx="0" cy="0" r="22" fill="none" stroke="#E8A85A" stroke-width="1.4" stroke-dasharray="6 6" />
+                            <line x1="-28" y1="0" x2="-22" y2="0" stroke="#E8A85A" stroke-width="2" />
+                            <line x1="22" y1="0" x2="28" y2="0" stroke="#E8A85A" stroke-width="2" />
+                            <line x1="0" y1="-28" x2="0" y2="-22" stroke="#E8A85A" stroke-width="2" />
+                            <line x1="0" y1="22" x2="0" y2="28" stroke="#E8A85A" stroke-width="2" />
+                        </g>
+
+                        <!-- ── WAYPOINT 1: DESTINATION LAGNA (SUMMARY) ── -->
+                        <g class="waypoint-pin active" id="pin-1" onclick="selectWaypoint(1, 585, 190)">
+                            <ellipse cx="585" cy="190" rx="16" ry="16" fill="none" stroke="rgba(122, 168, 255, 0.4)" stroke-dasharray="2 4" />
+                            <circle cx="585" cy="190" r="9" fill="url(#planetBlue)" class="planet" />
+                            <text x="605" y="186" class="highlight">1st: DESTINATION</text>
+                            <text x="605" y="200" class="tag">LAGNA (SUMMARY)</text>
+                        </g>
+
+                        <!-- ── WAYPOINT 2: UTILITIES (SKILLS) ── -->
+                        <g class="waypoint-pin" id="pin-2" onclick="selectWaypoint(2, 480, 235)">
+                            <circle cx="480" cy="235" r="7" fill="url(#planetPurple)" class="planet" />
+                            <text x="495" y="235" class="highlight">3rd: UTILITIES</text>
+                            <text x="495" y="247" class="tag">(SKILLS)</text>
+                        </g>
+
+                        <!-- ── WAYPOINT 3: PROTOTYPING (PROJECTS) ── -->
+                        <g class="waypoint-pin" id="pin-3" onclick="selectWaypoint(3, 310, 305)">
+                            <circle cx="310" cy="305" r="8" fill="url(#planetBlue)" class="planet" />
+                            <text x="230" y="300" class="highlight">5th: PROTOTYPING</text>
+                            <text x="245" y="312" class="tag">(PROJECTS)</text>
+                        </g>
+
+                        <!-- ── WAYPOINT 4: OPERATIONS (EXPERIENCE) ── -->
+                        <g class="waypoint-pin" id="pin-4" onclick="selectWaypoint(4, 505, 340)">
+                            <circle cx="505" cy="340" r="9" fill="url(#planetBlue)" class="planet" />
+                            <text x="525" y="338" class="highlight">10th: OPERATIONS</text>
+                            <text x="525" y="350" class="tag">(EXPERIENCE)</text>
+                        </g>
+
+                        <!-- ── WAYPOINT 5: THE MISSION (METRICS) ── -->
+                        <g class="waypoint-pin" id="pin-5" onclick="selectWaypoint(5, 370, 405)">
+                            <circle cx="370" cy="405" r="11" fill="url(#planetPurple)" class="planet" />
+                            <text x="390" y="405" class="highlight">11th: THE MISSION</text>
+                            <text x="390" y="417" class="tag">(METRICS / +200%)</text>
+                        </g>
+
+                        <!-- Far Outer Waypoint Marker -->
+                        <g class="waypoint-pin" id="pin-6" onclick="selectWaypoint(6, 550, 425)">
+                            <circle cx="550" cy="425" r="10" fill="url(#planetBlue)" class="planet" />
+                            <circle cx="550" cy="425" r="16" fill="none" stroke="rgba(122, 168, 255, 0.4)" />
+                        </g>
+
+                        <!-- Coordinate Annotations on Hud Axis -->
+                        <text x="445" y="40" fill="rgba(122,168,255,0.4)" font-family="monospace" font-size="9">0° // NORTH</text>
+                        <text x="790" y="275" fill="rgba(122,168,255,0.4)" font-family="monospace" font-size="9">+350</text>
+                        <text x="780" y="330" fill="rgba(122,168,255,0.4)" font-family="monospace" font-size="9">+250</text>
+                        <text x="750" y="380" fill="rgba(122,168,255,0.4)" font-family="monospace" font-size="9">+200</text>
+                        <text x="140" y="275" fill="rgba(122,168,255,0.4)" font-family="monospace" font-size="9">-100</text>
+                    </svg>
+
+                    <!-- Active Waypoint Telemetry Overlay Card -->
+                    <div class="waypoint-overlay-card">
+                        <div class="wp-modal-left">
+                            <div class="wp-modal-title" id="wp-disp-title">1st: DESTINATION LAGNA // EXECUTIVE SUMMARY</div>
+                            <div class="wp-modal-desc" id="wp-disp-desc">
+                                Core engineering identity focused on deterministic agentic frameworks (LangGraph), resilient low-latency state machines, and high-frequency edge IoT firmware (ESP32).
+                            </div>
+                        </div>
+                        <div class="wp-modal-tags" id="wp-disp-tags">
+                            <span>[SECTOR: CORE]</span>
+                            <span>[COORDINATES: AMRITSAR]</span>
+                            <a href="docs/Sparsh_khanna_Resume_gndu-18.pdf" target="_blank" class="icon-deck-btn" style="border-color: var(--solar-amber); color: var(--solar-amber);">
+                                ↓ RESUME PDF
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Alternate Screens (Tabs) -->
+                    <!-- Screen: Telemetry -->
+                    <div class="deck-view-screen" id="screen-telemetry">
+                        <h2>DECK TELEMETRY // SYSTEM BENCHMARKS</h2>
+                        <div style="font-family: var(--font-mono); font-size: 0.8rem; line-height: 1.8; color: var(--text-main);">
+                            <div>• ASYNC RESPONSE TIME: <span style="color: var(--solar-amber);">0.38ms average</span> (FastAPI + uvloop)</div>
+                            <div>• LANGGRAPH RE-RANK ACCURACY: <span style="color: var(--ion-blue);">99.4% Top-1 Precision</span></div>
+                            <div>• ESP32 TRANSMISSION CYCLES: <span style="color: var(--solar-amber);">10,000 packets / 0 loss</span></div>
+                            <div>• VECTOR EMBEDDING DIMS: <span style="color: var(--ion-blue);">1,024 Dense + BM25 Hybrid</span></div>
+                            <div>• UPTIME RELIABILITY: <span style="color: #4cd964;">99.99% Nominal</span></div>
+                        </div>
+                        <button class="icon-deck-btn" onclick="closeScreen()" style="align-self: flex-start;">← RETURN TO TRAJECTORY MAP</button>
+                    </div>
+
+                    <!-- Screen: Crew Data -->
+                    <div class="deck-view-screen" id="screen-crew-data">
+                        <h2>CREW DATA // LEADERSHIP &amp; HONORS</h2>
+                        <div style="font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.8;">
+                            <div style="color: var(--solar-amber); font-weight: 700;">★ HEAD OF PLACEMENT OPERATIONS // GNDU (2024–PRESENT)</div>
+                            <p style="color: var(--text-main); font-size: 0.85rem; margin-bottom: 14px;">
+                                Directed multi-department recruitment cycles. Engineered scheduling algorithms that improved candidate processing throughput by +200%. Commended with official Letter of Recommendation.
+                            </p>
+                            <div style="color: var(--ion-blue); font-weight: 700;">★ STATE WINNER // INDIA SKILL COMPETITION 2024</div>
+                            <p style="color: var(--text-main); font-size: 0.85rem;">
+                                Awarded first place in state-level embedded systems &amp; software engineering challenge.
+                            </p>
+                        </div>
+                        <button class="icon-deck-btn" onclick="closeScreen()" style="align-self: flex-start;">← RETURN TO TRAJECTORY MAP</button>
+                    </div>
+
+                    <!-- Screen: Faction Comm -->
+                    <div class="deck-view-screen" id="screen-faction-comm">
+                        <h2>FACTION COMM // CHANNELS &amp; CONTACT</h2>
+                        <div style="font-family: var(--font-mono); font-size: 0.85rem; line-height: 2;">
+                            <div>EMAIL TRANSMISSION: <a href="mailto:sparshkhannas8@gmail.com" style="color: var(--solar-amber);">sparshkhannas8@gmail.com</a></div>
+                            <div>SECURE GITHUB FEED: <a href="https://github.com/Sparsh-Khanna" target="_blank" style="color: var(--ion-blue);">github.com/Sparsh-Khanna</a></div>
+                            <div>LINKEDIN SUBNET: <a href="https://linkedin.com/in/sparshkhanna" target="_blank" style="color: var(--ion-blue);">linkedin.com/in/sparshkhanna</a></div>
+                        </div>
+                        <button class="icon-deck-btn" onclick="closeScreen()" style="align-self: flex-start;">← RETURN TO TRAJECTORY MAP</button>
+                    </div>
+
+                    <!-- Screen: Systems -->
+                    <div class="deck-view-screen" id="screen-systems">
+                        <h2>SYSTEMS ARCHITECTURE // IOT &amp; AI HARDWARE</h2>
+                        <div style="font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.7;">
+                            <div>[MICROCONTROLLER]: ESP32-WROOM-32 (240MHz Dual-Core Xtensa LX6)</div>
+                            <div>[BUS PROTOCOLS]: SPI (Display), I2C (Sensory Telemetry), UART (Diagnostic Stream)</div>
+                            <div>[FIRMWARE RUNTIME]: C++ with FreeRTOS multitasking tasks</div>
+                            <div>[AI ORCHESTRATOR]: LangGraph multi-agent DAG with persistent checkpointers</div>
+                        </div>
+                        <button class="icon-deck-btn" onclick="closeScreen()" style="align-self: flex-start;">← RETURN TO TRAJECTORY MAP</button>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- ── RIGHT COLUMN: Propulsion Stack & Telemetry ── -->
+            <aside class="right-col">
+
+                <!-- 1. Interactive Terminal Console -->
+                <div class="cockpit-panel terminal-panel">
+                    <div class="panel-tag">
+                        <span>TERMINAL // CLI</span>
+                        <span style="color: var(--ion-blue);">[INPUT_READY]</span>
+                    </div>
+                    <div class="terminal-stream" id="term-stream">
+                        <div class="stream-line"><span class="stream-ts">[10:25:10]</span> <span>warp core: 100% nominal</span></div>
+                        <div class="stream-line"><span class="stream-ts">[10:25:15]</span> <span>vector lock: 0.82c</span></div>
+                        <div class="stream-line"><span class="stream-ts">[10:25:20]</span> <span class="stream-msg amber">LangGraph state graphs OK</span></div>
+                        <div class="stream-line"><span class="stream-ts">[10:25:28]</span> <span>FastAPI async loop ready</span></div>
+                        <div class="stream-line"><span class="stream-ts">[10:25:35]</span> <span class="stream-msg amber">GNDU placement: +200% alpha</span></div>
+                        <div class="stream-line"><span class="stream-ts">[10:25:40]</span> <span style="color: var(--text-muted);">type 'help' for commands</span></div>
+                    </div>
+                    
+                    <form class="terminal-prompt-box" onsubmit="handleTerminalSubmit(event)">
+                        <span>&gt;</span>
+                        <input type="text" id="terminal-cli-input" class="terminal-input" placeholder="try 'help' or 'cat skills'..." autocomplete="off">
+                    </form>
+                </div>
+
+                <!-- 2. Thrust & Propulsion Card -->
+                <div class="cockpit-panel propulsion-stack-card">
+                    <div class="panel-tag">
+                        <span>THRUST &amp; PROPULSION</span>
+                        <span style="color: var(--solar-amber);">[ION_DRIVE]</span>
+                    </div>
+
+                    <div class="prop-unit" onclick="triggerStackDetail('Rust')">
+                        <div class="prop-meta">
+                            <span class="prop-name">Rust</span>
+                            <div class="prop-blocks">
+                                <div class="prop-block amber"></div>
+                                <div class="prop-block amber"></div>
+                                <div class="prop-block amber"></div>
+                                <div class="prop-block amber"></div>
+                                <div class="prop-block"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="prop-unit" onclick="triggerStackDetail('Python')">
+                        <div class="prop-meta">
+                            <span class="prop-name">Python</span>
+                            <div class="prop-blocks">
+                                <div class="prop-block amber"></div>
+                                <div class="prop-block amber"></div>
+                                <div class="prop-block amber"></div>
+                                <div class="prop-block amber"></div>
+                                <div class="prop-block amber"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="prop-unit" onclick="triggerStackDetail('LangGraph')">
+                        <div class="prop-meta">
+                            <span class="prop-name">LangGraph</span>
+                            <div class="prop-blocks">
+                                <div class="prop-block amber"></div>
+                                <div class="prop-block amber"></div>
+                                <div class="prop-block amber"></div>
+                                <div class="prop-block amber"></div>
+                                <div class="prop-block amber"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="prop-unit" onclick="triggerStackDetail('FastAPI')">
+                        <div class="prop-meta">
+                            <span class="prop-name">FastAPI</span>
+                            <div class="prop-blocks">
+                                <div class="prop-block amber"></div>
+                                <div class="prop-block amber"></div>
+                                <div class="prop-block amber"></div>
+                                <div class="prop-block amber"></div>
+                                <div class="prop-block"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="prop-unit" onclick="triggerStackDetail('ESP32')">
+                        <div class="prop-meta">
+                            <span class="prop-name">ESP32</span>
+                            <div class="prop-blocks">
+                                <div class="prop-block amber"></div>
+                                <div class="prop-block amber"></div>
+                                <div class="prop-block amber"></div>
+                                <div class="prop-block amber"></div>
+                                <div class="prop-block amber"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Flight Tracking Curve Graph -->
+                <div class="cockpit-panel flight-curve-card">
+                    <div class="curve-header">FLIGHT TRACKING // TRAJECTORY CURVE</div>
+                    <svg class="curve-svg" viewBox="0 0 260 64" fill="none">
+                        <defs>
+                            <linearGradient id="amberCurveGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#E8A85A" stop-opacity="0.45" />
+                                <stop offset="100%" stop-color="#E8A85A" stop-opacity="0" />
+                            </linearGradient>
+                        </defs>
+                        <path d="M 0 54 Q 50 50 100 42 T 180 24 T 260 10 L 260 64 L 0 64 Z" fill="url(#amberCurveGrad)" />
+                        <path d="M 0 54 Q 50 50 100 42 T 180 24 T 260 10" stroke="#E8A85A" stroke-width="1.8" />
+                        <circle cx="260" cy="10" r="3" fill="#E8A85A" />
+                    </svg>
+                </div>
+
+                <!-- 4. Panchang Ephemeris Coordinates -->
+                <div class="cockpit-panel panchang-card">
+                    <div class="panel-tag">
+                        <span>PANCHANG // EPHEMERIS</span>
+                        <span style="color: var(--ion-blue);">[DELHI/AMRITSAR]</span>
+                    </div>
+                    <div class="panchang-row">
+                        <span>Transits</span>
+                        <span class="panchang-val">Dhanus 14°</span>
+                    </div>
+                    <div class="panchang-row">
+                        <span>Transit Velocity</span>
+                        <span class="panchang-val" id="transit-vel-readout">15:58 // 0.82c</span>
+                    </div>
+                    <div class="panchang-row">
+                        <span>Graha Lord</span>
+                        <span class="panchang-val">Jupiter (♃)</span>
+                    </div>
+                </div>
+
+                <!-- 5. Dynamic HUD Calibration Dial -->
+                <div class="cockpit-panel calibration-deck">
+                    <div style="font-family: var(--font-mono); font-size: 0.68rem;">
+                        <div style="color: var(--text-main); font-weight: 700;">DYNAMIC HUD CALIBRATION</div>
+                        <div style="color: var(--text-muted);">FREQ: 1420 MHZ</div>
+                    </div>
+                    <div class="calib-dial">
+                        <div class="calib-inner"></div>
+                    </div>
+                </div>
+
+            </aside>
+
+        </main>
+
+        <!-- ── 5. Bottom Warp Progression Dock ── -->
+        <footer class="bottom-warp-bar">
+            <div class="warp-stage-sequence">
+                <span class="stage-label">WARP PROGRESSION / ACTIVE STAGES:</span>
+                <span class="stage-active">B.TECH (2022–2026)</span>
+                <span>→</span>
+                <span class="stage-active">GNDU PLACEMENT CHIEF (+200% METRICS / OFFICIAL LOR)</span>
+            </div>
+
+            <div style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-muted);">
+                TRACKING: <span style="color: var(--ion-blue);">#7AA8FF</span> • S0AB-AMASE: <span style="color: var(--solar-amber);">#E8A85A</span>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- ── Interactive JavaScript Engine ── -->
+    <script>
+        // ── 1. Web Audio API Avionics Sound Synthesizer & Ambient Drone ──
+        let audioEnabled = true;
+        let audioCtx = null;
+        let engineDroneOsc = null;
+        let engineDroneGain = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (AudioContext) {
+                    audioCtx = new AudioContext();
+                    startAmbientDrone();
+                }
+            }
+        }
+
+        function startAmbientDrone() {
+            if (!audioCtx || engineDroneOsc) return;
+            try {
+                engineDroneOsc = audioCtx.createOscillator();
+                engineDroneGain = audioCtx.createGain();
+
+                // 48Hz Sub-bass starship warp core drone
+                engineDroneOsc.type = 'sawtooth';
+                engineDroneOsc.frequency.setValueAtTime(48, audioCtx.currentTime);
+
+                // Very faint ambient hum
+                engineDroneGain.gain.setValueAtTime(0.015, audioCtx.currentTime);
+
+                // Low-pass filter to make it muffled and atmospheric like a real cockpit interior
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(110, audioCtx.currentTime);
+
+                engineDroneOsc.connect(filter);
+                filter.connect(engineDroneGain);
+                engineDroneGain.connect(audioCtx.destination);
+
+                engineDroneOsc.start();
+            } catch (err) {
+                console.log("Drone auto-start deferred until user gesture");
+            }
+        }
+
+        function playSound(type) {
+            if (!audioEnabled) return;
+            initAudio();
+            if (!audioCtx) return;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            if (type === 'chirp') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(1200, now);
+                osc.frequency.exponentialRampToValueAtTime(1800, now + 0.04);
+                gain.gain.setValueAtTime(0.04, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+                osc.start(now);
+                osc.stop(now + 0.04);
+            } else if (type === 'lock') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(440, now);
+                osc.frequency.exponentialRampToValueAtTime(880, now + 0.12);
+                gain.gain.setValueAtTime(0.06, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+                osc.start(now);
+                osc.stop(now + 0.12);
+            } else if (type === 'warp') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(110, now);
+                osc.frequency.exponentialRampToValueAtTime(55, now + 0.25);
+                gain.gain.setValueAtTime(0.07, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+                osc.start(now);
+                osc.stop(now + 0.25);
+            }
+        }
+
+        function toggleAudio() {
+            audioEnabled = !audioEnabled;
+            const btn = document.getElementById('audio-btn');
+            if (btn) {
+                btn.innerText = audioEnabled ? '🔊 AUDIO: ON' : '🔇 AUDIO: OFF';
+                btn.classList.toggle('active', audioEnabled);
+            }
+            if (engineDroneGain) {
+                engineDroneGain.gain.setValueAtTime(audioEnabled ? 0.015 : 0.0, audioCtx.currentTime);
+            }
+            if (audioEnabled) playSound('chirp');
+        }
+
+        // Auto-resume audio on first user touch/click
+        window.addEventListener('click', () => {
+            initAudio();
+            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+        }, { once: true });
+
+        // ── 2. Radial Warp-Speed Star Canvas with Variable Throttle ──
+        const canvas = document.getElementById('warp-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let w = canvas.width = window.innerWidth;
+        let h = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        });
+
+        const STAR_COUNT = 380;
+        let currentSpeed = 20; // Default: 0.82c
+        const stars = [];
+
+        for (let i = 0; i < STAR_COUNT; i++) {
+            stars.push({
+                x: (Math.random() - 0.5) * w * 2,
+                y: (Math.random() - 0.5) * h * 2,
+                z: Math.random() * w,
+                pz: 0
+            });
+            stars[i].pz = stars[i].z;
+        }
+
+        function drawWarp() {
+            ctx.fillStyle = '#020307';
+            ctx.fillRect(0, 0, w, h);
+
+            const cx = w / 2;
+            const cy = h / 2;
+
+            for (let i = 0; i < stars.length; i++) {
+                const s = stars[i];
+                s.z -= currentSpeed;
+
+                if (s.z <= 0) {
+                    s.z = w;
+                    s.pz = w;
+                    s.x = (Math.random() - 0.5) * w * 2;
+                    s.y = (Math.random() - 0.5) * h * 2;
+                }
+
+                const k = 220 / s.z;
+                const px = s.x * k + cx;
+                const py = s.y * k + cy;
+
+                const prevK = 220 / s.pz;
+                const prevX = s.x * prevK + cx;
+                const prevY = s.y * prevK + cy;
+
+                s.pz = s.z;
+
+                if (px >= 0 && px <= w && py >= 0 && py <= h) {
+                    const alpha = Math.min(1, (1 - s.z / w) * 1.6);
+                    ctx.beginPath();
+                    ctx.moveTo(prevX, prevY);
+                    ctx.lineTo(px, py);
+                    ctx.strokeStyle = `rgba(122, 168, 255, ${alpha})`;
+                    ctx.lineWidth = Math.max(0.8, (1 - s.z / w) * (currentSpeed > 30 ? 3.4 : 2.2));
+                    ctx.stroke();
+                }
+            }
+
+            requestAnimationFrame(drawWarp);
+        }
+        drawWarp();
+
+        // Warp Throttle Modes
+        const warpLevels = [
+            { speed: 8, label: '0.24c', status: 'IMPULSE' },
+            { speed: 14, label: '0.52c', status: 'CRUISE' },
+            { speed: 20, label: '0.82c', status: 'ACTIVE' },
+            { speed: 38, label: '1.00c', status: 'MAX WARP' }
+        ];
+        let currentThrottleIdx = 2;
+
+        function cycleWarpThrottle() {
+            currentThrottleIdx = (currentThrottleIdx + 1) % warpLevels.length;
+            const target = warpLevels[currentThrottleIdx];
+            currentSpeed = target.speed;
+            
+            document.getElementById('velocity-readout').innerText = target.label;
+            document.getElementById('warp-status-lbl').innerText = target.status;
+            document.getElementById('transit-vel-readout').innerText = `15:58 // ${target.label}`;
+            
+            playSound('warp');
+            appendTerminal(`throttle shifted to ${target.status} (${target.label})`);
+        }
+
+        // ── 3. 3D Gyroscopic Parallax on Mouse Move ──
+        const stage = document.getElementById('trajectory-stage');
+        const viewport = document.getElementById('center-viewport');
+
+        viewport.addEventListener('mousemove', (e) => {
+            const rect = viewport.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width - 0.5;
+            const y = (e.clientY - rect.top) / rect.height - 0.5;
+            stage.style.transform = `rotateY(${x * 12}deg) rotateX(${-y * 12}deg)`;
+        });
+
+        viewport.addEventListener('mouseleave', () => {
+            stage.style.transform = `rotateY(0deg) rotateX(0deg)`;
+        });
+
+        // ── 4. Traveling Spacecraft Beacon along Path ──
+        const beacon = document.getElementById('traveling-beacon');
+        const path = document.getElementById('trajectory-path');
+        let pathDist = 0;
+        const pathLen = path ? path.getTotalLength() : 800;
+
+        function animateBeacon() {
+            pathDist = (pathDist + 1.2) % pathLen;
+            if (path && beacon) {
+                const pt = path.getPointAtLength(pathDist);
+                const nextPt = path.getPointAtLength(Math.min(pathDist + 2, pathLen));
+                const angle = Math.atan2(nextPt.y - pt.y, nextPt.x - pt.x) * (180 / Math.PI) + 90;
+                beacon.setAttribute('transform', `translate(${pt.x - 430}, ${pt.y - 270}) rotate(${angle} 430 270)`);
+            }
+            requestAnimationFrame(animateBeacon);
+        }
+        animateBeacon();
+
+        // ── 5. Interactive Waypoint Data & Target Lock Reticle ──
+        const waypointData = {
+            1: {
+                title: "1st: DESTINATION LAGNA // EXECUTIVE SUMMARY",
+                desc: "Core engineering identity focused on deterministic agentic frameworks (LangGraph), resilient low-latency state machines, and high-frequency edge IoT firmware (ESP32).",
+                tags: ["SECTOR: CORE", "COORDINATES: AMRITSAR"]
+            },
+            2: {
+                title: "3rd: UTILITIES // TECHNICAL CAPABILITIES",
+                desc: "High-throughput stack: Rust, Python, LangGraph, FastAPI, Docker, and PostgreSQL. ESP32 embedded C++ with deep-sleep power optimizations.",
+                tags: ["SECTOR: STACK", "RUNTIME: ASYNC"]
+            },
+            3: {
+                title: "5th: PROTOTYPING // FLAGSHIP ARCHITECTURES",
+                desc: "Autonomous multi-agent research swarms, stateful RAG systems with reranking, and IoT smart sensory telemetries deployed at edge scale.",
+                tags: ["SECTOR: AI & IOT", "STATE: DETERMINISTIC"]
+            },
+            4: {
+                title: "10th: OPERATIONS // EXECUTIVE LEADERSHIP",
+                desc: "Directed university-wide placement operations across engineering departments, accelerating corporate recruiter throughput by +200% with official Letter of Recommendation.",
+                tags: ["SECTOR: PLACEMENT CELL", "COMMENDATION: OFFICIAL LOR"]
+            },
+            5: {
+                title: "11th: THE MISSION // VERIFIED METRICS & RECOGNITION",
+                desc: "State Winner at India Skill Competition 2024. Maintained 99.9% uptime across production services, processing high-volume candidate evaluations.",
+                tags: ["SECTOR: BENCHMARKS", "AWARD: STATE WINNER"]
+            },
+            6: {
+                title: "EXPEDITION // BEYOND HORIZON",
+                desc: "Exploration of Model Context Protocol (MCP) tool integration, decentralized distributed inference, and ultra low-latency systems.",
+                tags: ["SECTOR: FRONTIER", "TRAJECTORY: EXPANDING"]
+            }
+        };
+
+        function selectWaypoint(id, x, y) {
+            playSound('lock');
+            document.querySelectorAll('.waypoint-pin').forEach(p => p.classList.remove('active'));
+            const activePin = document.getElementById(`pin-${id}`);
+            if (activePin) activePin.classList.add('active');
+
+            // Move the tactical target lock bracket over the selected planet
+            const lockBracket = document.getElementById('target-lock-bracket');
+            if (lockBracket && x && y) {
+                lockBracket.setAttribute('transform', `translate(${x}, ${y})`);
+            }
+
+            const data = waypointData[id];
+            if (!data) return;
+
+            document.getElementById('wp-disp-title').innerText = data.title;
+            document.getElementById('wp-disp-desc').innerText = data.desc;
+            
+            const tagsBox = document.getElementById('wp-disp-tags');
+            tagsBox.innerHTML = '';
+            data.tags.forEach(t => {
+                const s = document.createElement('span');
+                s.innerText = `[${t}]`;
+                tagsBox.appendChild(s);
+            });
+            const pdfLink = document.createElement('a');
+            pdfLink.href = 'docs/Sparsh_khanna_Resume_gndu-18.pdf';
+            pdfLink.target = '_blank';
+            pdfLink.className = 'icon-deck-btn';
+            pdfLink.style.borderColor = 'var(--solar-amber)';
+            pdfLink.style.color = 'var(--solar-amber)';
+            pdfLink.innerText = '↓ RESUME PDF';
+            tagsBox.appendChild(pdfLink);
+
+            appendTerminal(`target locked: WP-0${id} (${data.tags[0]})`);
+        }
+
+        // ── 6. Cockpit Mode Tabs Screen Switcher ──
+        function setDeckTab(btn, tabName) {
+            playSound('chirp');
+            document.querySelectorAll('.nav-pill').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            document.querySelectorAll('.deck-view-screen').forEach(s => s.classList.remove('active'));
+
+            if (tabName === 'telemetry') {
+                document.getElementById('screen-telemetry').classList.add('active');
+            } else if (tabName === 'crew-data') {
+                document.getElementById('screen-crew-data').classList.add('active');
+            } else if (tabName === 'faction-comm') {
+                document.getElementById('screen-faction-comm').classList.add('active');
+            } else if (tabName === 'systems') {
+                document.getElementById('screen-systems').classList.add('active');
+            }
+            appendTerminal(`deck switched: ${tabName.toUpperCase()}`);
+        }
+
+        function closeScreen() {
+            playSound('chirp');
+            document.querySelectorAll('.deck-view-screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-pill').forEach((b, i) => {
+                if (i === 0) b.classList.add('active');
+                else b.classList.remove('active');
+            });
+        }
+
+        // ── 7. Interactive Terminal CLI Console ──
+        function appendTerminal(text, isAmber = false) {
+            const stream = document.getElementById('term-stream');
+            if (!stream) return;
+            const now = new Date();
+            const ts = `[${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}]`;
+            
+            const line = document.createElement('div');
+            line.className = 'stream-line';
+            line.innerHTML = `<span class="stream-ts">${ts}</span> <span class="${isAmber ? 'stream-msg amber' : ''}">${text}</span>`;
+            stream.appendChild(line);
+            stream.scrollTop = stream.scrollHeight;
+            if (stream.children.length > 25) {
+                stream.removeChild(stream.children[0]);
+            }
+        }
+
+        function handleTerminalSubmit(e) {
+            e.preventDefault();
+            const input = document.getElementById('terminal-cli-input');
+            const cmd = input.value.trim().toLowerCase();
+            input.value = '';
+            if (!cmd) return;
+
+            appendTerminal(`> ${cmd}`);
+            playSound('chirp');
+
+            if (cmd === 'help') {
+                appendTerminal('AVAILABLE: help, skills, resume, warp, clear, ping, coords');
+            } else if (cmd === 'skills' || cmd === 'cat skills') {
+                appendTerminal('STACK: LangGraph, Python, Rust, FastAPI, ESP32, PostgreSQL', true);
+            } else if (cmd === 'resume' || cmd === 'cat resume') {
+                appendTerminal('DOWNLOADING RESUME...');
+                window.open('docs/Sparsh_khanna_Resume_gndu-18.pdf', '_blank');
+            } else if (cmd === 'warp' || cmd === 'throttle') {
+                cycleWarpThrottle();
+            } else if (cmd === 'ping') {
+                appendTerminal('PONG: GNDU-AMRITSAR LATENCY 0.38MS');
+            } else if (cmd === 'coords') {
+                appendTerminal('LAT: 31°38\'N • LON: 74°52\'E • SIDEREAL: DHANUS 14°');
+            } else if (cmd === 'clear') {
+                document.getElementById('term-stream').innerHTML = '';
+            } else {
+                appendTerminal(`unknown command: '${cmd}'. try 'help'.`);
+            }
+        }
+
+        function triggerStackDetail(name) {
+            playSound('chirp');
+            appendTerminal(`query stack [${name}]: active in flight architecture`);
+        }
+    </script>
+</body>
+
+</html>

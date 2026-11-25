@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPARSH KHANNA // ISOMETRIC NIGHT-SHIFT STUDIO (COFFEE TALK EDITION)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=JetBrains+Mono:wght@400;500;700&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* ── Default: Night Mode Palette ── */
+            --bg-canvas: #0A0C16;
+            --wall-dark: #1A1F33;
+            --wall-light: #252D47;
+            --floor-wood: #35221B;
+            --floor-wood-light: #452D24;
+            --lamp-amber: #F5A623;
+            --lamp-glow: rgba(245, 166, 35, 0.45);
+            --lamp-cone: rgba(245, 166, 35, 0.14);
+            --cool-cyan: #56F0E0;
+            --cyan-glow: rgba(86, 240, 224, 0.4);
+            --term-green: #4ADE80;
+            --panel-slate: rgba(16, 20, 34, 0.95);
+            --border-pixel: #363F5C;
+            --border-active: #56F0E0;
+            --text-light: #E0E7FF;
+            --text-muted: #8493B2;
+            --window-sky: #070914;
+            --window-rain: rgba(86, 240, 224, 0.4);
+
+            /* Typography */
+            --font-pixel: 'Silkscreen', monospace;
+            --font-jap: 'DotGothic16', sans-serif;
+            --font-body: 'JetBrains Mono', monospace;
+        }
+
+        /* ── Dusk Mode Palette ── */
+        body.theme-dusk {
+            --bg-canvas: #180D1A;
+            --wall-dark: #271530;
+            --wall-light: #3A2046;
+            --floor-wood: #381924;
+            --floor-wood-light: #4D2332;
+            --lamp-amber: #FF7E5F;
+            --lamp-glow: rgba(255, 126, 95, 0.5);
+            --lamp-cone: rgba(255, 126, 95, 0.18);
+            --cool-cyan: #FEB47B;
+            --cyan-glow: rgba(254, 180, 123, 0.45);
+            --term-green: #FFC371;
+            --panel-slate: rgba(28, 15, 34, 0.95);
+            --border-pixel: #542B60;
+            --border-active: #FEB47B;
+            --text-light: #FFF0EB;
+            --text-muted: #B496A6;
+            --window-sky: #2A0F29;
+            --window-rain: rgba(255, 126, 95, 0.45);
+        }
+
+        /* ── Dawn / Morning Pastel Mode ── */
+        body.theme-dawn {
+            --bg-canvas: #121A24;
+            --wall-dark: #1E2E3D;
+            --wall-light: #2C4257;
+            --floor-wood: #3A2E28;
+            --floor-wood-light: #4E3E36;
+            --lamp-amber: #FFD166;
+            --lamp-glow: rgba(255, 209, 102, 0.4);
+            --lamp-cone: rgba(255, 209, 102, 0.12);
+            --cool-cyan: #4CC9F0;
+            --cyan-glow: rgba(76, 201, 240, 0.4);
+            --term-green: #06D6A0;
+            --panel-slate: rgba(20, 32, 44, 0.95);
+            --border-pixel: #3B5773;
+            --border-active: #4CC9F0;
+            --text-light: #EDF6F9;
+            --text-muted: #8AA3BA;
+            --window-sky: #1F384F;
+            --window-rain: rgba(76, 201, 240, 0.35);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            image-rendering: pixelated;
+        }
+
+        body {
+            background-color: var(--bg-canvas);
+            color: var(--text-light);
+            font-family: var(--font-body);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            user-select: none;
+            transition: background-color 0.25s steps(4);
+        }
+
+        /* ── Top Pixel HUD Bar ── */
+        .hud-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            height: 56px;
+            background: var(--panel-slate);
+            border-bottom: 2px solid var(--border-pixel);
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.5);
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .hud-brand {
+            font-family: var(--font-pixel);
+            font-size: 0.76rem;
+            color: var(--cool-cyan);
+            letter-spacing: 0.08em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hud-status-blip {
+            width: 8px;
+            height: 8px;
+            background: var(--term-green);
+            box-shadow: 0 0 6px var(--term-green);
+            animation: blip 1.5s steps(2) infinite;
+        }
+
+        @keyframes blip {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.2; }
+        }
+
+        .hud-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pixel-btn {
+            background: #171D2D;
+            border: 2px solid var(--border-pixel);
+            color: var(--text-light);
+            font-family: var(--font-pixel);
+            font-size: 0.68rem;
+            padding: 6px 10px;
+            cursor: pointer;
+            box-shadow: 2px 2px 0 #000;
+            transition: all 0.08s steps(2);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .pixel-btn:hover {
+            border-color: var(--cool-cyan);
+            color: var(--cool-cyan);
+            transform: translate(-1px, -1px);
+            box-shadow: 3px 3px 0 #000;
+        }
+
+        .pixel-btn:active, .pixel-btn.active {
+            border-color: var(--border-active);
+            background: var(--border-pixel);
+            color: #fff;
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0 #000;
+        }
+
+        /* ── Main Stage Grid ── */
+        .stage-container {
+            max-width: 1400px;
+            margin: 20px auto 40px;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 28px;
+            align-items: start;
+            min-height: calc(100vh - 120px);
+        }
+
+        /* ── Isometric Room Viewport with Stepped Camera Zoom ── */
+        .isometric-room-wrap {
+            position: relative;
+            width: 100%;
+            max-width: 920px;
+            margin: 0 auto;
+            background: rgba(10, 12, 22, 0.4);
+            border: 2px solid var(--border-pixel);
+            box-shadow: 4px 4px 0 #000;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .isometric-canvas-box {
+            position: relative;
+            width: 100%;
+            max-width: 820px;
+            aspect-ratio: 16 / 10;
+            transition: transform 0.25s steps(4);
+            transform-origin: center center;
+        }
+
+        /* Camera Zoom Target Classes */
+        .isometric-canvas-box.zoom-monitors {
+            transform: scale(1.3) translate(6%, 8%);
+        }
+        .isometric-canvas-box.zoom-corkboard {
+            transform: scale(1.3) translate(-14%, 18%);
+        }
+        .isometric-canvas-box.zoom-bookshelf {
+            transform: scale(1.3) translate(-18%, 2%);
+        }
+        .isometric-canvas-box.zoom-pager {
+            transform: scale(1.3) translate(22%, -10%);
+        }
+
+        .isometric-svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* Hotspot Hover Styles */
+        .iso-hotspot {
+            cursor: pointer;
+            transition: all 0.1s steps(2);
+        }
+
+        .iso-hotspot:hover polygon, .iso-hotspot.active polygon,
+        .iso-hotspot:hover rect, .iso-hotspot.active rect,
+        .iso-hotspot:hover path, .iso-hotspot.active path {
+            stroke: var(--cool-cyan) !important;
+            stroke-width: 2.5px !important;
+            filter: drop-shadow(0 0 6px var(--cool-cyan));
+        }
+
+        /* Pixel Callout Speech Tags */
+        .callout-badge {
+            position: absolute;
+            background: var(--panel-slate);
+            border: 2px solid var(--border-pixel);
+            box-shadow: 2px 2px 0 #000;
+            padding: 4px 8px;
+            font-family: var(--font-pixel);
+            font-size: 0.62rem;
+            color: var(--cool-cyan);
+            pointer-events: none;
+            transition: transform 0.15s steps(2), border-color 0.15s steps(2);
+            z-index: 10;
+        }
+
+        .callout-badge::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 14px;
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 6px solid var(--border-pixel);
+        }
+
+        .iso-hotspot:hover ~ .callout-badge,
+        .iso-hotspot.active ~ .callout-badge {
+            border-color: var(--cool-cyan);
+            transform: translateY(-3px);
+            color: #fff;
+        }
+
+        /* Sleeping Studio Cat */
+        .studio-cat {
+            cursor: pointer;
+            transition: filter 0.1s steps(2);
+        }
+        .studio-cat:hover {
+            filter: drop-shadow(0 0 6px var(--lamp-amber));
+        }
+
+        /* Cat Speech Bubble */
+        #cat-bubble {
+            position: absolute;
+            background: #FFF;
+            border: 2px solid #111;
+            color: #111;
+            font-family: var(--font-pixel);
+            font-size: 0.6rem;
+            padding: 3px 6px;
+            top: 68%;
+            left: 64%;
+            box-shadow: 2px 2px 0 #000;
+            display: none;
+            z-index: 20;
+            animation: bounceBubble 0.8s steps(2) infinite alternate;
+        }
+        @keyframes bounceBubble {
+            from { transform: translateY(0); }
+            to { transform: translateY(-3px); }
+        }
+
+        /* ── 3. Floating Pixel Inspector Panel ── */
+        .inspector-panel {
+            background: var(--panel-slate);
+            border: 2px solid var(--border-pixel);
+            box-shadow: 4px 4px 0 #000;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            position: sticky;
+            top: 76px;
+        }
+
+        .inspector-header {
+            border-bottom: 2px solid var(--border-pixel);
+            padding-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .inspector-node-title {
+            font-family: var(--font-pixel);
+            font-size: 0.85rem;
+            color: var(--cool-cyan);
+            letter-spacing: 0.08em;
+        }
+
+        .inspector-key {
+            font-family: var(--font-pixel);
+            font-size: 0.62rem;
+            color: var(--lamp-amber);
+            background: rgba(245, 166, 35, 0.12);
+            border: 1px solid var(--lamp-amber);
+            padding: 2px 6px;
+        }
+
+        .inspector-content {
+            font-size: 0.88rem;
+            line-height: 1.6;
+            color: var(--text-light);
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            animation: snapIn 0.15s steps(3);
+        }
+
+        @keyframes snapIn {
+            0% { opacity: 0; transform: translateY(4px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .pixel-card-item {
+            background: rgba(14, 18, 30, 0.65);
+            border: 2px solid var(--border-pixel);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            box-shadow: 2px 2px 0 #000;
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-family: var(--font-pixel);
+            font-size: 0.75rem;
+            color: var(--lamp-amber);
+        }
+
+        .card-tag {
+            font-family: var(--font-pixel);
+            font-size: 0.58rem;
+            color: var(--cool-cyan);
+            border: 1px solid var(--cool-cyan);
+            padding: 1px 5px;
+        }
+
+        .card-desc {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .badge-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .skill-badge {
+            font-family: var(--font-pixel);
+            font-size: 0.62rem;
+            background: #171E30;
+            border: 1px solid var(--border-pixel);
+            color: var(--cool-cyan);
+            padding: 3px 8px;
+        }
+
+        /* Pager Interactive Ticker Input */
+        .pager-input-wrap {
+            display: flex;
+            gap: 6px;
+            margin-top: 6px;
+        }
+
+        .pixel-input {
+            flex: 1;
+            background: #0C101C;
+            border: 2px solid var(--border-pixel);
+            color: #fff;
+            padding: 4px 8px;
+            font-family: var(--font-body);
+            font-size: 0.76rem;
+            outline: none;
+        }
+
+        @media (max-width: 900px) {
+            .stage-container {
+                grid-template-columns: 1fr;
+            }
+            .inspector-panel {
+                position: static;
+                width: 100%;
+            }
+            .isometric-canvas-box {
+                transform: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ── Top Pixel HUD Bar ── -->
+    <header class="hud-bar">
+        <div class="hud-brand">
+            <span class="hud-status-blip"></span>
+            <span>SPARSH KHANNA // SYSTEMS &amp; AI</span>
+        </div>
+
+        <nav class="hud-right" aria-label="Room navigation">
+            <button class="pixel-btn active" id="hud-nav-1" onclick="selectNode(1)">1:PROJECTS</button>
+            <button class="pixel-btn" id="hud-nav-2" onclick="selectNode(2)">2:EXPERIENCE</button>
+            <button class="pixel-btn" id="hud-nav-3" onclick="selectNode(3)">3:SKILLS</button>
+            <button class="pixel-btn" id="hud-nav-4" onclick="selectNode(4)">4:CONTACT</button>
+            
+            <!-- Lo-Fi Music & Rain Audio Toggle -->
+            <button class="pixel-btn" id="audio-toggle-btn" onclick="toggleLoFiAudio()" title="Toggle Lo-Fi Synth Chords & Rain">
+                <span>🎵</span> <span id="audio-status-txt">LO-FI: OFF</span>
+            </button>
+
+            <!-- Light Switch Toggle (Cycles: NIGHT -> DUSK -> DAWN) -->
+            <button class="pixel-btn" id="lighting-toggle" onclick="cycleTheme()" title="Switch Room Light Cycle">
+                <span>💡</span> <span id="mode-text">NIGHT</span>
+            </button>
+            
+            <a href="index.html" class="pixel-btn" title="Back to Windows 95">⊞ OS</a>
+        </nav>
+    </header>
+
+    <!-- ── Main Center Stage ── -->
+    <main class="stage-container">
+
+        <!-- Isometric Diorama Canvas Container -->
+        <section class="isometric-room-wrap">
+            <div class="isometric-canvas-box" id="iso-canvas-box">
+
+                <!-- Cat Purr Speech Bubble -->
+                <div id="cat-bubble">PURR... 💤</div>
+
+                <!-- Inline Vector Isometric Pixel Art Room -->
+                <svg class="isometric-svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid meet">
+                    <defs>
+                        <!-- Diagonal Rain Particle Stream -->
+                        <pattern id="rainPattern" width="16" height="16" patternUnits="userSpaceOnUse">
+                            <line x1="0" y1="0" x2="6" y2="16" stroke="var(--window-rain)" stroke-width="1.2" />
+                        </pattern>
+                    </defs>
+
+                    <!-- ── ROOM ARCHITECTURE ── -->
+                    <!-- Floor (Isometric Diamond) -->
+                    <polygon points="400,200 750,375 400,480 50,375" fill="var(--floor-wood)" stroke="#111" stroke-width="2" />
+                    <!-- Floor Planks -->
+                    <line x1="330" y1="235" x2="680" y2="410" stroke="var(--floor-wood-light)" stroke-width="1.5" />
+                    <line x1="260" y1="270" x2="610" y2="445" stroke="var(--floor-wood-light)" stroke-width="1.5" />
+                    <line x1="190" y1="305" x2="540" y2="480" stroke="var(--floor-wood-light)" stroke-width="1.5" />
+                    <line x1="120" y1="340" x2="470" y2="480" stroke="var(--floor-wood-light)" stroke-width="1.5" />
+
+                    <!-- Left Back Wall -->
+                    <polygon points="50,375 50,150 400,20 400,200" fill="var(--wall-dark)" stroke="#111" stroke-width="2" />
+
+                    <!-- Right Back Wall -->
+                    <polygon points="400,200 400,20 750,150 750,375" fill="var(--wall-light)" stroke="#111" stroke-width="2" />
+
+                    <!-- ── WINDOW (Rainy Sky View) ── -->
+                    <polygon points="120,240 120,130 260,80 260,190" fill="var(--window-sky)" stroke="#0E121A" stroke-width="3" />
+                    <polygon points="122,238 122,132 258,82 258,188" fill="url(#rainPattern)" opacity="0.8" />
+                    <!-- Window Frame Mullions -->
+                    <line x1="190" y1="105" x2="190" y2="215" stroke="#1E243B" stroke-width="2.5" />
+                    <line x1="120" y1="185" x2="260" y2="135" stroke="#1E243B" stroke-width="2.5" />
+
+                    <!-- ── WALL DECORATIONS ── -->
+                    <!-- Node 2: Wall Corkboard (Hotspot: EXPERIENCE) -->
+                    <g class="iso-hotspot" id="hotspot-corkboard" onclick="selectNode(2)" tabindex="0">
+                        <polygon points="510,135 630,95 630,165 510,205" fill="#8B5A2B" stroke="#2B1A0D" stroke-width="2" />
+                        <polygon points="515,138 625,101 625,161 515,198" fill="#C49A6C" />
+                        <!-- Pinned Paper Notes -->
+                        <polygon points="525,150 560,138 560,165 525,177" fill="#FFFBE6" stroke="#444" stroke-width="1" />
+                        <circle cx="542" cy="144" r="2" fill="#E53935" />
+                        <polygon points="575,130 615,116 615,145 575,158" fill="#E3F2FD" stroke="#444" stroke-width="1" />
+                        <circle cx="595" cy="123" r="2" fill="#1E88E5" />
+                        <!-- Red Yarn Connecting Notes -->
+                        <line x1="542" y1="144" x2="595" y2="123" stroke="#D32F2F" stroke-width="1.2" stroke-dasharray="2 2" />
+                    </g>
+
+                    <!-- Node 3: Bookshelf with Tech Manuals (Hotspot: SKILLS) -->
+                    <g class="iso-hotspot" id="hotspot-bookshelf" onclick="selectNode(3)" tabindex="0">
+                        <polygon points="630,220 710,190 710,340 630,370" fill="#2E1D13" stroke="#120A05" stroke-width="2" />
+                        <polygon points="630,260 710,230 710,235 630,265" fill="#5C3A24" />
+                        <polygon points="630,310 710,280 710,285 630,315" fill="#5C3A24" />
+                        <!-- Books -->
+                        <rect x="645" y="235" width="8" height="22" fill="#E65100" stroke="#000" stroke-width="1" transform="skewY(-19)" />
+                        <rect x="655" y="235" width="9" height="20" fill="#2196F3" stroke="#000" stroke-width="1" transform="skewY(-19)" />
+                        <rect x="666" y="235" width="7" height="23" fill="#4CAF50" stroke="#000" stroke-width="1" transform="skewY(-19)" />
+                        <rect x="675" y="235" width="10" height="19" fill="#9C27B0" stroke="#000" stroke-width="1" transform="skewY(-19)" />
+                        <!-- Lower Shelf Electronics & Gear -->
+                        <rect x="648" y="285" width="22" height="15" fill="#37474F" stroke="#000" stroke-width="1" transform="skewY(-19)" />
+                        <circle cx="685" cy="272" r="3" fill="var(--cool-cyan)" />
+                    </g>
+
+                    <!-- ── DESK AREA (CENTER-LEFT) ── -->
+                    <polygon points="260,280 470,210 520,270 310,340" fill="#4E3629" stroke="#1C130D" stroke-width="2" />
+                    <polygon points="260,280 310,340 310,360 260,300" fill="#38251B" stroke="#1C130D" stroke-width="1.5" />
+                    <polygon points="520,270 310,340 310,360 520,290" fill="#291A12" stroke="#1C130D" stroke-width="1.5" />
+
+                    <!-- Amber Desk Lamp Cone of Warm Light -->
+                    <polygon points="460,210 320,330 480,310 510,230" fill="var(--lamp-cone)" pointer-events="none" />
+                    <path d="M 460 230 Q 455 205 470 195" fill="none" stroke="#222" stroke-width="3" />
+                    <polygon points="462,192 478,188 475,200 458,205" fill="var(--lamp-amber)" stroke="#111" stroke-width="1.5" />
+                    <circle cx="468" cy="198" r="4" fill="var(--lamp-amber)" filter="drop-shadow(0 0 6px var(--lamp-amber))" />
+
+                    <!-- Coffee Mug with Steam -->
+                    <rect x="330" y="285" width="8" height="10" fill="#FFF" stroke="#222" stroke-width="1" />
+                    <path d="M 334 280 Q 332 272 335 266" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" stroke-dasharray="2 2" />
+
+                    <!-- Node 1: Dual Desk Monitors (Hotspot: PROJECTS) -->
+                    <g class="iso-hotspot active" id="hotspot-monitors" onclick="selectNode(1)" tabindex="0">
+                        <!-- Monitor 1: Vertical IDE -->
+                        <polygon points="340,245 375,233 375,285 340,297" fill="#121620" stroke="#000" stroke-width="2" />
+                        <polygon points="342,248 373,237 373,282 342,293" fill="#0C1017" />
+                        <line x1="346" y1="256" x2="368" y2="248" stroke="var(--term-green)" stroke-width="1.5" />
+                        <line x1="346" y1="264" x2="362" y2="258" stroke="var(--cool-cyan)" stroke-width="1.5" />
+                        <line x1="346" y1="272" x2="370" y2="263" stroke="#FFA726" stroke-width="1.5" />
+
+                        <!-- Monitor 2: Primary Ultrawide Terminal -->
+                        <polygon points="385,230 460,205 460,255 385,280" fill="#121620" stroke="#000" stroke-width="2" />
+                        <polygon points="388,233 457,210 457,252 388,275" fill="#0A0E17" />
+                        <!-- LangGraph Pulse Node Graph -->
+                        <circle cx="405" cy="250" r="3" fill="var(--cool-cyan)" />
+                        <circle cx="430" cy="235" r="3" fill="var(--term-green)" />
+                        <circle cx="445" cy="242" r="3" fill="var(--lamp-amber)" />
+                        <line x1="405" y1="250" x2="430" y2="235" stroke="rgba(86,240,224,0.6)" stroke-width="1.2" />
+                        <line x1="430" y1="235" x2="445" y2="242" stroke="rgba(74,222,128,0.6)" stroke-width="1.2" />
+                        <polygon points="405,273 430,265 435,273 410,281" fill="#222" />
+                    </g>
+
+                    <!-- Node 4: Workbench Pager & Hardware Desk (Hotspot: CONTACT) -->
+                    <g class="iso-hotspot" id="hotspot-pager" onclick="selectNode(4)" tabindex="0">
+                        <polygon points="170,335 240,310 270,350 200,375" fill="#3D4450" stroke="#1A1E24" stroke-width="1.5" />
+                        <rect x="210" y="325" width="22" height="12" fill="#1B5E20" stroke="#000" stroke-width="1" transform="skewY(-18)" />
+                        <!-- Blinking LED -->
+                        <circle cx="218" cy="336" r="2.5" fill="#FF1744" filter="drop-shadow(0 0 5px #FF1744)">
+                            <animate attributeName="opacity" values="1;0.2;1" dur="1.2s" repeatCount="indefinite" />
+                        </circle>
+                        <!-- Pager Terminal Device -->
+                        <rect x="185" y="340" width="18" height="14" fill="#111" stroke="#444" stroke-width="1" transform="skewY(-18)" />
+                        <rect x="187" y="342" width="14" height="6" fill="var(--cool-cyan)" opacity="0.8" transform="skewY(-18)" />
+                    </g>
+
+                    <!-- Studio Mesh Chair -->
+                    <path d="M 370 330 Q 380 300 405 310" fill="none" stroke="#222" stroke-width="4" />
+                    <circle cx="400" cy="315" r="14" fill="#1E2430" stroke="#000" stroke-width="2" />
+                    <polygon points="390,345 410,340 405,370 385,375" fill="#111" />
+
+                    <!-- ── SLEEPING STUDIO CAT (INTERACTIVE PET) ── -->
+                    <g class="studio-cat" onclick="petCat()" title="Click to pet the cat!">
+                        <!-- Cat Rug Base -->
+                        <ellipse cx="510" cy="340" rx="28" ry="16" fill="#1F283D" stroke="#141A28" stroke-width="1.5" />
+                        <!-- Orange Tabby Curled Body -->
+                        <ellipse cx="510" cy="338" rx="14" ry="10" fill="#E67E22" stroke="#935116" stroke-width="1.2">
+                            <animate attributeName="ry" values="10;11.5;10" dur="2.8s" repeatCount="indefinite" />
+                        </ellipse>
+                        <!-- Cat Head -->
+                        <circle cx="520" cy="336" r="7" fill="#E67E22" stroke="#935116" stroke-width="1.2" />
+                        <!-- Ears -->
+                        <polygon points="522,330 526,326 525,333" fill="#D35400" />
+                        <polygon points="517,330 519,325 521,332" fill="#D35400" />
+                        <!-- Tail -->
+                        <path d="M 498 340 Q 492 334 496 330" fill="none" stroke="#E67E22" stroke-width="2.5" />
+                    </g>
+
+                </svg>
+
+                <!-- Floating Tooltip Callouts -->
+                <div class="callout-badge" style="top: 36%; left: 44%;">MONITORS: PROJECTS [1]</div>
+                <div class="callout-badge" style="top: 18%; left: 66%;">CORKBOARD: EXPERIENCE [2]</div>
+                <div class="callout-badge" style="top: 45%; left: 78%;">SHELF: SKILLS [3]</div>
+                <div class="callout-badge" style="top: 64%; left: 22%;">HARDWARE: CONTACT [4]</div>
+
+            </div>
+        </section>
+
+        <!-- ── Floating Pixel Inspector Panel ── -->
+        <aside class="inspector-panel" id="inspector-card">
+            
+            <div class="inspector-header">
+                <div>
+                    <span style="font-size: 0.65rem; color: var(--text-muted); font-family: var(--font-pixel);">ACTIVE NODE //</span>
+                    <div class="inspector-node-title" id="node-headline">MONITORS // FLAGSHIP PROJECTS</div>
+                </div>
+                <span class="inspector-key" id="node-shortcut">HOTKEY [1]</span>
+            </div>
+
+            <!-- Dynamic Inspector Body Injection -->
+            <div class="inspector-content" id="node-body">
+                
+                <div class="pixel-card-item">
+                    <div class="card-top">
+                        <span class="card-title">LANGGRAPH MULTI-AGENT SWARMS</span>
+                        <span class="card-tag">PRODUCTION</span>
+                    </div>
+                    <p class="card-desc">
+                        Autonomous research networks orchestrating specialized subagents with persistent SQLite memory, iterative reflection cycles, and MCP protocol integration.
+                    </p>
+                    <div class="badge-cloud">
+                        <span class="skill-badge">LANGGRAPH</span>
+                        <span class="skill-badge">STATEFUL RAG</span>
+                        <span class="skill-badge">PYTHON</span>
+                    </div>
+                </div>
+
+                <div class="pixel-card-item">
+                    <div class="card-top">
+                        <span class="card-title">REV (RUST DAG ENGINE)</span>
+                        <span class="card-tag">HIGH CONCURRENCY</span>
+                    </div>
+                    <p class="card-desc">
+                        Asynchronous directed acyclic graph runtime written in Rust for parallel AI task scheduling and real-time streaming pipelines.
+                    </p>
+                    <div class="badge-cloud">
+                        <span class="skill-badge">RUST</span>
+                        <span class="skill-badge">TOKIO</span>
+                        <span class="skill-badge">LOCK-FREE QUEUES</span>
+                    </div>
+                </div>
+
+                <div class="pixel-card-item">
+                    <div class="card-top">
+                        <span class="card-title">BLINKY (EDGE VOICE OS)</span>
+                        <span class="card-tag">ESP32 HARDWARE</span>
+                    </div>
+                    <p class="card-desc">
+                        Offline voice assistant firmware deployed on ESP32 microcontrollers with sub-100ms keyword spotting and local peripheral actuation.
+                    </p>
+                    <div class="badge-cloud">
+                        <span class="skill-badge">C++</span>
+                        <span class="skill-badge">FREERTOS</span>
+                        <span class="skill-badge">I2S AUDIO</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Bottom Action Button -->
+            <div style="border-top: 2px solid var(--border-pixel); padding-top: 14px; display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 0.65rem; color: var(--text-muted); font-family: var(--font-pixel);">VERIFIED BUILD 2026</span>
+                <a href="docs/Sparsh_khanna_Resume_gndu-18.pdf" target="_blank" class="pixel-btn" style="border-color: var(--lamp-amber); color: var(--lamp-amber);">
+                    ↓ RESUME PDF
+                </a>
+            </div>
+
+        </aside>
+
+    </main>
+
+    <!-- ── Interaction, Sound & Camera Engine ── -->
+    <script>
+        // ── 1. Web Audio Synthesizer: Coffee Talk Lo-Fi Synth & Rain Generator ──
+        let audioCtx = null;
+        let lofiPlaying = false;
+        let rainNode = null;
+        let lofiInterval = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (AudioContext) audioCtx = new AudioContext();
+            }
+        }
+
+        // Mechanical UI Click
+        function playPixelClick() {
+            initAudio();
+            if (!audioCtx) return;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(600, now);
+            osc.frequency.exponentialRampToValueAtTime(1200, now + 0.03);
+
+            gain.gain.setValueAtTime(0.04, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
+
+            osc.start(now);
+            osc.stop(now + 0.03);
+        }
+
+        // Soft Rain Noise Synthesizer
+        function startRainAudio() {
+            if (!audioCtx || rainNode) return;
+            const bufferSize = audioCtx.sampleRate * 2;
+            const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = Math.random() * 2 - 1; // White noise
+            }
+
+            const noise = audioCtx.createBufferSource();
+            noise.buffer = buffer;
+            noise.loop = true;
+
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(450, audioCtx.currentTime);
+
+            const gain = audioCtx.createGain();
+            gain.gain.setValueAtTime(0.015, audioCtx.currentTime);
+
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(audioCtx.destination);
+            noise.start();
+            rainNode = { noise, gain };
+        }
+
+        function stopRainAudio() {
+            if (rainNode) {
+                rainNode.noise.stop();
+                rainNode = null;
+            }
+        }
+
+        // Lo-Fi Synth Chord Progression Loop (Coffee Talk vibes: Dmaj7 -> Bm7 -> Gmaj7 -> A7)
+        const lofiChords = [
+            [146.83, 220.00, 277.18, 369.99], // Dmaj7
+            [123.47, 185.00, 220.00, 293.66], // Bm7
+            [98.00, 146.83, 196.00, 246.94],  // Gmaj7
+            [110.00, 164.81, 220.00, 277.18]  // A7
+        ];
+        let chordIdx = 0;
+
+        function playLoFiChord() {
+            if (!lofiPlaying || !audioCtx) return;
+            const chord = lofiChords[chordIdx];
+            chordIdx = (chordIdx + 1) % lofiChords.length;
+
+            const now = audioCtx.currentTime;
+            chord.forEach((freq) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                const filter = audioCtx.createBiquadFilter();
+
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(freq, now);
+
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(800, now);
+
+                gain.gain.setValueAtTime(0.018, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 3.8);
+
+                osc.connect(filter);
+                filter.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.start(now);
+                osc.stop(now + 3.8);
+            });
+        }
+
+        function toggleLoFiAudio() {
+            initAudio();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            lofiPlaying = !lofiPlaying;
+
+            const btn = document.getElementById('audio-status-txt');
+            if (lofiPlaying) {
+                btn.innerText = 'LO-FI: ON 🎵';
+                startRainAudio();
+                playLoFiChord();
+                lofiInterval = setInterval(playLoFiChord, 4000);
+            } else {
+                btn.innerText = 'LO-FI: OFF';
+                stopRainAudio();
+                if (lofiInterval) clearInterval(lofiInterval);
+            }
+            playPixelClick();
+        }
+
+        // ── 2. Pet the Cat Micro-Interaction ──
+        const catMeows = ["MEOW! 🐱", "PURR... 💤", "MRRRP? ✨", "^._.^ 💤"];
+        function petCat() {
+            playPixelClick();
+            const bubble = document.getElementById('cat-bubble');
+            bubble.innerText = catMeows[Math.floor(Math.random() * catMeows.length)];
+            bubble.style.display = 'block';
+            setTimeout(() => {
+                bubble.style.display = 'none';
+            }, 2400);
+        }
+
+        // ── 3. Stepped Camera Zoom on Hotspot Selection ──
+        const zoomClasses = {
+            1: 'zoom-monitors',
+            2: 'zoom-corkboard',
+            3: 'zoom-bookshelf',
+            4: 'zoom-pager'
+        };
+
+        const nodeData = {
+            1: {
+                headline: "MONITORS // FLAGSHIP PROJECTS",
+                shortcut: "HOTKEY [1]",
+                body: `
+                    <div class="pixel-card-item">
+                        <div class="card-top">
+                            <span class="card-title">LANGGRAPH MULTI-AGENT SWARMS</span>
+                            <span class="card-tag">PRODUCTION</span>
+                        </div>
+                        <p class="card-desc">
+                            Autonomous research networks orchestrating specialized subagents with persistent SQLite memory, iterative reflection cycles, and MCP protocol integration.
+                        </p>
+                        <div class="badge-cloud">
+                            <span class="skill-badge">LANGGRAPH</span>
+                            <span class="skill-badge">STATEFUL RAG</span>
+                            <span class="skill-badge">PYTHON</span>
+                        </div>
+                    </div>
+
+                    <div class="pixel-card-item">
+                        <div class="card-top">
+                            <span class="card-title">REV (RUST DAG ENGINE)</span>
+                            <span class="card-tag">CONCURRENCY</span>
+                        </div>
+                        <p class="card-desc">
+                            Asynchronous directed acyclic graph runtime written in Rust for parallel AI task scheduling and real-time streaming pipelines.
+                        </p>
+                        <div class="badge-cloud">
+                            <span class="skill-badge">RUST</span>
+                            <span class="skill-badge">TOKIO</span>
+                            <span class="skill-badge">LOCK-FREE</span>
+                        </div>
+                    </div>
+
+                    <div class="pixel-card-item">
+                        <div class="card-top">
+                            <span class="card-title">BLINKY (EDGE VOICE OS)</span>
+                            <span class="card-tag">ESP32 FIRMWARE</span>
+                        </div>
+                        <p class="card-desc">
+                            Offline voice assistant firmware deployed on ESP32 microcontrollers with sub-100ms keyword spotting and local peripheral actuation.
+                        </p>
+                        <div class="badge-cloud">
+                            <span class="skill-badge">C++</span>
+                            <span class="skill-badge">FREERTOS</span>
+                            <span class="skill-badge">I2S AUDIO</span>
+                        </div>
+                    </div>
+                `
+            },
+            2: {
+                headline: "CORKBOARD // WORK & LEADERSHIP",
+                shortcut: "HOTKEY [2]",
+                body: `
+                    <div class="pixel-card-item">
+                        <div class="card-top">
+                            <span class="card-title">GNDU PLACEMENT HEAD</span>
+                            <span class="card-tag">+200% METRIC</span>
+                        </div>
+                        <p class="card-desc">
+                            Directed university-wide placement operations across engineering departments. Orchestrated scheduling algorithms accelerating corporate recruiter throughput by +200%.
+                        </p>
+                        <div style="font-size: 0.78rem; color: var(--lamp-amber); margin-top: 4px;">
+                            ★ COMMENDED WITH OFFICIAL LETTER OF RECOMMENDATION (LOR)
+                        </div>
+                    </div>
+
+                    <div class="pixel-card-item">
+                        <div class="card-top">
+                            <span class="card-title">INDIA SKILL COMPETITION '24</span>
+                            <span class="card-tag">STATE WINNER</span>
+                        </div>
+                        <p class="card-desc">
+                            Awarded 1st place in state-level embedded systems &amp; software engineering challenge, building low-latency microcontroller sensory telemetries.
+                        </p>
+                    </div>
+
+                    <div class="pixel-card-item">
+                        <div class="card-top">
+                            <span class="card-title">B.TECH IN ELECTRONICS &amp; CSE</span>
+                            <span class="card-tag">2022–2026</span>
+                        </div>
+                        <p class="card-desc">
+                            Guru Nanak Dev University (GNDU), Amritsar. Rigorous coursework in Distributed Systems, Digital Signal Processing, and Microcontrollers.
+                        </p>
+                    </div>
+                `
+            },
+            3: {
+                headline: "BOOKSHELF // TECHNICAL SKILLS",
+                shortcut: "HOTKEY [3]",
+                body: `
+                    <div class="pixel-card-item">
+                        <span class="card-title">AGENTIC AI &amp; DISTRIBUTED ARCHITECTURE</span>
+                        <div class="badge-cloud" style="margin-top: 6px;">
+                            <span class="skill-badge">LANGGRAPH</span>
+                            <span class="skill-badge">STATEFUL RAG</span>
+                            <span class="skill-badge">VECTOR DIMS (1024)</span>
+                            <span class="skill-badge">MCP PROTOCOL</span>
+                            <span class="skill-badge">OPEN-TELEMETRY</span>
+                        </div>
+                    </div>
+
+                    <div class="pixel-card-item">
+                        <span class="card-title">BACKEND &amp; EMBEDDED LANGUAGES</span>
+                        <div class="badge-cloud" style="margin-top: 6px;">
+                            <span class="skill-badge">PYTHON (EXALTED)</span>
+                            <span class="skill-badge">FASTAPI</span>
+                            <span class="skill-badge">DJANGO DRF</span>
+                            <span class="skill-badge">RUST</span>
+                            <span class="skill-badge">C++ / FREERTOS</span>
+                            <span class="skill-badge">ESP32 HARDWARE</span>
+                        </div>
+                    </div>
+
+                    <div class="pixel-card-item">
+                        <span class="card-title">DATA SYSTEMS &amp; INFRASTRUCTURE</span>
+                        <div class="badge-cloud" style="margin-top: 6px;">
+                            <span class="skill-badge">POSTGRESQL</span>
+                            <span class="skill-badge">REDIS CACHE</span>
+                            <span class="skill-badge">DOCKER</span>
+                            <span class="skill-badge">GIT CI/CD</span>
+                        </div>
+                    </div>
+                `
+            },
+            4: {
+                headline: "HARDWARE DESK // TRANSMISSION LINK",
+                shortcut: "HOTKEY [4]",
+                body: `
+                    <div class="pixel-card-item">
+                        <span class="card-title">DISPATCH DIRECT TRANSMISSION</span>
+                        <p class="card-desc" style="margin-top: 4px;">
+                            Reach out for AI systems engineering, agentic architecture roles, and low-latency consulting.
+                        </p>
+                        <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 8px; font-family: var(--font-body); font-size: 0.8rem;">
+                            <div>EMAIL: <a href="mailto:sparshkhannas8@gmail.com" style="color: var(--cool-cyan);">sparshkhannas8@gmail.com</a></div>
+                            <div>GITHUB: <a href="https://github.com/Sparsh-Khanna" target="_blank" style="color: var(--cool-cyan);">github.com/Sparsh-Khanna</a></div>
+                            <div>LINKEDIN: <a href="https://linkedin.com/in/sparshkhanna" target="_blank" style="color: var(--cool-cyan);">linkedin.com/in/sparshkhanna</a></div>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Workbench Pager Guestbook -->
+                    <div class="pixel-card-item" style="border-color: var(--lamp-amber);">
+                        <span class="card-title" style="color: var(--lamp-amber);">WORKBENCH PAGER GUESTBOOK</span>
+                        <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">
+                            Leave a short message to page the developer studio:
+                        </div>
+                        <form class="pager-input-wrap" onsubmit="handlePagerSubmit(event)">
+                            <input type="text" id="pager-input" class="pixel-input" placeholder="Type a message..." maxlength="35" required autocomplete="off">
+                            <button type="submit" class="pixel-btn" style="border-color: var(--lamp-amber);">PAGE</button>
+                        </form>
+                    </div>
+                `
+            }
+        };
+
+        function selectNode(id) {
+            playPixelClick();
+
+            // Camera stepped zoom
+            const canvasBox = document.getElementById('iso-canvas-box');
+            canvasBox.className = 'isometric-canvas-box';
+            if (zoomClasses[id]) {
+                canvasBox.classList.add(zoomClasses[id]);
+            }
+
+            // Update Hotspot visual class
+            document.querySelectorAll('.iso-hotspot').forEach(el => el.classList.remove('active'));
+            const hotspots = {
+                1: 'hotspot-monitors',
+                2: 'hotspot-corkboard',
+                3: 'hotspot-bookshelf',
+                4: 'hotspot-pager'
+            };
+            const activeHotspot = document.getElementById(hotspots[id]);
+            if (activeHotspot) activeHotspot.classList.add('active');
+
+            // Update Top HUD Buttons
+            document.querySelectorAll('.hud-right .pixel-btn').forEach(b => {
+                if (b.id && b.id.startsWith('hud-nav-')) b.classList.remove('active');
+            });
+            const activeNav = document.getElementById(`hud-nav-${id}`);
+            if (activeNav) activeNav.classList.add('active');
+
+            // Render Inspector Data
+            const data = nodeData[id];
+            if (!data) return;
+
+            document.getElementById('node-headline').innerText = data.headline;
+            document.getElementById('node-shortcut').innerText = data.shortcut;
+            
+            const bodyEl = document.getElementById('node-body');
+            bodyEl.style.animation = 'none';
+            bodyEl.offsetHeight;
+            bodyEl.innerHTML = data.body;
+            bodyEl.style.animation = 'snapIn 0.15s steps(3)';
+        }
+
+        // Pager Guestbook Submit Handler
+        function handlePagerSubmit(e) {
+            e.preventDefault();
+            playPixelClick();
+            const input = document.getElementById('pager-input');
+            const msg = input.value.trim();
+            if (!msg) return;
+
+            alert(`[PAGER SENT]: "${msg}" -> Transmitted to Sparsh Khanna's local terminal.`);
+            input.value = '';
+        }
+
+        // ── 4. Lighting Cycle (Night -> Dusk -> Dawn) ──
+        const lightingCycles = ['night', 'dusk', 'dawn'];
+        let cycleIdx = 0;
+
+        function cycleTheme() {
+            playPixelClick();
+            cycleIdx = (cycleIdx + 1) % lightingCycles.length;
+            const mode = lightingCycles[cycleIdx];
+
+            document.body.classList.remove('theme-dusk', 'theme-dawn');
+            if (mode === 'dusk') document.body.classList.add('theme-dusk');
+            if (mode === 'dawn') document.body.classList.add('theme-dawn');
+
+            document.getElementById('mode-text').innerText = mode.toUpperCase();
+        }
+
+        // ── 5. Keyboard Navigation ──
+        window.addEventListener('keydown', (e) => {
+            if (e.key === '1') selectNode(1);
+            else if (e.key === '2') selectNode(2);
+            else if (e.key === '3') selectNode(3);
+            else if (e.key === '4') selectNode(4);
+            else if (e.key.toLowerCase() === 'l') cycleTheme();
+            else if (e.key.toLowerCase() === 'm') toggleLoFiAudio();
+            else if (e.key === 'Escape') {
+                const canvasBox = document.getElementById('iso-canvas-box');
+                canvasBox.className = 'isometric-canvas-box';
+            }
+        });
+    </script>
+</body>
+
+</html>
