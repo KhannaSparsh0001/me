@@ -243,6 +243,8 @@ COM.LoadFile = function(filename)
 		for (j = search.pack.length - 1; j >= 0; --j)
 		{
 			pak = search.pack[j];
+			var packname = search.filename + '/pak' + j + '.pak';
+			var pbuf = (COM.packBuffers != null) ? COM.packBuffers[packname] : null;
 			for (k = 0; k < pak.length; ++k)
 			{
 				file = pak[k];
@@ -252,6 +254,11 @@ COM.LoadFile = function(filename)
 				{
 					Draw.EndDisc();
 					return new ArrayBuffer(0);
+				}
+				if (pbuf != null)
+				{
+					Draw.EndDisc();
+					return pbuf.slice(file.filepos, file.filepos + file.filelen);
 				}
 				xhr.open('GET', search.filename + '/pak' + j + '.pak', false);
 				xhr.setRequestHeader('Range', 'bytes=' + file.filepos + '-' + (file.filepos + file.filelen - 1));
@@ -296,6 +303,29 @@ COM.LoadTextFile = function(filename)
 
 COM.LoadPackFile = function(packfile)
 {
+	var pBuf = (COM.packBuffers != null) ? COM.packBuffers[packfile] : null;
+	if (pBuf != null)
+	{
+		var header = new DataView(pBuf, 0, 12);
+		if (header.getUint32(0, true) !== 0x4b434150)
+			Sys.Error(packfile + ' is not a packfile');
+		var dirofs = header.getUint32(4, true);
+		var dirlen = header.getUint32(8, true);
+		var numpackfiles = dirlen >> 6;
+		var pack = [];
+		for (var i = 0; i < numpackfiles; ++i)
+		{
+			pack[pack.length] =
+			{
+				name: Q.memstr(new Uint8Array(pBuf, dirofs + (i << 6), 56)).toLowerCase(),
+				filepos: (new DataView(pBuf)).getUint32(dirofs + (i << 6) + 56, true),
+				filelen: (new DataView(pBuf)).getUint32(dirofs + (i << 6) + 60, true)
+			};
+		}
+		Con.Print('Added packfile ' + packfile + ' (' + numpackfiles + ' files)\n');
+		return pack;
+	}
+
 	var xhr = new XMLHttpRequest();
 	xhr.overrideMimeType('text/plain; charset=x-user-defined');
 	xhr.open('GET', packfile, false);

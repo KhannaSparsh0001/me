@@ -2,29 +2,340 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Windows 95 - Wolfenstein 3D</title>
     <!-- Load the JS-DOS engine -->
     <script src="https://js-dos.com/6.22/current/js-dos.js"></script>
     <style>
-        body { background-color: #008080; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .window { background: #c0c0c0; border: 2px solid; border-color: #fff #000 #000 #fff; padding: 2px; }
-        canvas { width: 640px; height: 400px; display: block; outline: none; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            background-color: #c0c0c0;
+            font-family: "MS Sans Serif", Tahoma, sans-serif;
+            font-size: 11px;
+            color: #000;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Windows 95 Menu Bar */
+        .menu-bar {
+            display: flex;
+            background: #c0c0c0;
+            padding: 2px 4px;
+            border-bottom: 1px solid #808080;
+            gap: 12px;
+            font-size: 11px;
+            z-index: 100;
+        }
+
+        .menu-item {
+            cursor: pointer;
+            padding: 1px 5px;
+            position: relative;
+        }
+
+        .menu-item:hover {
+            background-color: #000080;
+            color: #ffffff;
+        }
+
+        .menu-item u {
+            text-decoration: underline;
+        }
+
+        /* Viewport Container */
+        .viewport-wrapper {
+            flex: 1;
+            position: relative;
+            background: #008080;
+            margin: 2px 3px;
+            border-top: 2px solid #808080;
+            border-left: 2px solid #808080;
+            border-right: 2px solid #ffffff;
+            border-bottom: 2px solid #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .window-frame {
+            background: #c0c0c0;
+            border: 2px solid;
+            border-color: #ffffff #000000 #000000 #ffffff;
+            padding: 2px;
+            box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        canvas {
+            width: 640px;
+            height: 400px;
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+            outline: none;
+            background: #000000;
+        }
+
+        /* Fullscreen styles */
+        :fullscreen {
+            background-color: #000000 !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        :fullscreen .window-frame {
+            border: none;
+            background: transparent;
+            box-shadow: none;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        :fullscreen canvas {
+            width: 100vw !important;
+            height: 100vh !important;
+            object-fit: contain;
+        }
+
+        :-webkit-full-screen {
+            background-color: #000000 !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        :-webkit-full-screen .window-frame {
+            border: none;
+            background: transparent;
+            box-shadow: none;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        :-webkit-full-screen canvas {
+            width: 100vw !important;
+            height: 100vh !important;
+            object-fit: contain;
+        }
+
+        /* Sunken Retro Status Bar */
+        .status-bar {
+            display: flex;
+            gap: 2px;
+            padding: 2px 3px;
+            background: #c0c0c0;
+            font-size: 11px;
+            line-height: 14px;
+        }
+
+        .status-panel {
+            padding: 1px 6px;
+            border: 1px solid;
+            border-color: #808080 #ffffff #ffffff #808080;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .status-main {
+            flex: 1;
+        }
+
+        .status-mid {
+            width: 150px;
+            text-align: center;
+        }
+
+        .status-end {
+            width: 90px;
+            text-align: right;
+            color: #008000;
+            font-weight: bold;
+        }
+
+        /* Controls Modal dialog */
+        .help-dialog {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #c0c0c0;
+            border: 2px solid;
+            border-color: #ffffff #000000 #000000 #ffffff;
+            box-shadow: 2px 2px 0 #808080;
+            width: 320px;
+            z-index: 500;
+            padding: 2px;
+        }
+
+        .dialog-title {
+            background: #000080;
+            color: #ffffff;
+            padding: 2px 4px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dialog-close {
+            background: #c0c0c0;
+            border: 1px solid;
+            border-color: #ffffff #000000 #000000 #ffffff;
+            width: 14px;
+            height: 14px;
+            font-size: 9px;
+            font-weight: bold;
+            line-height: 12px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .dialog-body {
+            padding: 12px;
+            line-height: 1.5;
+            font-size: 11px;
+        }
+
+        .dialog-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 6px;
+        }
+
+        .dialog-body td {
+            padding: 2px 4px;
+            border-bottom: 1px solid #dfdfdf;
+        }
+
+        .dialog-btn {
+            display: block;
+            margin: 8px auto 0;
+            padding: 3px 18px;
+            background: #c0c0c0;
+            border: 2px solid;
+            border-color: #ffffff #000000 #000000 #ffffff;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 11px;
+        }
+
+        .dialog-btn:active {
+            border-color: #000000 #ffffff #ffffff #000000;
+        }
     </style>
 </head>
 <body>
 
-    <div class="window">
-        <canvas id="wolf-canvas" tabindex="0" onclick="this.focus()"></canvas>
+    <!-- Windows 95 Menu Bar -->
+    <div class="menu-bar">
+        <div class="menu-item" onclick="toggleHelp(true)"><u>H</u>elp</div>
+        <div class="menu-item" onclick="location.reload()"><u>R</u>estart</div>
+        <div class="menu-item" onclick="toggleFullscreen()"><u>F</u>ullscreen [Alt+Enter]</div>
+    </div>
+
+    <!-- Viewport Container -->
+    <div class="viewport-wrapper" id="viewport">
+        <div class="window-frame" id="game-frame">
+            <canvas id="wolf-canvas" tabindex="0" onclick="this.focus()"></canvas>
+        </div>
+    </div>
+
+    <!-- Win95 Sunken Status Bar -->
+    <div class="status-bar">
+        <div class="status-panel status-main">MS-DOS Prompt - WOLF3D.EXE (1992)</div>
+        <div class="status-panel status-mid">Sound Blaster / AdLib</div>
+        <div class="status-panel status-end">● Active</div>
+    </div>
+
+    <!-- Controls Guide Dialog -->
+    <div class="help-dialog" id="help-dialog">
+        <div class="dialog-title">
+            <span>Wolfenstein 3D Controls</span>
+            <div class="dialog-close" onclick="toggleHelp(false)">×</div>
+        </div>
+        <div class="dialog-body">
+            <strong>Default MS-DOS Controls:</strong>
+            <table>
+                <tr><td><strong>Arrow Keys / WASD</strong></td><td>Move & Turn</td></tr>
+                <tr><td><strong>Ctrl / Left Click</strong></td><td>Fire Weapon</td></tr>
+                <tr><td><strong>Space</strong></td><td>Open Door / Push Wall</td></tr>
+                <tr><td><strong>Alt + Arrow Keys</strong></td><td>Strafe Left / Right</td></tr>
+                <tr><td><strong>1 - 4</strong></td><td>Select Weapons</td></tr>
+                <tr><td><strong>Shift</strong></td><td>Speed / Run</td></tr>
+                <tr><td><strong>Esc</strong></td><td>Main Menu</td></tr>
+                <tr><td><strong>Alt + Enter</strong></td><td>Toggle Fullscreen</td></tr>
+            </table>
+            <button class="dialog-btn" onclick="toggleHelp(false)">OK</button>
+        </div>
     </div>
 
     <script>
-        // Initialize the emulator
+        // Register in Win95 Process Manager
+        try {
+            if (window.parent && window.parent.ProcessManager) {
+                window.parent.ProcessManager.register("Wolf3d.exe", "Active", "MS-DOS");
+            }
+        } catch (e) {}
+
+        function toggleHelp(show) {
+            const dialog = document.getElementById('help-dialog');
+            if (dialog) dialog.style.display = show ? 'block' : 'none';
+        }
+
+        function toggleFullscreen() {
+            const elem = document.getElementById('viewport');
+            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                } else if (elem.webkitRequestFullscreen) {
+                    elem.webkitRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                }
+            }
+        }
+
+        // Keyboard shortcut: Alt+Enter for Fullscreen
+        window.addEventListener('keydown', function (e) {
+            if (e.altKey && (e.key === 'Enter' || e.keyCode === 13)) {
+                e.preventDefault();
+                toggleFullscreen();
+            }
+        });
+
+        // Initialize JS-DOS emulator
         Dos(document.getElementById("wolf-canvas"), {
             wdosboxUrl: "https://js-dos.com/6.22/current/wdosbox.js"
         }).ready(function (fs, main) {
-            // Extract the Wolfenstein zip
             fs.extract("wolf3d.zip").then(function () {
-                // Run the Wolfenstein executable
                 main(["-c", "WOLF3D.EXE"]); 
             });
         });

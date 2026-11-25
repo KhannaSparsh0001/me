@@ -52,7 +52,7 @@ Sys.FloatTime = function()
 	return Date.now() * 0.001 - Sys.oldtime;
 };
 
-window.onload = function()
+Sys.InitEngine = function()
 {
 	if (Number.isNaN != null)
 		Q.isNaN = Number.isNaN;
@@ -147,6 +147,111 @@ window.onload = function()
 		window[Sys.events[i]] = Sys[Sys.events[i]];
 
 	Sys.frame = setInterval(Host.Frame, 1000.0 / 60.0);
+};
+
+Sys.GetCachedPak = function(key) {
+	return new Promise(function(resolve) {
+		try {
+			if (!window.indexedDB) return resolve(null);
+			var req = indexedDB.open('QuakeOfflineStore', 1);
+			req.onupgradeneeded = function(e) {
+				e.target.result.createObjectStore('assets');
+			};
+			req.onsuccess = function(e) {
+				var db = e.target.result;
+				var tx = db.transaction('assets', 'readonly');
+				var store = tx.objectStore('assets');
+				var getReq = store.get(key);
+				getReq.onsuccess = function() {
+					resolve(getReq.result || null);
+				};
+				getReq.onerror = function() { resolve(null); };
+			};
+			req.onerror = function() { resolve(null); };
+		} catch (e) {
+			resolve(null);
+		}
+	});
+};
+
+Sys.SaveCachedPak = function(key, buffer) {
+	try {
+		if (!window.indexedDB) return;
+		var req = indexedDB.open('QuakeOfflineStore', 1);
+		req.onupgradeneeded = function(e) {
+			e.target.result.createObjectStore('assets');
+		};
+		req.onsuccess = function(e) {
+			var db = e.target.result;
+			var tx = db.transaction('assets', 'readwrite');
+			tx.objectStore('assets').put(buffer, key);
+		};
+	} catch (e) {}
+};
+
+window.onload = function()
+{
+	var progress = document.getElementById('progress');
+	if (progress == null)
+	{
+		Sys.InitEngine();
+		return;
+	}
+
+	progress.innerText = 'Checking local asset cache...';
+
+	Sys.GetCachedPak('id1/pak0.pak').then(function(cached) {
+		if (cached != null)
+		{
+			progress.innerText = 'Loaded from local cache! Starting 3D World...';
+			COM.packBuffers = { 'id1/pak0.pak': cached };
+			setTimeout(Sys.InitEngine, 30);
+			return;
+		}
+
+		progress.innerText = 'Connecting to Quake Assets...';
+
+		fetch('id1/pak0.pak')
+			.then(function(response) {
+				if (!response.ok)
+					throw new Error('HTTP ' + response.status + ' ' + response.statusText);
+				var total = parseInt(response.headers.get('content-length'), 10) || 94730968;
+				var loaded = 0;
+				var reader = response.body.getReader();
+				var chunks = [];
+
+				function pump() {
+					return reader.read().then(function(result) {
+						if (result.done) {
+							var all = new Uint8Array(loaded);
+							var offset = 0;
+							for (var j = 0; j < chunks.length; ++j) {
+								all.set(chunks[j], offset);
+								offset += chunks[j].length;
+							}
+							chunks = null;
+							COM.packBuffers = { 'id1/pak0.pak': all.buffer };
+							Sys.SaveCachedPak('id1/pak0.pak', all.buffer);
+							progress.innerText = 'Starting 3D World...';
+							setTimeout(Sys.InitEngine, 30);
+							return;
+						}
+						chunks.push(result.value);
+						loaded += result.value.length;
+						var pct = Math.round((loaded / total) * 100);
+						var curMb = (loaded / (1024 * 1024)).toFixed(1);
+						var totMb = (total / (1024 * 1024)).toFixed(1);
+						progress.innerText = 'Loading Quake Assets: ' + pct + '% (' + curMb + ' / ' + totMb + ' MB)';
+						return pump();
+					});
+				}
+				return pump();
+			})
+			.catch(function(err) {
+				console.error('Asset load error:', err);
+				progress.innerText = 'Failed to load assets: ' + err.message;
+			});
+	});
 };
 
 Sys.onbeforeunload = function()
