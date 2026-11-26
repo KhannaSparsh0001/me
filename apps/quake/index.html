@@ -811,7 +811,9 @@ void main(void)
         window.addEventListener('message', (ev) => {
             if (!ev.data) return;
             if (ev.data.type === 'quake_key') {
-                if (window.Sys) {
+                if (ev.data.directKey && window.Key && typeof window.Key.Event === 'function') {
+                    Key.Event(ev.data.directKey, ev.data.action === 'down');
+                } else if (window.Sys) {
                     if (ev.data.action === 'down') {
                         Sys.onkeydown({ keyCode: ev.data.keyCode, preventDefault: () => {} });
                     } else if (ev.data.action === 'up') {

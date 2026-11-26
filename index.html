@@ -649,7 +649,97 @@
             }
         }
 
-        /* ── RETRO MOBILE HANDHELD CONSOLE (NES / GAME BOY / ARCADE STYLE) ── */
+        /* ── PRE-STATE MOBILE GAME OVERLAY (DOOM & WOLFENSTEIN 3D) ── */
+        .mobile-game-overlay {
+            position: absolute;
+            bottom: 2px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .mobile-game-overlay .dpad,
+        .mobile-game-overlay .action-buttons {
+            pointer-events: auto;
+            display: flex;
+        }
+
+        .mobile-game-overlay .dpad {
+            position: relative;
+            width: 120px;
+            height: 120px;
+        }
+
+        .mobile-game-overlay .dbtn {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            user-select: none;
+            touch-action: none;
+        }
+
+        .mobile-game-overlay .dbtn.up {
+            top: 0;
+            left: 40px;
+        }
+
+        .mobile-game-overlay .dbtn.down {
+            bottom: 0;
+            left: 40px;
+        }
+
+        .mobile-game-overlay .dbtn.left {
+            top: 40px;
+            left: 0;
+        }
+
+        .mobile-game-overlay .dbtn.right {
+            top: 40px;
+            right: 0;
+        }
+
+        .mobile-game-overlay .action-buttons {
+            flex-direction: column;
+            gap: 5px;
+            justify-content: flex-end;
+        }
+
+        .mobile-game-overlay .abtn {
+            width: 90px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.9);
+            font-family: 'Pixelated', sans-serif;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            user-select: none;
+            touch-action: none;
+        }
+
+        .mobile-game-overlay .dbtn.active,
+        .mobile-game-overlay .abtn.active {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(0.95);
+        }
+
+        /* ── QUAKE 3D MOBILE HANDHELD CONSOLE ── */
         .game-window.mobile-handheld {
             position: fixed !important;
             inset: 0 !important;
@@ -714,6 +804,7 @@
             letter-spacing: 1px;
             touch-action: manipulation;
         }
+
         .handheld-pill-btn:active {
             background: #00C3FF;
             color: #000;
@@ -763,7 +854,7 @@
         .handheld-controller-deck {
             flex: 1;
             background: #06070A;
-            background-image: 
+            background-image:
                 radial-gradient(circle at 50% 50%, #0E1017 0%, #050608 100%),
                 linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
@@ -813,6 +904,7 @@
             border-radius: 8px 8px 0 0;
             border-bottom: none;
         }
+
         .retro-dpad-btn.down {
             bottom: 0;
             left: 48px;
@@ -821,6 +913,7 @@
             border-radius: 0 0 8px 8px;
             border-top: none;
         }
+
         .retro-dpad-btn.left {
             top: 48px;
             left: 0;
@@ -829,6 +922,7 @@
             border-radius: 8px 0 0 8px;
             border-right: none;
         }
+
         .retro-dpad-btn.right {
             top: 48px;
             right: 0;
@@ -837,6 +931,7 @@
             border-radius: 0 8px 8px 0;
             border-left: none;
         }
+
         .retro-dpad-center {
             position: absolute;
             width: 44px;
@@ -852,7 +947,8 @@
             pointer-events: none;
         }
 
-        .retro-dpad-btn.active, .retro-dpad-btn:active {
+        .retro-dpad-btn.active,
+        .retro-dpad-btn:active {
             background: #00C3FF !important;
             color: #000 !important;
             box-shadow: 0 0 20px #00C3FF, inset 0 0 10px #FFF !important;
@@ -901,12 +997,14 @@
             bottom: 6px;
             left: 6px;
         }
+
         .retro-round-btn.btn-a {
             top: 6px;
             right: 6px;
         }
 
-        .retro-round-btn.active, .retro-round-btn:active {
+        .retro-round-btn.active,
+        .retro-round-btn:active {
             background: #00C3FF !important;
             color: #000 !important;
             box-shadow: 0 0 24px #00C3FF, inset 0 0 12px #FFF !important;
@@ -971,12 +1069,15 @@
             font-size: 12px;
         }
 
-        .quake-action-btn.active, .quake-action-btn:active {
+        .quake-action-btn.active,
+        .quake-action-btn:active {
             background: #00C3FF;
             color: #000;
             transform: scale(0.95);
         }
-        .quake-action-btn.fire.active, .quake-action-btn.fire:active {
+
+        .quake-action-btn.fire.active,
+        .quake-action-btn.fire:active {
             background: #FF3B30;
             color: #FFF;
         }
@@ -2788,14 +2889,14 @@
         });
         let highestZ = 100;
 
-        window.toggleGameWindowFullscreen = function(targetWin) {
+        window.toggleGameWindowFullscreen = function (targetWin) {
             const win = targetWin || document.querySelector('.game-window');
             if (!win) return;
             const isFull = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement);
             if (!isFull) {
                 const req = win.requestFullscreen || win.webkitRequestFullscreen || win.mozRequestFullScreen || win.msRequestFullscreen;
                 if (req) {
-                    req.call(win).catch(() => {});
+                    req.call(win).catch(() => { });
                 }
             } else {
                 const exit = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
@@ -2804,20 +2905,185 @@
         };
 
         window.openGameModal = function (title, url, width, height, requiresOverlay) {
-            const isMobile = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
-                             navigator.maxTouchPoints > 0 || 
-                             window.matchMedia("(pointer: coarse)").matches || 
-                             ('ontouchstart' in window) ||
-                             window.innerWidth <= 768;
+            const isMobile = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                navigator.maxTouchPoints > 0 ||
+                window.matchMedia("(pointer: coarse)").matches ||
+                ('ontouchstart' in window) ||
+                window.innerWidth <= 768;
 
             const isQuake = title.toLowerCase().includes('quake') || url.toLowerCase().includes('quake');
 
             const win = document.createElement("div");
             win.className = "game-window";
             win.dataset.gameTitle = title;
+            win.style.zIndex = ++highestZ;
 
+            // ── REVERTED PRE-STATE FOR DOOM, WOLFENSTEIN 3D, AND OTHER RETRO TITLES ──
+            if (!isQuake) {
+                win.style.left = "180px";
+                win.style.top = "120px";
+                if (width) {
+                    win.style.width = width;
+                    win.style.minWidth = width;
+                }
+                if (height) {
+                    win.style.height = height;
+                    win.style.minHeight = height;
+                }
+
+                let overlayHTML = '';
+                if (isMobile && requiresOverlay) {
+                    overlayHTML = `
+                    <div class="mobile-game-overlay">
+                        <div class="dpad">
+                            <button class="dbtn up" data-key="ArrowUp">▲</button>
+                            <button class="dbtn left" data-key="ArrowLeft">◀</button>
+                            <button class="dbtn right" data-key="ArrowRight">▶</button>
+                            <button class="dbtn down" data-key="ArrowDown">▼</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="abtn" data-key="Escape">Y (Menu)</button>
+                            <button class="abtn" data-key="Control">CTRL (Fire)</button>
+                            <button class="abtn" data-key="Space">SPACE (Use)</button>
+                            <button class="abtn" data-key="Alt">ALT (Strafe)</button>
+                        </div>
+                    </div>
+                    `;
+                }
+
+                win.innerHTML = `
+                    <div class="retro-window-header">
+                        <span>${title}</span>
+                        <button class="close-btn">X</button>
+                    </div>
+
+                    <iframe src="${url}" allow="autoplay; fullscreen; pointer-lock"></iframe>
+                    ${overlayHTML}
+                `;
+
+                document.getElementById("window-container").appendChild(win);
+
+                if (isMobile && requiresOverlay) {
+                    const iframe = win.querySelector('iframe');
+                    const dispatchKey = (keyName, type) => {
+                        if (iframe.contentWindow && iframe.contentWindow.document) {
+                            let keyCode;
+                            switch (keyName) {
+                                case 'ArrowUp': keyCode = 38; break;
+                                case 'ArrowDown': keyCode = 40; break;
+                                case 'ArrowLeft': keyCode = 37; break;
+                                case 'ArrowRight': keyCode = 39; break;
+                                case 'Escape': keyCode = 27; break;
+                                case 'Control': keyCode = 17; break;
+                                case 'Space': keyCode = 32; break;
+                                case 'Alt': keyCode = 18; break;
+                            }
+                            const event = new KeyboardEvent(type, {
+                                key: keyName,
+                                code: keyName,
+                                keyCode: keyCode,
+                                which: keyCode,
+                                bubbles: true
+                            });
+                            iframe.contentWindow.document.dispatchEvent(event);
+                        }
+                    };
+
+                    const bindBtn = (btn) => {
+                        const key = btn.getAttribute('data-key');
+                        const startEvt = (e) => {
+                            e.preventDefault();
+                            dispatchKey(key, 'keydown');
+                            btn.classList.add('active');
+                        };
+                        const endEvt = (e) => {
+                            e.preventDefault();
+                            dispatchKey(key, 'keyup');
+                            btn.classList.remove('active');
+                        };
+                        btn.addEventListener('touchstart', startEvt, { passive: false });
+                        btn.addEventListener('touchend', endEvt, { passive: false });
+                        btn.addEventListener('mousedown', startEvt);
+                        btn.addEventListener('mouseup', endEvt);
+                        btn.addEventListener('mouseleave', endEvt);
+                    };
+
+                    win.querySelectorAll('.dbtn, .abtn').forEach(bindBtn);
+                }
+
+                if (window.WindowManager) {
+                    window.WindowManager.open(title);
+                    window.WindowManager.focus(title);
+                }
+
+                win.addEventListener("mousedown", () => {
+                    if (window.WindowManager) {
+                        window.WindowManager.focus(title);
+                    }
+                });
+
+                if (window.SystemAPI) window.SystemAPI.playSound('open');
+                win.classList.add('window-opening');
+
+                win.querySelector(".close-btn").onclick = () => {
+                    if (window.SystemAPI) window.SystemAPI.playSound('close');
+                    if (window.WindowManager) {
+                        window.WindowManager.close(title);
+                    }
+                    win.classList.remove('window-opening');
+                    win.classList.add('window-closing');
+                    setTimeout(() => {
+                        win.remove();
+                    }, 150);
+                };
+
+                makeDraggable(win);
+                return;
+            }
+
+            // ── QUAKE SPECIFIC INITIALIZATION (WASD & TOUCH CONTROLS) ──
             if (isMobile) {
                 win.classList.add("mobile-handheld");
+                win.innerHTML = `
+                    <div class="handheld-sys-bar">
+                        <div class="handheld-brand">
+                            <span>NTSC</span>
+                            <span style="color: #6E748B;">// ${title}</span>
+                        </div>
+                        <div class="handheld-sys-btns">
+                            <button class="handheld-pill-btn" id="hh-select" data-key="Escape" data-quake-key="27" data-direct-key="27">MENU</button>
+                            <button class="handheld-pill-btn" id="hh-start" data-key="Enter" data-quake-key="13" data-direct-key="13">START</button>
+                            <button class="handheld-pill-btn" id="hh-fullscreen" title="Toggle Fullscreen">⛶</button>
+                            <button class="handheld-close-btn" id="hh-close" title="Close">✕</button>
+                        </div>
+                    </div>
+
+                    <div class="handheld-screen-stage">
+                        <iframe src="${url}" allow="autoplay; fullscreen; pointer-lock"></iframe>
+                    </div>
+
+                    <div class="handheld-controller-deck">
+                        <div class="quake-3d-deck">
+                            <div class="retro-dpad-container" id="quake-move-pad">
+                                <button class="retro-dpad-btn up" data-key="KeyW" data-quake-key="87" data-direct-key="119">W</button>
+                                <button class="retro-dpad-btn left" data-key="KeyA" data-quake-key="65" data-direct-key="97">A</button>
+                                <div class="retro-dpad-center">MOVE</div>
+                                <button class="retro-dpad-btn right" data-key="KeyD" data-quake-key="68" data-direct-key="100">D</button>
+                                <button class="retro-dpad-btn down" data-key="KeyS" data-quake-key="83" data-direct-key="115">S</button>
+                            </div>
+                            <div class="quake-aim-trackpad" id="quake-touch-aim">
+                                <span style="font-weight: bold; margin-bottom: 4px;">AIM TRACKPAD</span>
+                                <span style="font-size: 8px; opacity: 0.8;">SWIPE TO LOOK</span>
+                            </div>
+                            <div class="quake-trigger-cluster">
+                                <button class="quake-action-btn fire" data-key="Control" data-quake-key="17" data-direct-key="200">🔥 FIRE</button>
+                                <button class="quake-action-btn" data-key="Space" data-quake-key="32" data-direct-key="32">⬆ JUMP</button>
+                                <button class="quake-action-btn" id="quake-btn-wpn">🔄 WPN</button>
+                                <button class="quake-action-btn" data-key="Escape" data-quake-key="27" data-direct-key="27">ESC</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
             } else {
                 win.style.left = "160px";
                 win.style.top = "100px";
@@ -2829,75 +3095,7 @@
                     win.style.height = height;
                     win.style.minHeight = height;
                 }
-            }
 
-            win.style.zIndex = ++highestZ;
-
-            if (isMobile) {
-                // Handheld Layout
-                let controllerDeckHTML = '';
-                if (isQuake) {
-                    // Quake 3D Touch Deck
-                    controllerDeckHTML = `
-                    <div class="quake-3d-deck">
-                        <div class="retro-dpad-container" id="quake-move-pad">
-                            <button class="retro-dpad-btn up" data-key="KeyW" data-quake-key="119">W</button>
-                            <button class="retro-dpad-btn left" data-key="KeyA" data-quake-key="97">A</button>
-                            <div class="retro-dpad-center">MOVE</div>
-                            <button class="retro-dpad-btn right" data-key="KeyD" data-quake-key="100">D</button>
-                            <button class="retro-dpad-btn down" data-key="KeyS" data-quake-key="115">S</button>
-                        </div>
-                        <div class="quake-aim-trackpad" id="quake-touch-aim">
-                            <span style="font-weight: bold; margin-bottom: 4px;">AIM TRACKPAD</span>
-                            <span style="font-size: 8px; opacity: 0.8;">SWIPE TO LOOK</span>
-                        </div>
-                        <div class="quake-trigger-cluster">
-                            <button class="quake-action-btn fire" data-key="Control" data-quake-key="17">🔥 FIRE</button>
-                            <button class="quake-action-btn" data-key="Space" data-quake-key="32">⬆ JUMP</button>
-                            <button class="quake-action-btn" id="quake-btn-wpn">🔄 WPN</button>
-                            <button class="quake-action-btn" data-key="Escape" data-quake-key="27">ESC</button>
-                        </div>
-                    </div>`;
-                } else {
-                    // 2D Retro Handheld Deck (Doom, Wolf3D, etc.) matching Reference Image
-                    controllerDeckHTML = `
-                    <div class="retro-dpad-container" id="retro-dpad">
-                        <button class="retro-dpad-btn up" data-key="ArrowUp" data-keycode="38">▲</button>
-                        <button class="retro-dpad-btn left" data-key="ArrowLeft" data-keycode="37">◀</button>
-                        <div class="retro-dpad-center">◎</div>
-                        <button class="retro-dpad-btn right" data-key="ArrowRight" data-keycode="39">▶</button>
-                        <button class="retro-dpad-btn down" data-key="ArrowDown" data-keycode="40">▼</button>
-                    </div>
-                    <div class="retro-action-container">
-                        <button class="retro-round-btn btn-b" data-key="Alt" data-alt-key="Space" data-keycode="18">B</button>
-                        <button class="retro-round-btn btn-a" data-key="Control" data-keycode="17">A</button>
-                    </div>`;
-                }
-
-                win.innerHTML = `
-                    <div class="handheld-sys-bar">
-                        <div class="handheld-brand">
-                            <span>NTSC</span>
-                            <span style="color: #6E748B;">// ${title}</span>
-                        </div>
-                        <div class="handheld-sys-btns">
-                            <button class="handheld-pill-btn" id="hh-select" data-key="Escape" data-keycode="27">SELECT</button>
-                            <button class="handheld-pill-btn" id="hh-start" data-key="Enter" data-keycode="13">START</button>
-                            <button class="handheld-pill-btn" id="hh-fullscreen" title="Toggle Fullscreen">⛶</button>
-                            <button class="handheld-close-btn" id="hh-close" title="Close">✕</button>
-                        </div>
-                    </div>
-
-                    <div class="handheld-screen-stage">
-                        <iframe src="${url}" allow="autoplay; fullscreen; pointer-lock"></iframe>
-                    </div>
-
-                    <div class="handheld-controller-deck">
-                        ${controllerDeckHTML}
-                    </div>
-                `;
-            } else {
-                // Desktop Window Layout
                 win.innerHTML = `
                     <div class="retro-window-header">
                         <span>${title}</span>
@@ -2914,19 +3112,18 @@
 
             const iframe = win.querySelector('iframe');
 
-            // Dispatch helper for both DOM events and WebQuake postMessage
-            const dispatchKeyToGame = (keyName, keyCode, type) => {
+            // Dispatch helper for Quake postMessage & DOM events
+            const dispatchKeyToQuake = (keyName, keyCode, directKey, type) => {
                 if (!iframe || !iframe.contentWindow) return;
                 try {
-                    // Send to Quake listener
                     iframe.contentWindow.postMessage({
                         type: 'quake_key',
                         action: type === 'keydown' ? 'down' : 'up',
                         keyCode: keyCode || 0,
+                        directKey: directKey || 0,
                         key: keyName
                     }, '*');
 
-                    // Standard DOM KeyboardEvent
                     if (iframe.contentWindow.document) {
                         const evt = new KeyboardEvent(type, {
                             key: keyName,
@@ -2936,55 +3133,35 @@
                             bubbles: true
                         });
                         iframe.contentWindow.document.dispatchEvent(evt);
-                        if (iframe.contentWindow.Sys) {
-                            if (type === 'keydown' && typeof iframe.contentWindow.Sys.onkeydown === 'function') {
-                                iframe.contentWindow.Sys.onkeydown({ keyCode: keyCode, altKey: false, preventDefault: () => {} });
-                            } else if (type === 'keyup' && typeof iframe.contentWindow.Sys.onkeyup === 'function') {
-                                iframe.contentWindow.Sys.onkeyup({ keyCode: keyCode, preventDefault: () => {} });
-                            }
+                        if (iframe.contentWindow.Key && typeof iframe.contentWindow.Key.Event === 'function') {
+                            if (directKey) iframe.contentWindow.Key.Event(directKey, type === 'keydown');
                         }
                     }
-                } catch (e) {}
+                } catch (e) { }
             };
 
             const triggerHaptic = () => {
                 try {
                     if (navigator.vibrate) navigator.vibrate(10);
-                } catch (e) {}
+                } catch (e) { }
             };
 
-            // Bind Touch and Click Handlers
-            const bindTouchBtn = (btn) => {
+            // Bind Quake Touch Buttons
+            const bindQuakeBtn = (btn) => {
                 const key = btn.getAttribute('data-key');
-                let keyCode = parseInt(btn.getAttribute('data-keycode') || btn.getAttribute('data-quake-key'), 10);
-                if (!keyCode) {
-                    switch (key) {
-                        case 'ArrowUp': keyCode = 38; break;
-                        case 'ArrowDown': keyCode = 40; break;
-                        case 'ArrowLeft': keyCode = 37; break;
-                        case 'ArrowRight': keyCode = 39; break;
-                        case 'KeyW': keyCode = 87; break;
-                        case 'KeyS': keyCode = 83; break;
-                        case 'KeyA': keyCode = 65; break;
-                        case 'KeyD': keyCode = 68; break;
-                        case 'Escape': keyCode = 27; break;
-                        case 'Control': keyCode = 17; break;
-                        case 'Space': keyCode = 32; break;
-                        case 'Alt': keyCode = 18; break;
-                        case 'Enter': keyCode = 13; break;
-                    }
-                }
+                let keyCode = parseInt(btn.getAttribute('data-quake-key'), 10) || 0;
+                let directKey = parseInt(btn.getAttribute('data-direct-key'), 10) || 0;
 
                 const onDown = (e) => {
                     e.preventDefault();
                     triggerHaptic();
-                    dispatchKeyToGame(key, keyCode, 'keydown');
+                    dispatchKeyToQuake(key, keyCode, directKey, 'keydown');
                     btn.classList.add('active');
                 };
 
                 const onUp = (e) => {
                     e.preventDefault();
-                    dispatchKeyToGame(key, keyCode, 'keyup');
+                    dispatchKeyToQuake(key, keyCode, directKey, 'keyup');
                     btn.classList.remove('active');
                 };
 
@@ -2996,10 +3173,10 @@
                 btn.addEventListener('mouseleave', onUp);
             };
 
-            win.querySelectorAll('button[data-key]').forEach(bindTouchBtn);
+            win.querySelectorAll('button[data-quake-key]').forEach(bindQuakeBtn);
 
-            // Quake-specific Aim Trackpad & Weapon Switch
-            if (isMobile && isQuake) {
+            // Quake Aim Trackpad & Weapon Switch
+            if (isMobile) {
                 const aimPad = win.querySelector('#quake-touch-aim');
                 let lastTouchX = null;
                 let lastTouchY = null;
@@ -3031,7 +3208,7 @@
                                 if (iframe.contentWindow.IN && typeof iframe.contentWindow.IN.InjectDelta === 'function') {
                                     iframe.contentWindow.IN.InjectDelta(dx, dy);
                                 }
-                            } catch (err) {}
+                            } catch (err) { }
                         }
                     }, { passive: false });
 
@@ -3043,7 +3220,6 @@
                     aimPad.addEventListener('touchcancel', endTouch, { passive: false });
                 }
 
-                // Weapon cycle button (1 through 8)
                 let currentWpn = 1;
                 const wpnBtn = win.querySelector('#quake-btn-wpn');
                 if (wpnBtn) {
@@ -3051,16 +3227,15 @@
                         e.preventDefault();
                         triggerHaptic();
                         currentWpn = (currentWpn % 8) + 1;
-                        const wpnKeyCode = 48 + currentWpn; // 1-8 key codes
-                        dispatchKeyToGame('Digit' + currentWpn, wpnKeyCode, 'keydown');
+                        const wpnKeyCode = 48 + currentWpn;
+                        dispatchKeyToQuake('Digit' + currentWpn, wpnKeyCode, wpnKeyCode, 'keydown');
                         setTimeout(() => {
-                            dispatchKeyToGame('Digit' + currentWpn, wpnKeyCode, 'keyup');
+                            dispatchKeyToQuake('Digit' + currentWpn, wpnKeyCode, wpnKeyCode, 'keyup');
                         }, 50);
                     });
                 }
             }
 
-            // Fullscreen Button
             const fsBtn = win.querySelector('#hh-fullscreen, .fs-btn');
             if (fsBtn) {
                 fsBtn.onclick = (e) => {
@@ -3069,19 +3244,17 @@
                 };
             }
 
-            // Close button
             const closeBtn = win.querySelector('#hh-close, .close-btn');
             if (closeBtn) {
                 closeBtn.onclick = () => {
                     if (window.SystemAPI) window.SystemAPI.playSound('close');
                     if (window.WindowManager) window.WindowManager.close(title);
 
-                    // Cleanly stop any audio or iframe processes before unmounting
                     try {
                         if (iframe && iframe.contentWindow && iframe.contentWindow.Sys && typeof iframe.contentWindow.Sys.Quit === 'function') {
                             iframe.contentWindow.Sys.Quit();
                         }
-                    } catch (e) {}
+                    } catch (e) { }
 
                     win.classList.remove('window-opening');
                     win.classList.add('window-closing');
@@ -3110,45 +3283,69 @@
             win.classList.add('window-opening');
         };
 
-        // Desktop Global Keyboard Router & Alt+Enter Bridge
+        // Desktop Global Keyboard Router & Alt+Enter Bridge for Quake
         window.addEventListener('keydown', (e) => {
             const activeGameWin = document.querySelector('.game-window');
             if (!activeGameWin) return;
 
-            // Alt+Enter Fullscreen
             if (e.key === 'Enter' && e.altKey) {
                 e.preventDefault();
                 window.toggleGameWindowFullscreen(activeGameWin);
                 return;
             }
 
+            const isQuake = (activeGameWin.dataset.gameTitle || '').toLowerCase().includes('quake');
+            if (!isQuake) return;
+
             const iframe = activeGameWin.querySelector('iframe');
             if (!iframe || !iframe.contentWindow) return;
+
+            let directKey = 0;
+            const k = e.key.toLowerCase();
+            if (k === 'w') directKey = 119;
+            else if (k === 's') directKey = 115;
+            else if (k === 'a') directKey = 97;
+            else if (k === 'd') directKey = 100;
+            else if (k === ' ') directKey = 32;
 
             try {
                 iframe.contentWindow.postMessage({
                     type: 'quake_key',
                     action: 'down',
                     keyCode: e.keyCode,
+                    directKey: directKey,
                     key: e.key
                 }, '*');
-            } catch (err) {}
+            } catch (err) { }
         });
 
         window.addEventListener('keyup', (e) => {
             const activeGameWin = document.querySelector('.game-window');
             if (!activeGameWin) return;
+
+            const isQuake = (activeGameWin.dataset.gameTitle || '').toLowerCase().includes('quake');
+            if (!isQuake) return;
+
             const iframe = activeGameWin.querySelector('iframe');
             if (!iframe || !iframe.contentWindow) return;
+
+            let directKey = 0;
+            const k = e.key.toLowerCase();
+            if (k === 'w') directKey = 119;
+            else if (k === 's') directKey = 115;
+            else if (k === 'a') directKey = 97;
+            else if (k === 'd') directKey = 100;
+            else if (k === ' ') directKey = 32;
 
             try {
                 iframe.contentWindow.postMessage({
                     type: 'quake_key',
                     action: 'up',
                     keyCode: e.keyCode,
+                    directKey: directKey,
                     key: e.key
                 }, '*');
-            } catch (err) {}
+            } catch (err) { }
         });
         window.openApp = window.openGameModal;
 

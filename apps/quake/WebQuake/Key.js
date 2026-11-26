@@ -363,6 +363,12 @@ Key.Init = function()
 	Cmd.AddCommand('bind', Key.Bind_f);
 	Cmd.AddCommand('unbind', Key.Unbind_f);
 	Cmd.AddCommand('unbindall', Key.Unbindall_f);
+
+	Key.bindings[119] = '+forward';
+	Key.bindings[115] = '+back';
+	Key.bindings[97] = '+moveleft';
+	Key.bindings[100] = '+moveright';
+	Key.bindings[Key.k.space] = '+jump';
 };
 
 Key.Event = function(key, down)

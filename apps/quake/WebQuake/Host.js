@@ -318,7 +318,7 @@ Host.Init = function()
 	Sbar.Init();
 	CL.Init();
 	IN.Init();
-	Cmd.text = 'exec quake.rc\n' + Cmd.text;
+	Cmd.text = 'exec quake.rc\nbind w +forward\nbind s +back\nbind a +moveleft\nbind d +moveright\nbind space +jump\n+mlook\n' + Cmd.text;
 	Host.initialized = true;
 	Sys.Print('========Quake Initialized=========\n');
 };
