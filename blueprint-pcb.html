@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPARSH KHANNA // SYSTEM DESIGN // EDA SCHEMATIC</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pcb-bg: #072619;
+            --pcb-dark: #04180F;
+            --pcb-grid: #0B3824;
+            --copper-gold: #C99742;
+            --copper-glow: #FBD46D;
+            --copper-dim: #7A5B24;
+            --silkscreen: #EAE6D9;
+            --silkscreen-faint: #8AA495;
+            --silicon-ic: #091710;
+            --pin-gold: #E5B354;
+            --led-green: #3DFF5E;
+            --led-amber: #FFA826;
+            --font-eda: 'Share Tech Mono', monospace;
+            --font-digital: 'VT323', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #030F0A;
+            color: var(--silkscreen);
+            font-family: var(--font-eda);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            user-select: none;
+            overflow-x: hidden;
+        }
+
+        /* ── Top Browser / Frame Bar ── */
+        .window-frame {
+            width: 100%;
+            max-width: 1360px;
+            background: #04120B;
+            border: 2px solid #143D28;
+            border-bottom: none;
+            border-radius: 6px 6px 0 0;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.72rem;
+            color: var(--silkscreen-faint);
+            letter-spacing: 0.08em;
+        }
+
+        .window-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        .dot.red { background: #FF5F56; }
+        .dot.yellow { background: #FFBD2E; }
+        .dot.green { background: #27C93F; }
+
+        .address-bar {
+            background: #082115;
+            border: 1px solid #164730;
+            padding: 3px 24px;
+            border-radius: 3px;
+            color: var(--silkscreen);
+            font-size: 0.75rem;
+        }
+
+        .nav-links-right a {
+            color: var(--copper-gold);
+            text-decoration: none;
+            margin-left: 12px;
+            font-size: 0.7rem;
+            border: 1px solid var(--copper-dim);
+            padding: 2px 8px;
+            border-radius: 2px;
+            transition: all 0.15s ease;
+        }
+
+        .nav-links-right a:hover {
+            color: #000;
+            background: var(--copper-gold);
+            border-color: var(--copper-gold);
+        }
+
+        /* ── Master PCB Canvas Board ── */
+        .pcb-board {
+            width: 100%;
+            max-width: 1360px;
+            height: 780px;
+            background-color: var(--pcb-bg);
+            border: 3px solid #1B4E33;
+            border-radius: 0 0 6px 6px;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), inset 0 0 40px rgba(0, 0, 0, 0.6);
+            overflow: hidden;
+            background-image: 
+                linear-gradient(var(--pcb-grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--pcb-grid) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* ── Integrated Top Header Strip Inside PCB ── */
+        .pcb-header-strip {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            right: 20px;
+            height: 38px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1.5px solid var(--silkscreen);
+            font-size: 0.75rem;
+            letter-spacing: 0.08em;
+            z-index: 20;
+        }
+
+        .header-title {
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pcb-header-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 0.68rem;
+            color: var(--silkscreen-faint);
+        }
+
+        .tag-pill {
+            border: 1px solid var(--silkscreen);
+            padding: 2px 8px;
+            color: var(--silkscreen);
+            border-radius: 2px;
+        }
+
+        /* ── Millimeter Perimeter Rulers ── */
+        .ruler-top {
+            position: absolute;
+            top: 52px;
+            left: 36px;
+            right: 36px;
+            height: 16px;
+            border-bottom: 1px solid var(--silkscreen-faint);
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.55rem;
+            color: var(--silkscreen-faint);
+            z-index: 10;
+        }
+
+        .ruler-left {
+            position: absolute;
+            top: 68px;
+            left: 14px;
+            bottom: 20px;
+            width: 22px;
+            border-right: 1px solid var(--silkscreen-faint);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            font-size: 0.55rem;
+            color: var(--silkscreen-faint);
+            text-align: right;
+            padding-right: 4px;
+            z-index: 10;
+        }
+
+        /* ── Center Schematic Navigation Buttons ── */
+        .schematic-nav-tabs {
+            position: absolute;
+            top: 80px;
+            left: 450px;
+            display: flex;
+            gap: 8px;
+            z-index: 30;
+        }
+
+        .tab-btn {
+            background: #082115;
+            border: 1.5px solid var(--silkscreen);
+            color: var(--silkscreen);
+            font-family: var(--font-eda);
+            font-size: 0.68rem;
+            padding: 4px 14px;
+            cursor: pointer;
+            border-radius: 2px;
+            transition: all 0.12s ease;
+        }
+
+        .tab-btn:hover {
+            border-color: var(--copper-gold);
+            color: var(--copper-gold);
+            background: #0C2E1F;
+        }
+
+        .tab-btn.active {
+            background: var(--silkscreen);
+            color: #000;
+            font-weight: 700;
+        }
+
+        /* ── Top Right Sub-Readout Boxes ── */
+        .top-sub-stats {
+            position: absolute;
+            top: 76px;
+            right: 40px;
+            display: flex;
+            gap: 20px;
+            font-size: 0.65rem;
+            color: var(--silkscreen-faint);
+            z-index: 10;
+        }
+
+        .stat-block-item {
+            border-left: 1px solid var(--silkscreen-faint);
+            padding-left: 8px;
+        }
+
+        .stat-block-item span.lbl {
+            display: block;
+            color: var(--silkscreen);
+            font-weight: 700;
+        }
+
+        /* ── SVG Master Copper Traces Layer ── */
+        .svg-board-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .trace-line {
+            stroke: var(--copper-gold);
+            stroke-width: 2.5;
+            fill: none;
+            stroke-linecap: square;
+            stroke-linejoin: round;
+            transition: all 0.2s ease;
+        }
+
+        .trace-bus {
+            stroke: var(--copper-gold);
+            stroke-width: 4.5;
+            fill: none;
+            stroke-linecap: square;
+            stroke-linejoin: round;
+        }
+
+        .trace-line.energized {
+            stroke: var(--copper-glow) !important;
+            stroke-width: 3.5 !important;
+            filter: drop-shadow(0 0 6px var(--copper-glow));
+            stroke-dasharray: 8 6;
+            animation: pulseTrace 0.6s linear infinite;
+        }
+
+        @keyframes pulseTrace {
+            from { stroke-dashoffset: 28; }
+            to { stroke-dashoffset: 0; }
+        }
+
+        .pad-circle {
+            fill: var(--copper-gold);
+            stroke: var(--pcb-bg);
+            stroke-width: 2;
+        }
+
+        .via-hole {
+            fill: #000;
+        }
+
+        /* ── 1. Left: QFP Central MCU Module ── */
+        .mcu-qfp-housing {
+            position: absolute;
+            top: 130px;
+            left: 105px;
+            width: 230px;
+            height: 230px;
+            background: #091710;
+            border: 2px solid #1E4430;
+            border-radius: 4px;
+            z-index: 15;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.15s ease;
+        }
+
+        .mcu-qfp-housing:hover {
+            transform: scale(1.02);
+            border-color: var(--copper-gold);
+        }
+
+        /* Circular Brushed-Metal Center Heatspreader */
+        .mcu-heatspreader {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 45% 45%, #E2E8EC 0%, #A4ADB5 50%, #68727A 100%);
+            border: 4px solid #48525A;
+            box-shadow: 
+                inset 2px 2px 6px rgba(255, 255, 255, 0.8),
+                inset -3px -3px 8px rgba(0, 0, 0, 0.7),
+                0 0 20px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            text-align: center;
+            position: relative;
+        }
+
+        .mcu-avatar {
+            width: 82px;
+            height: 82px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #33383E;
+            margin-bottom: 6px;
+            background: #000;
+        }
+
+        .mcu-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .mcu-engraved-name {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: #12181E;
+            letter-spacing: 0.05em;
+            line-height: 1;
+        }
+
+        .mcu-engraved-title {
+            font-size: 0.62rem;
+            color: #333D45;
+            letter-spacing: 0.04em;
+            margin-top: 2px;
+        }
+
+        /* ── MCU Datasheet Card Below MCU ── */
+        .mcu-datasheet-box {
+            position: absolute;
+            top: 430px;
+            left: 100px;
+            width: 250px;
+            background: #FAF7EA;
+            color: #111;
+            border: 2px solid #111;
+            padding: 12px 14px;
+            font-size: 0.72rem;
+            line-height: 1.45;
+            z-index: 15;
+            box-shadow: 3px 4px 12px rgba(0, 0, 0, 0.6);
+        }
+
+        .datasheet-heading {
+            font-weight: 700;
+            border-bottom: 1.5px solid #111;
+            padding-bottom: 4px;
+            margin-bottom: 8px;
+            letter-spacing: 0.05em;
+        }
+
+        /* ── 2. Center: IC Packages & Modules ── */
+        /* IC-1: KARMA (EXPERIENCE) */
+        .ic-box {
+            position: absolute;
+            background: #06150E;
+            border: 1.5px solid var(--silkscreen);
+            border-radius: 2px;
+            z-index: 15;
+            padding: 10px 14px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .ic-box:hover {
+            border-color: var(--copper-gold);
+            background: #0B2418;
+            box-shadow: 0 0 16px rgba(201, 151, 66, 0.4);
+        }
+
+        #ic-karma {
+            top: 200px;
+            left: 540px;
+            width: 200px;
+        }
+
+        .ic-header-tag {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--silkscreen);
+            margin-bottom: 4px;
+        }
+
+        .ic-body-text {
+            font-size: 0.65rem;
+            color: var(--silkscreen-faint);
+            line-height: 1.4;
+        }
+
+        /* IC-2: CREATIONS (PROJECTS) */
+        #ic-creations-main {
+            top: 360px;
+            left: 550px;
+            width: 110px;
+            height: 95px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            background: #091710;
+            border: 2px solid var(--copper-gold);
+            z-index: 15;
+        }
+
+        .pin-dot-corner {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            width: 6px;
+            height: 6px;
+            border: 1px solid var(--copper-gold);
+            border-radius: 50%;
+        }
+
+        .ic2-label {
+            position: absolute;
+            top: -24px;
+            left: -20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--silkscreen);
+            white-space: nowrap;
+        }
+
+        /* Project Daughter Module Boxes (REV & BLINKY) */
+        .sub-project-box {
+            position: absolute;
+            background: #071A12;
+            border: 1.5px solid var(--silkscreen);
+            padding: 8px 12px;
+            width: 135px;
+            font-size: 0.72rem;
+            text-align: center;
+            z-index: 15;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .sub-project-box:hover {
+            border-color: var(--copper-gold);
+            background: #0D2E20;
+            box-shadow: 0 0 14px rgba(201, 151, 66, 0.5);
+            transform: translateX(3px);
+        }
+
+        #mod-rev {
+            top: 360px;
+            left: 730px;
+        }
+
+        #mod-blinky {
+            top: 430px;
+            left: 730px;
+        }
+
+        /* IC-3: ACQUISITIONS (EDUCATION) */
+        #ic-acquisitions {
+            top: 550px;
+            left: 620px;
+            width: 250px;
+        }
+
+        /* Bottom Screw Terminal Block (5V, 12V, GND) */
+        .terminal-screw-block {
+            position: absolute;
+            bottom: 24px;
+            left: 460px;
+            display: flex;
+            background: #C99742;
+            border: 2px solid #5C4318;
+            padding: 4px 6px;
+            z-index: 15;
+            gap: 2px;
+        }
+
+        .screw-cell {
+            background: #0D1713;
+            border: 1px solid #5C4318;
+            padding: 6px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .screw-slot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #68727A;
+            border: 1px solid #333;
+            position: relative;
+        }
+
+        .screw-slot::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 2px;
+            width: 8px;
+            height: 1.5px;
+            background: #222;
+        }
+
+        .screw-lbl {
+            font-size: 0.55rem;
+            color: var(--silkscreen);
+        }
+
+        /* ── 3. Right: Power Bus (Skills) & Oscilloscope ── */
+        .power-bus-frame {
+            position: absolute;
+            top: 130px;
+            right: 40px;
+            width: 260px;
+            border: 1.5px solid var(--silkscreen);
+            padding: 12px 16px;
+            background: rgba(6, 21, 14, 0.85);
+            z-index: 15;
+        }
+
+        .power-bus-title {
+            font-size: 0.78rem;
+            font-weight: 700;
+            border-bottom: 1.5px solid var(--silkscreen);
+            padding-bottom: 4px;
+            margin-bottom: 12px;
+        }
+
+        .skill-rail {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.72rem;
+            cursor: pointer;
+            transition: all 0.12s ease;
+        }
+
+        .skill-rail:hover {
+            color: var(--copper-gold);
+        }
+
+        .skill-meter-pill {
+            width: 110px;
+            height: 14px;
+            background: #0A1E14;
+            border: 1.5px solid var(--silkscreen);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .meter-fill {
+            height: 100%;
+            background: var(--silkscreen);
+        }
+
+        /* Mini Top Waveform Box in Center */
+        .mini-scope-center {
+            position: absolute;
+            top: 130px;
+            left: 755px;
+            width: 140px;
+            height: 55px;
+            background: #05140C;
+            border: 1.5px solid #1E4430;
+            z-index: 15;
+            padding: 4px;
+        }
+
+        /* Large Oscilloscope Display (Right) */
+        .oscilloscope-display {
+            position: absolute;
+            top: 360px;
+            right: 40px;
+            width: 260px;
+            height: 120px;
+            background: #04120A;
+            border: 1.5px solid #1A422D;
+            z-index: 15;
+            padding: 8px;
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8);
+        }
+
+        .scope-grid-bg {
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(26, 66, 45, 0.4) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(26, 66, 45, 0.4) 1px, transparent 1px);
+            background-size: 12px 12px;
+            position: relative;
+        }
+
+        /* Bottom Right Diagnostic Terminal Log */
+        .diagnostic-log-pane {
+            position: absolute;
+            top: 500px;
+            right: 40px;
+            width: 260px;
+            height: 190px;
+            background: #04120A;
+            border: 1.5px solid #1A422D;
+            padding: 10px;
+            font-size: 0.65rem;
+            color: var(--silkscreen-faint);
+            line-height: 1.45;
+            overflow-y: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            z-index: 15;
+        }
+
+        .log-row {
+            white-space: nowrap;
+        }
+
+        .log-row.highlight {
+            color: var(--copper-gold);
+            font-weight: 700;
+        }
+
+        /* Component Details Modal Overlay */
+        .component-modal-overlay {
+            position: absolute;
+            top: 60px;
+            left: 60px;
+            right: 60px;
+            bottom: 60px;
+            background: rgba(4, 18, 11, 0.98);
+            border: 2px solid var(--copper-gold);
+            z-index: 100;
+            padding: 24px;
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.95);
+        }
+
+        .component-modal-overlay.open {
+            display: flex;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ── Top Simulated Browser Bar ── -->
+    <div class="window-frame">
+        <div class="window-dots">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+        </div>
+        <div class="address-bar">blueprint.khanna.dev</div>
+        <div class="nav-links-right">
+            <a href="pcb-schematic.html">SCHEMATIC 1.0</a>
+            <a href="obsidian-codex.html">CODEX</a>
+            <a href="isometric-studio.html">PIXEL</a>
+            <a href="index.html">WIN95</a>
+        </div>
+    </div>
+
+    <!-- ── Master PCB Canvas Board ── -->
+    <main class="pcb-board">
+
+        <!-- ── Integrated Header Strip ── -->
+        <div class="pcb-header-strip">
+            <div class="header-title">
+                <span>SYSTEM DESIGN // EDA SCHEMATIC //</span>
+                <span style="color: var(--copper-gold);">SPARSH KHANNA</span>
+            </div>
+            <div class="pcb-header-meta">
+                <span>PCB PANEL ID: <span class="tag-pill">REV 2.0</span></span>
+                <span>SYSTEM CLOCK: 1GHz</span>
+                <span>CLOCK 38/MHZ // AEPCD68ROUND 28.2 MM2</span>
+            </div>
+        </div>
+
+        <!-- ── Millimeter Coordinate Rulers ── -->
+        <div class="ruler-top">
+            <span>| 0</span><span>| 30</span><span>| 60</span><span>| 90</span><span>| 120</span>
+            <span>| 150</span><span>| 180</span><span>| 210</span><span>| 240</span><span>| 270</span>
+            <span>| 300</span><span>| 330</span><span>| 360</span>
+        </div>
+
+        <div class="ruler-left">
+            <div>0 -</div><div>40 -</div><div>80 -</div><div>120 -</div><div>160 -</div>
+            <div>200 -</div><div>240 -</div><div>280 -</div><div>320 -</div>
+        </div>
+
+        <!-- ── Top Nav Tabs Strip ── -->
+        <div class="schematic-nav-tabs">
+            <button class="tab-btn active" id="btn-schematic" onclick="selectTab('schematic')">SCHEMATIC</button>
+            <button class="tab-btn" id="btn-routing" onclick="selectTab('routing')">ROUTING</button>
+            <button class="tab-btn" id="btn-bom" onclick="selectTab('bom')">BILL OF MATERIALS</button>
+            <button class="tab-btn" id="btn-diagnostics" onclick="selectTab('diagnostics')">DIAGNOSTICS</button>
+        </div>
+
+        <div class="top-sub-stats">
+            <div class="stat-block-item">
+                <span class="lbl">ACTIVE DIAGNOSTIC STATS</span>
+                <span>DIAGNOSTE: 10GS S20S</span>
+            </div>
+            <div class="stat-block-item">
+                <span class="lbl">STATUS LEDS</span>
+                <span>GROUNDS 88%</span>
+            </div>
+        </div>
+
+        <!-- ── SVG Master Metallic Copper Traces & Pads Layer ── -->
+        <svg class="svg-board-layer" viewBox="0 0 1360 780">
+            
+            <!-- Traces radiating from MCU Top to Bus -->
+            <path class="trace-line" d="M 140 130 L 140 90 L 380 90" />
+            <path class="trace-line" d="M 160 130 L 160 98 L 380 98" />
+            <path class="trace-line" d="M 180 130 L 180 106 L 380 106" />
+            <path class="trace-line" d="M 200 130 L 200 114 L 380 114" />
+            <path class="trace-line" d="M 220 130 L 220 122 L 380 122" />
+
+            <!-- Traces from MCU Right Pins through 45-degree bends to IC-1 & IC-2 -->
+            <path id="tr-mcu-karma" class="trace-line" d="M 335 180 L 370 180 L 400 210 L 540 210" />
+            <path class="trace-line" d="M 335 200 L 365 200 L 410 245 L 470 245" />
+            <path class="trace-line" d="M 335 220 L 380 220 L 430 270 L 430 330 L 480 380 L 550 380" />
+            <path id="tr-mcu-ic2" class="trace-line" d="M 335 240 L 390 240 L 440 290 L 440 350 L 480 390 L 550 390" />
+            <path class="trace-line" d="M 335 260 L 370 260 L 410 300 L 410 390 L 450 430 L 550 430" />
+
+            <!-- Traces from IC-1 Karma to Power Bus Resistors -->
+            <path id="tr-karma-bus" class="trace-line" d="M 740 210 L 780 210 L 810 180 L 1000 180 L 1020 160 L 1060 160" />
+            <path class="trace-line" d="M 740 225 L 775 225 L 805 195 L 980 195 L 1010 205 L 1060 205" />
+            <path class="trace-line" d="M 740 240 L 770 240 L 800 270 L 970 270 L 1000 250 L 1060 250" />
+
+            <!-- Thick Copper Bus Lines connecting to Skills (Power Bus) -->
+            <path class="trace-bus" d="M 850 310 L 960 310 L 1000 270 L 1020 270 L 1050 240 L 1080 240" />
+            <path class="trace-bus" d="M 860 330 L 950 330 L 990 290 L 1030 290 L 1050 280 L 1080 280" />
+            <path class="trace-bus" d="M 870 350 L 940 350 L 980 320 L 1040 320 L 1080 320" />
+
+            <!-- Traces connecting to IC-3 Acquisitions and Bottom Terminal -->
+            <path class="trace-line" d="M 550 470 L 510 510 L 510 590 L 620 590" />
+            <path class="trace-line" d="M 550 490 L 490 550 L 490 620 L 620 620" />
+            <path class="trace-line" d="M 460 700 L 460 670 L 500 630 L 500 580" />
+            <path class="trace-line" d="M 500 700 L 500 660 L 530 630 L 530 580" />
+
+            <!-- Right-Hand Oscilloscope Bus Trace wrapping into log -->
+            <path class="trace-line" d="M 1000 480 L 1000 690 L 930 730 L 850 730" />
+            <path class="trace-line" d="M 1015 480 L 1015 675 L 940 715 L 860 715" />
+
+            <!-- Gold Through-Hole Contact Pads on Power Bus -->
+            <circle cx="1060" cy="160" r="7" class="pad-circle" /><circle cx="1060" cy="160" r="2.5" class="via-hole" />
+            <circle cx="1060" cy="205" r="7" class="pad-circle" /><circle cx="1060" cy="205" r="2.5" class="via-hole" />
+            <circle cx="1060" cy="250" r="7" class="pad-circle" /><circle cx="1060" cy="250" r="2.5" class="via-hole" />
+            <circle cx="1060" cy="285" r="7" class="pad-circle" /><circle cx="1060" cy="285" r="2.5" class="via-hole" />
+            <circle cx="1060" cy="325" r="7" class="pad-circle" /><circle cx="1060" cy="325" r="2.5" class="via-hole" />
+            <circle cx="1060" cy="365" r="7" class="pad-circle" /><circle cx="1060" cy="365" r="2.5" class="via-hole" />
+
+            <!-- Decorative Schematics Elements (Ground, Capacitor C3, Resistor block) -->
+            <!-- C3 Capacitor -->
+            <line x1="390" y1="630" x2="410" y2="630" stroke="#C99742" stroke-width="2" />
+            <line x1="410" y1="620" x2="410" y2="640" stroke="#EAE6D9" stroke-width="2.5" />
+            <line x1="416" y1="620" x2="416" y2="640" stroke="#EAE6D9" stroke-width="2.5" />
+            <line x1="416" y1="630" x2="436" y2="630" stroke="#C99742" stroke-width="2" />
+            <text x="395" y="612" fill="#EAE6D9" font-size="11" font-family="monospace">C3</text>
+
+            <!-- GND Earth Ground Symbol -->
+            <line x1="426" y1="710" x2="426" y2="725" stroke="#C99742" stroke-width="2" />
+            <line x1="416" y1="725" x2="436" y2="725" stroke="#C99742" stroke-width="2" />
+            <line x1="420" y1="729" x2="432" y2="729" stroke="#C99742" stroke-width="1.8" />
+            <line x1="424" y1="733" x2="428" y2="733" stroke="#C99742" stroke-width="1.5" />
+
+            <!-- Copper Resistor Block (5V) -->
+            <rect x="880" y="240" width="36" height="18" fill="#C99742" stroke="#5C4318" stroke-width="1.5" />
+            <text x="882" y="232" fill="#EAE6D9" font-size="10" font-family="monospace">5V</text>
+
+            <!-- Zigzag Resistors -->
+            <path d="M 920 270 L 925 264 L 935 276 L 945 264 L 955 276 L 960 270" fill="none" stroke="#C99742" stroke-width="2" />
+            <path d="M 920 345 L 925 339 L 935 351 L 945 339 L 955 351 L 960 345" fill="none" stroke="#C99742" stroke-width="2" />
+        </svg>
+
+        <!-- ── 1. Left Column: Central MCU & Datasheet ── -->
+        <div class="mcu-qfp-housing" id="mcu-card" onclick="openComponentModal('mcu')">
+            <div class="mcu-heatspreader">
+                <div class="mcu-avatar">
+                    <img src="pfp.png" alt="Sparsh Khanna" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\'><rect width=\'100\' height=\'100\' fill=\'%2368727A\'/><text x=\'50\' y=\'55\' fill=\'%23FFF\' font-size=\'24\' text-anchor=\'middle\' font-family=\'sans-serif\'>SK</text></svg>'">
+                </div>
+                <div class="mcu-engraved-name">SPARSH KHANNA</div>
+                <div class="mcu-engraved-title">SYSTEMS &amp; AI ENGINEER</div>
+            </div>
+        </div>
+
+        <!-- MCU Data Sheet Silkscreen Box -->
+        <div class="mcu-datasheet-box">
+            <div class="datasheet-heading">MCU DATA SHEET</div>
+            <p>
+                Hardware &amp; Software Engineer specializing in Agentic AI architectures (LangGraph, Stateful RAG) and Edge Computing (ESP32).
+            </p>
+            <p style="margin-top: 6px;">
+                Leader of scalable systems and team operations.
+            </p>
+        </div>
+
+        <!-- ── 2. Center: IC Packages & Project Daughter Modules ── -->
+        <!-- IC-1: KARMA (EXPERIENCE) -->
+        <div class="ic-box" id="ic-karma" onclick="openComponentModal('karma')">
+            <div class="ic-header-tag">IC-1: KARMA (EXPERIENCE)</div>
+            <div class="ic-body-text" style="color: var(--silkscreen); font-weight: 700; margin-bottom: 2px;">
+                GNDU PLACEMENT HEAD
+            </div>
+            <div class="ic-body-text">
+                (COORD: 10+ DRIVES, 200% OUTPUT BOOST, OFF_LOR_APPROVED)
+            </div>
+        </div>
+
+        <!-- IC-2: CREATIONS (PROJECTS HUB) -->
+        <div id="ic-creations-main" onclick="openComponentModal('creations')">
+            <div class="pin-dot-corner"></div>
+            <div class="ic2-label">IC-2: CREATIONS (PROJECTS)</div>
+            <div style="font-size: 0.65rem; color: var(--copper-gold); text-align: center;">HUB CORE<br>QFN-32</div>
+        </div>
+
+        <!-- Daughter Modules (REV & BLINKY) -->
+        <div class="sub-project-box" id="mod-rev" onclick="openComponentModal('rev')">
+            <div style="font-weight: 700; color: var(--silkscreen);">REV</div>
+            <div style="font-size: 0.62rem; color: var(--silkscreen-faint);">(RUST DAG ENGINE)</div>
+        </div>
+
+        <div class="sub-project-box" id="mod-blinky" onclick="openComponentModal('blinky')">
+            <div style="font-weight: 700; color: var(--silkscreen);">BLINKY</div>
+            <div style="font-size: 0.62rem; color: var(--silkscreen-faint);">(VOICE OS)</div>
+        </div>
+
+        <!-- IC-3: ACQUISITIONS (EDUCATION) -->
+        <div class="ic-box" id="ic-acquisitions" onclick="openComponentModal('acquisitions')">
+            <div class="ic-header-tag">IC-3: ACQUISITIONS (EDUCATION)</div>
+            <div class="ic-body-text" style="color: var(--silkscreen); font-weight: 700;">
+                B.TECH ECE // GURU NANAK DEV UNIV // 2022–2026
+            </div>
+        </div>
+
+        <!-- Bottom Screw Terminal Block -->
+        <div class="terminal-screw-block">
+            <div class="screw-cell"><div class="screw-slot"></div><span class="screw-lbl">1U</span></div>
+            <div class="screw-cell"><div class="screw-slot"></div><span class="screw-lbl">12V</span></div>
+            <div class="screw-cell"><div class="screw-slot"></div><span class="screw-lbl">100</span></div>
+            <div class="screw-cell"><div class="screw-slot"></div><span class="screw-lbl">100</span></div>
+            <div class="screw-cell"><div class="screw-slot"></div><span class="screw-lbl">SMD</span></div>
+            <div class="screw-cell"><div class="screw-slot"></div><span class="screw-lbl">GND</span></div>
+        </div>
+
+        <!-- ── 3. Right: Power Bus (Skills) & Real Oscilloscope ── -->
+        <div class="power-bus-frame">
+            <div class="power-bus-title">POWER BUS (SKILLS)</div>
+            
+            <div class="skill-rail" onclick="triggerSkillTrace('Rust')">
+                <span>Rust</span>
+                <div class="skill-meter-pill"><div class="meter-fill" style="width: 85%;"></div></div>
+            </div>
+
+            <div class="skill-rail" onclick="triggerSkillTrace('Python')">
+                <span>Python</span>
+                <div class="skill-meter-pill"><div class="meter-fill" style="width: 95%;"></div></div>
+            </div>
+
+            <div class="skill-rail" onclick="triggerSkillTrace('LangGraph')">
+                <span>LangGraph</span>
+                <div class="skill-meter-pill"><div class="meter-fill" style="width: 92%;"></div></div>
+            </div>
+
+            <div class="skill-rail" onclick="triggerSkillTrace('FastAPI')">
+                <span>FastAPI</span>
+                <div class="skill-meter-pill"><div class="meter-fill" style="width: 88%;"></div></div>
+            </div>
+
+            <div class="skill-rail" onclick="triggerSkillTrace('ESP32')">
+                <span>ESP32</span>
+                <div class="skill-meter-pill"><div class="meter-fill" style="width: 90%;"></div></div>
+            </div>
+        </div>
+
+        <!-- Mini Center Scope Window -->
+        <div class="mini-scope-center">
+            <svg viewBox="0 0 130 45" style="width: 100%; height: 100%;">
+                <path d="M 0 22 Q 15 5 30 22 T 60 22 T 90 22 T 120 22" fill="none" stroke="#C99742" stroke-width="1.5" />
+            </svg>
+        </div>
+
+        <!-- Large Oscilloscope Window -->
+        <div class="oscilloscope-display">
+            <div class="scope-grid-bg">
+                <svg viewBox="0 0 240 100" style="width: 100%; height: 100%;">
+                    <path id="real-scope-path" d="M 0 50 Q 15 15 30 50 T 60 50 T 90 50 T 120 50 T 150 50 T 180 50 T 210 50 T 240 50" fill="none" stroke="#C99742" stroke-width="2" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- Bottom Right Live Diagnostic Terminal Log -->
+        <div class="diagnostic-log-pane" id="diag-terminal">
+            <div class="log-row">Diagnostic system terminal data log ...</div>
+            <div class="log-row">Diagnostic system terminal data log ...</div>
+            <div class="log-row">Diagnostic system terminal data log ...</div>
+            <div class="log-row">Diagnostic system 1581370s LED</div>
+            <div class="log-row">Diagnostic system 1581270s LED</div>
+            <div class="log-row">Diagnostic system 1581170s LED</div>
+            <div class="log-row highlight">&gt; BOARD TRACE VERIFIED // 100% NOMINAL</div>
+        </div>
+
+        <!-- ── Component Detail Modal Overlay ── -->
+        <div class="component-modal-overlay" id="component-modal">
+            <div>
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid var(--copper-gold); padding-bottom: 8px;">
+                    <h2 id="modal-title" style="color: var(--copper-glow); font-size: 1.15rem;">COMPONENT SPECIFICATION</h2>
+                    <button onclick="closeComponentModal()" style="background: none; border: 1px solid var(--copper-gold); color: var(--copper-gold); padding: 4px 10px; cursor: pointer; font-family: monospace;">✕ CLOSE</button>
+                </div>
+                <div id="modal-content" style="font-size: 0.85rem; line-height: 1.7; color: var(--silkscreen); margin-top: 16px;">
+                    <!-- Injected dynamically -->
+                </div>
+            </div>
+            <div style="border-top: 1px dashed var(--copper-dim); padding-top: 12px; display: flex; justify-content: space-between;">
+                <span style="font-size: 0.72rem; color: var(--silkscreen-faint);">CIRCUIT VALIDATED</span>
+                <a href="docs/Sparsh_khanna_Resume_gndu-18.pdf" target="_blank" style="color: var(--copper-gold); text-decoration: none; border: 1px solid var(--copper-gold); padding: 4px 12px;">↓ DOWNLOAD RESUME (PDF)</a>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ── Interactive JavaScript Engine ── -->
+    <script>
+        // ── 1. Animated Oscilloscope Waveform ──
+        let phase = 0;
+        function renderWave() {
+            phase += 0.08;
+            const path = document.getElementById('real-scope-path');
+            if (path) {
+                let d = 'M 0 50 ';
+                for (let x = 0; x <= 240; x += 15) {
+                    const y = 50 + Math.sin((x * 0.12) + phase) * 28;
+                    d += `L ${x} ${y.toFixed(1)} `;
+                }
+                path.setAttribute('d', d);
+            }
+            requestAnimationFrame(renderWave);
+        }
+        renderWave();
+
+        // ── 2. Diagnostic Terminal Append ──
+        function appendDiagLog(msg, isHighlight = false) {
+            const pane = document.getElementById('diag-terminal');
+            if (!pane) return;
+            const row = document.createElement('div');
+            row.className = 'log-row' + (isHighlight ? ' highlight' : '');
+            row.innerText = msg;
+            pane.appendChild(row);
+            if (pane.children.length > 9) {
+                pane.removeChild(pane.children[0]);
+            }
+        }
+
+        // ── 3. Skill Trace Trigger ──
+        function triggerSkillTrace(skill) {
+            const tr = document.getElementById('tr-karma-bus');
+            if (tr) {
+                tr.classList.add('energized');
+                setTimeout(() => tr.classList.remove('energized'), 1400);
+            }
+            appendDiagLog(`> POWER BUS PULSE: [${skill.toUpperCase()}] 3.3V ACTIVE`, true);
+        }
+
+        // ── 4. Component Modal Data ──
+        const modalData = {
+            'mcu': {
+                title: "MCU-01 // SPARSH KHANNA (CENTRAL PROCESSOR)",
+                content: `
+                    <div><strong>PACKAGE:</strong> QFP-64 WITH DUAL COPPER SLAB</div>
+                    <div><strong>CLOCK FREQUENCY:</strong> 240 MHZ DUAL-CORE XTENSA</div>
+                    <p style="margin-top: 8px;">
+                        Specialized Systems &amp; Software Engineer architecting deterministic agentic AI workflows (LangGraph, Stateful RAG) and embedded hardware telemetry (ESP32). State Winner of India Skill Competition 2024.
+                    </p>
+                `
+            },
+            'karma': {
+                title: "IC-1 // KARMA: GNDU PLACEMENT LEADERSHIP",
+                content: `
+                    <div><strong>AFFILIATION:</strong> Guru Nanak Dev University (2024–Present)</div>
+                    <div><strong>THROUGHPUT IMPACT:</strong> +200% Output Boost</div>
+                    <p style="margin-top: 8px;">
+                        Directed university-wide recruitment logistics across faculties, coordinating 10+ corporate recruitment drives. Awarded official Letter of Recommendation (LOR) for architectural leadership.
+                    </p>
+                `
+            },
+            'creations': {
+                title: "IC-2 // CREATIONS: SYSTEMS ARCHITECTURE HUB",
+                content: `
+                    <div><strong>APPLICATION DOMAIN:</strong> Parallel Task Graphs &amp; Embedded Voice</div>
+                    <p style="margin-top: 8px;">
+                        Central routing core connecting ReV (Rust DAG Engine) and Blinky (ESP32 Voice OS) into a unified distributed computing topology.
+                    </p>
+                `
+            },
+            'rev': {
+                title: "DAUGHTER-MOD // REV (RUST DAG ENGINE)",
+                content: `
+                    <div><strong>LANGUAGE:</strong> Rust / Tokio / Lock-Free Queues</div>
+                    <p style="margin-top: 8px;">
+                        High-concurrency directed acyclic graph execution engine for executing complex multi-agent workflows with sub-millisecond scheduling overhead.
+                    </p>
+                `
+            },
+            'blinky': {
+                title: "DAUGHTER-MOD // BLINKY (EMBEDDED VOICE OS)",
+                content: `
+                    <div><strong>HARDWARE:</strong> ESP32-WROOM-32 / C++ / FreeRTOS</div>
+                    <p style="margin-top: 8px;">
+                        Low-power embedded offline voice assistant performing on-device acoustic keyword spotting with sub-100ms response latency. State Winner, India Skill Competition 2024.
+                    </p>
+                `
+            },
+            'acquisitions': {
+                title: "IC-3 // ACQUISITIONS: B.TECH ECE DEGREE",
+                content: `
+                    <div><strong>INSTITUTION:</strong> Guru Nanak Dev University, Amritsar (2022–2026)</div>
+                    <div><strong>DISCIPLINE:</strong> Electronics &amp; Computer Engineering</div>
+                    <p style="margin-top: 8px;">
+                        Comprehensive curriculum in low-level microcontrollers, signal processing, high-performance data structures, and distributed cloud systems.
+                    </p>
+                `
+            }
+        };
+
+        function openComponentModal(key) {
+            const data = modalData[key];
+            if (!data) return;
+            document.getElementById('modal-title').innerText = data.title;
+            document.getElementById('modal-content').innerHTML = data.content;
+            document.getElementById('component-modal').classList.add('open');
+            appendDiagLog(`> MODAL OPEN: [${key.toUpperCase()}] INSPECTED`, true);
+        }
+
+        function closeComponentModal() {
+            document.getElementById('component-modal').classList.remove('open');
+        }
+
+        // ── 5. Tab Switching ──
+        function selectTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            const btn = document.getElementById(`btn-${tab}`);
+            if (btn) btn.classList.add('active');
+            appendDiagLog(`> WORKSPACE MODE: [${tab.toUpperCase()}] ENGAGED`, true);
+        }
+
+        // Escape closes modal
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeComponentModal();
+        });
+    </script>
+</body>
+
+</html>

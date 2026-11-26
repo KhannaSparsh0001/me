@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPARSH KHANNA // JYOTISH EPHEMERIS & VEDIC COMPUTATIONAL ENGINE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-obsidian: #090A0D;
+            --bg-panel: #0E1015;
+            --bg-panel-trans: rgba(14, 16, 21, 0.88);
+            --gold-primary: #C5A059;
+            --gold-light: #E5C378;
+            --gold-dim: #7C6638;
+            --saffron: #FF5A1F;
+            --saffron-glow: rgba(255, 90, 31, 0.28);
+            --cream-parchment: #EADBC8;
+            --cream-muted: #A39B8F;
+            --border-brass: rgba(197, 160, 89, 0.28);
+            --border-brass-bright: rgba(197, 160, 89, 0.7);
+            --font-serif: 'Cinzel', serif;
+            --font-reading: 'Cormorant Garamond', serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-obsidian);
+            color: var(--cream-parchment);
+            font-family: var(--font-reading);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+            background-image: 
+                radial-gradient(circle at 50% 20%, rgba(197, 160, 89, 0.05) 0%, transparent 60%),
+                radial-gradient(circle at 80% 80%, rgba(255, 90, 31, 0.03) 0%, transparent 50%),
+                linear-gradient(rgba(197, 160, 89, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(197, 160, 89, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 64px 64px, 64px 64px;
+        }
+
+        /* Astrolabe Background Gear Parallax Rings */
+        .astrolabe-bg {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 1100px;
+            height: 1100px;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.16;
+            animation: spinDial 360s linear infinite;
+        }
+
+        @keyframes spinDial {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Top Ephemeris Telemetry Bar */
+        .ephemeris-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(9, 10, 13, 0.94);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border-brass);
+            padding: 8px 24px;
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--gold-light);
+        }
+
+        .telemetry-node {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .pulse-indicator {
+            width: 6px;
+            height: 6px;
+            background-color: var(--saffron);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--saffron);
+            animation: blinker 2s infinite ease-in-out;
+        }
+
+        @keyframes blinker {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.85); }
+        }
+
+        .theme-switcher-nav {
+            display: flex;
+            gap: 8px;
+        }
+
+        .theme-btn {
+            background: transparent;
+            border: 1px solid var(--border-brass);
+            color: var(--gold-light);
+            padding: 4px 10px;
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .theme-btn:hover {
+            border-color: var(--gold-primary);
+            background: rgba(197, 160, 89, 0.1);
+            color: #fff;
+        }
+
+        /* Layout Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px 24px 80px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header Identity */
+        .identity-banner {
+            display: grid;
+            grid-template-columns: 200px 1fr 340px;
+            gap: 32px;
+            align-items: center;
+            border: 1px solid var(--border-brass);
+            background: var(--bg-panel-trans);
+            padding: 32px;
+            margin-bottom: 32px;
+            position: relative;
+        }
+
+        .identity-banner::before {
+            content: "॥ श्री ॥";
+            position: absolute;
+            top: -10px;
+            left: 32px;
+            background: var(--bg-obsidian);
+            padding: 0 12px;
+            font-family: var(--font-serif);
+            font-size: 0.75rem;
+            color: var(--gold-light);
+            letter-spacing: 0.3em;
+        }
+
+        .astrolabe-portrait {
+            width: 180px;
+            height: 180px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .portrait-dial {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 1px dashed var(--gold-primary);
+            border-radius: 50%;
+            animation: spinDial 60s linear infinite reverse;
+        }
+
+        .portrait-inner {
+            width: 144px;
+            height: 144px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid var(--gold-primary);
+            box-shadow: 0 0 20px rgba(197, 160, 89, 0.25);
+            background: #000;
+        }
+
+        .portrait-inner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: contrast(110%) sepia(20%) brightness(95%);
+        }
+
+        .identity-text h1 {
+            font-family: var(--font-serif);
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--gold-light);
+            letter-spacing: 0.08em;
+            line-height: 1.1;
+            margin-bottom: 8px;
+        }
+
+        .identity-text .tagline {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--saffron);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        .identity-text .bio {
+            font-size: 1.18rem;
+            color: var(--cream-parchment);
+            max-width: 650px;
+            line-height: 1.5;
+        }
+
+        .natal-coordinates {
+            border-left: 1px solid var(--border-brass);
+            padding-left: 24px;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .coord-row {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px dotted rgba(197, 160, 89, 0.2);
+            padding-bottom: 4px;
+        }
+
+        .coord-label {
+            color: var(--gold-dim);
+        }
+
+        .coord-value {
+            color: var(--cream-parchment);
+        }
+
+        .coord-value.active {
+            color: var(--saffron);
+            font-weight: 700;
+        }
+
+        /* ── Dasha Chronology Horizontal Progression Bar ── */
+        .dasha-rail-panel {
+            background: var(--bg-panel-trans);
+            border: 1px solid var(--border-brass);
+            padding: 24px 32px;
+            margin-bottom: 32px;
+        }
+
+        .section-label {
+            font-family: var(--font-serif);
+            font-size: 0.9rem;
+            color: var(--gold-light);
+            letter-spacing: 0.25em;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-label::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--border-brass), transparent);
+        }
+
+        .dasha-track {
+            display: grid;
+            grid-template-columns: 2fr 3fr 3.5fr;
+            gap: 12px;
+            position: relative;
+        }
+
+        .dasha-period {
+            border: 1px solid var(--border-brass);
+            padding: 16px;
+            background: rgba(9, 10, 13, 0.7);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .dasha-period:hover, .dasha-period.active {
+            border-color: var(--gold-primary);
+            background: rgba(197, 160, 89, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .dasha-period.active {
+            border-color: var(--saffron);
+            box-shadow: 0 0 15px var(--saffron-glow);
+        }
+
+        .dasha-glyph {
+            font-family: var(--font-serif);
+            font-size: 1.4rem;
+            color: var(--gold-light);
+            margin-bottom: 4px;
+        }
+
+        .dasha-era {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--gold-dim);
+            letter-spacing: 0.1em;
+        }
+
+        .dasha-title {
+            font-family: var(--font-serif);
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--cream-parchment);
+            margin: 6px 0;
+        }
+
+        .dasha-desc {
+            font-size: 0.95rem;
+            color: var(--cream-muted);
+            line-height: 1.4;
+        }
+
+        /* ── Central North Indian Kundali Chart (12 Houses) & Inspector ── */
+        .chart-workbench {
+            display: grid;
+            grid-template-columns: 560px 1fr;
+            gap: 32px;
+            align-items: start;
+            margin-bottom: 32px;
+        }
+
+        .kundali-wrapper {
+            background: var(--bg-panel-trans);
+            border: 1px solid var(--border-brass);
+            padding: 28px;
+            text-align: center;
+            position: relative;
+        }
+
+        .kundali-svg {
+            width: 100%;
+            max-width: 480px;
+            height: auto;
+            margin: 0 auto;
+            filter: drop-shadow(0 0 10px rgba(197, 160, 89, 0.15));
+        }
+
+        .chart-house {
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .chart-house polygon, .chart-house path {
+            fill: rgba(14, 16, 21, 0.7);
+            stroke: var(--gold-dim);
+            stroke-width: 1.2;
+            transition: all 0.3s ease;
+        }
+
+        .chart-house text {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            fill: var(--gold-light);
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .chart-house text.house-label {
+            font-family: var(--font-serif);
+            font-size: 13px;
+            font-weight: 700;
+            fill: var(--cream-parchment);
+        }
+
+        .chart-house text.sub-label {
+            font-size: 9px;
+            fill: var(--cream-muted);
+        }
+
+        .chart-house:hover polygon, .chart-house:hover path {
+            fill: rgba(197, 160, 89, 0.18);
+            stroke: var(--gold-light);
+        }
+
+        .chart-house.selected polygon, .chart-house.selected path {
+            fill: rgba(255, 90, 31, 0.14);
+            stroke: var(--saffron);
+            stroke-width: 2;
+        }
+
+        .chart-house.selected text.house-label {
+            fill: var(--saffron);
+        }
+
+        /* House Inspector Panel */
+        .inspector-panel {
+            background: var(--bg-panel-trans);
+            border: 1px solid var(--border-brass);
+            padding: 32px;
+            min-height: 520px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .inspector-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            border-bottom: 1px solid var(--border-brass);
+            padding-bottom: 14px;
+            margin-bottom: 20px;
+        }
+
+        .inspector-bhava {
+            font-family: var(--font-serif);
+            font-size: 1.6rem;
+            color: var(--gold-light);
+        }
+
+        .inspector-deg {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--saffron);
+            letter-spacing: 0.15em;
+        }
+
+        .inspector-content h3 {
+            font-family: var(--font-serif);
+            font-size: 1.35rem;
+            color: var(--cream-parchment);
+            margin-bottom: 12px;
+        }
+
+        .inspector-content p {
+            font-size: 1.12rem;
+            color: var(--cream-muted);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .inspector-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .inspector-item {
+            border: 1px solid rgba(197, 160, 89, 0.2);
+            padding: 12px 16px;
+            background: rgba(9, 10, 13, 0.6);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .inspector-item-title {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--gold-light);
+            font-weight: 500;
+        }
+
+        .inspector-item-badge {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            padding: 3px 8px;
+            border: 1px solid var(--gold-dim);
+            color: var(--cream-parchment);
+        }
+
+        /* ── Shadbala Segmented Strength Matrix ── */
+        .shadbala-section {
+            background: var(--bg-panel-trans);
+            border: 1px solid var(--border-brass);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        .shadbala-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .shadbala-card {
+            border: 1px solid rgba(197, 160, 89, 0.2);
+            background: rgba(9, 10, 13, 0.7);
+            padding: 16px 20px;
+        }
+
+        .shadbala-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            margin-bottom: 10px;
+        }
+
+        .shadbala-metric {
+            color: var(--gold-light);
+            font-weight: 700;
+        }
+
+        .shadbala-rupa {
+            color: var(--saffron);
+        }
+
+        .meter-rail {
+            height: 10px;
+            background: rgba(14, 16, 21, 0.9);
+            border: 1px solid var(--border-brass);
+            display: flex;
+            gap: 3px;
+            padding: 1px;
+            margin-bottom: 8px;
+        }
+
+        .meter-segment {
+            flex: 1;
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .meter-segment.filled {
+            background: var(--gold-primary);
+        }
+
+        .meter-segment.filled.exalted {
+            background: var(--saffron);
+            box-shadow: 0 0 6px var(--saffron-glow);
+        }
+
+        .shadbala-tags {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--cream-muted);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border-brass);
+            padding: 32px;
+            text-align: center;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--gold-dim);
+            letter-spacing: 0.15em;
+        }
+
+        @media (max-width: 1024px) {
+            .identity-banner {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .astrolabe-portrait {
+                margin: 0 auto;
+            }
+            .natal-coordinates {
+                border-left: none;
+                border-top: 1px solid var(--border-brass);
+                padding-left: 0;
+                padding-top: 20px;
+            }
+            .chart-workbench {
+                grid-template-columns: 1fr;
+            }
+            .dasha-track {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Background Rotating Astrolabe Rings -->
+    <svg class="astrolabe-bg" viewBox="0 0 1000 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="500" cy="500" r="480" stroke="#C5A059" stroke-width="1" stroke-dasharray="2 6" />
+        <circle cx="500" cy="500" r="440" stroke="#C5A059" stroke-width="0.75" />
+        <circle cx="500" cy="500" r="380" stroke="#C5A059" stroke-width="1.2" stroke-dasharray="1 8" />
+        <circle cx="500" cy="500" r="300" stroke="#C5A059" stroke-width="0.5" />
+        <circle cx="500" cy="500" r="220" stroke="#C5A059" stroke-width="1" stroke-dasharray="4 4" />
+        <line x1="20" y1="500" x2="980" y2="500" stroke="#C5A059" stroke-width="0.5" />
+        <line x1="500" y1="20" x2="500" y2="980" stroke="#C5A059" stroke-width="0.5" />
+        <line x1="160" y1="160" x2="840" y2="840" stroke="#C5A059" stroke-width="0.5" stroke-dasharray="3 9" />
+        <line x1="160" y1="840" x2="840" y2="160" stroke="#C5A059" stroke-width="0.5" stroke-dasharray="3 9" />
+    </svg>
+
+    <!-- Top Ephemeris Telemetry Bar -->
+    <header class="ephemeris-bar">
+        <div class="telemetry-node">
+            <span class="pulse-indicator"></span>
+            <span>SIDEREAL EPOCH: <span id="sidereal-time">19h 42m 11s</span></span>
+            <span>•</span>
+            <span>AYANAMSA: LAHIRI (CHITRAPAKSHA) 24°10'48"</span>
+            <span>•</span>
+            <span>LAT: 31°38' N • LON: 74°52' E</span>
+        </div>
+        <nav class="theme-switcher-nav" aria-label="Theme selector">
+            <a href="modern-fintech.html" class="theme-btn">⚡ FINTECH</a>
+            <a href="space-theme.html" class="theme-btn">✦ SPACE</a>
+            <a href="resume.html" class="theme-btn">≡ NORMAL</a>
+            <a href="index.html" class="theme-btn">⊞ WIN95</a>
+        </nav>
+    </header>
+
+    <main class="container">
+
+        <!-- Header Identity & Natal Dial -->
+        <section class="identity-banner">
+            <div class="astrolabe-portrait">
+                <div class="portrait-dial"></div>
+                <div class="portrait-inner">
+                    <img src="pfp.png" alt="Sparsh Khanna" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\'><rect width=\'100\' height=\'100\' fill=\'%230e1015\'/><text x=\'50\' y=\'55\' fill=\'%23C5A059\' font-size=\'36\' text-anchor=\'middle\' font-family=\'serif\'>SK</text></svg>'">
+                </div>
+            </div>
+
+            <div class="identity-text">
+                <div class="tagline">JYOTISH COMPUTATIONAL FRAMEWORK // SYSTEMS ARCHITECT</div>
+                <h1>Sparsh Khanna</h1>
+                <p class="bio">
+                    Engineered at the intersection of <strong>Deterministic Agentic AI</strong>, <strong>Stateful LangGraph Systems</strong>, and high-precision <strong>Embedded Edge Infrastructure</strong>. Translating complex system topologies into deterministic, observable architectures.
+                </p>
+            </div>
+
+            <div class="natal-coordinates">
+                <div class="coord-row">
+                    <span class="coord-label">LAGNA (ASCENDANT)</span>
+                    <span class="coord-value active">DHANUS (SAGITTARIUS) 14°</span>
+                </div>
+                <div class="coord-row">
+                    <span class="coord-label">KARMA BHAVA (10TH)</span>
+                    <span class="coord-value">KANYA (VIRGO) 18° [MERCURY EXALTED]</span>
+                </div>
+                <div class="coord-row">
+                    <span class="coord-label">PRIMARY GRAHA</span>
+                    <span class="coord-value">BUDHA (☿) &amp; GURU (♃)</span>
+                </div>
+                <div class="coord-row">
+                    <span class="coord-label">OPERATING SYSTEM</span>
+                    <span class="coord-value">GNDU CSE // 2022–2026</span>
+                </div>
+                <div class="coord-row">
+                    <span class="coord-label">THROUGHPUT FACTOR</span>
+                    <span class="coord-value active">+200% PLACEMENT ALPHA</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chronology: Vimshottari Dasha Horizontal Rail -->
+        <section class="dasha-rail-panel">
+            <div class="section-label">CHRONOLOGY // VIMSHOTTARI DASHA PROGRESSION</div>
+            <div class="dasha-track">
+                
+                <div class="dasha-period" onclick="selectDasha(0)">
+                    <div class="dasha-glyph">☉ SURYA DASHA</div>
+                    <div class="dasha-era">2022 – 2023 // GENESIS</div>
+                    <div class="dasha-title">Core Embedded &amp; Algorithmic Foundations</div>
+                    <div class="dasha-desc">C++, Python data pipelines, hardware interfacing with ESP32, and low-level algorithmic mastery.</div>
+                </div>
+
+                <div class="dasha-period" onclick="selectDasha(1)">
+                    <div class="dasha-glyph">☿ BUDHA DASHA</div>
+                    <div class="dasha-era">2023 – 2024 // EXPANSION</div>
+                    <div class="dasha-title">Distributed Systems &amp; Web Topologies</div>
+                    <div class="dasha-desc">FastAPI, Django DRF, PostgreSQL relational architecture, and full-stack high-throughput applications.</div>
+                </div>
+
+                <div class="dasha-period active" onclick="selectDasha(2)">
+                    <div class="dasha-glyph">♃ GURU DASHA</div>
+                    <div class="dasha-era">2024 – PRESENT // MASTERY</div>
+                    <div class="dasha-title">Agentic AI &amp; Placement Operations</div>
+                    <div class="dasha-desc">LangGraph multi-agent orchestration, Stateful RAG, MCP protocol pipelines, and leading GNDU placement operations.</div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Central Kundali Geometric Diamond Map + Inspector -->
+        <section class="chart-workbench">
+            
+            <div class="kundali-wrapper">
+                <div class="section-label">CENTRAL GEOMETRIC KUNDALI (CLICK HOUSES TO INSPECT)</div>
+                
+                <!-- SVG North Indian Diamond Chart -->
+                <svg class="kundali-svg" viewBox="0 0 400 400">
+                    <!-- Outer Boundary Square -->
+                    <rect x="10" y="10" width="380" height="380" fill="none" stroke="#C5A059" stroke-width="2" />
+                    
+                    <!-- Main Diagonal Cross -->
+                    <line x1="10" y1="10" x2="390" y2="390" stroke="#7C6638" stroke-width="1.2" />
+                    <line x1="390" y1="10" x2="10" y2="390" stroke="#7C6638" stroke-width="1.2" />
+                    
+                    <!-- Center Diamond (Inner Rhombus) -->
+                    <!-- Points: Top(200, 10), Right(390, 200), Bottom(200, 390), Left(10, 200) -->
+                    
+                    <!-- House 1: Top Center Diamond (Lagna / Identity) -->
+                    <g class="chart-house selected" id="house-1" onclick="selectHouse(1)">
+                        <polygon points="200,10 295,105 200,200 105,105" />
+                        <text x="200" y="95" text-anchor="middle" class="house-label">I • LAGNA</text>
+                        <text x="200" y="115" text-anchor="middle" class="sub-label">IDENTITY / CORE</text>
+                    </g>
+
+                    <!-- House 2: Top Left Triangle -->
+                    <g class="chart-house" id="house-2" onclick="selectHouse(2)">
+                        <polygon points="10,10 200,10 105,105" />
+                        <text x="100" y="45" text-anchor="middle" class="house-label">II • DHANA</text>
+                        <text x="100" y="60" text-anchor="middle" class="sub-label">ASSETS / DATA</text>
+                    </g>
+
+                    <!-- House 3: Far Left Upper Triangle -->
+                    <g class="chart-house" id="house-3" onclick="selectHouse(3)">
+                        <polygon points="10,10 105,105 10,200" />
+                        <text x="45" y="105" text-anchor="middle" class="house-label">III</text>
+                        <text x="45" y="120" text-anchor="middle" class="sub-label">INITIATIVE</text>
+                    </g>
+
+                    <!-- House 4: Left Center Diamond (Foundations / Stack) -->
+                    <g class="chart-house" id="house-4" onclick="selectHouse(4)">
+                        <polygon points="10,200 105,105 200,200 105,295" />
+                        <text x="105" y="195" text-anchor="middle" class="house-label">IV • SUKHA</text>
+                        <text x="105" y="215" text-anchor="middle" class="sub-label">INFRASTRUCTURE</text>
+                    </g>
+
+                    <!-- House 5: Far Left Lower Triangle (Vidya / Innovation) -->
+                    <g class="chart-house" id="house-5" onclick="selectHouse(5)">
+                        <polygon points="10,200 105,295 10,390" />
+                        <text x="45" y="295" text-anchor="middle" class="house-label">V • VIDYA</text>
+                        <text x="45" y="310" text-anchor="middle" class="sub-label">AGENTIC AI</text>
+                    </g>
+
+                    <!-- House 6: Bottom Left Triangle -->
+                    <g class="chart-house" id="house-6" onclick="selectHouse(6)">
+                        <polygon points="10,390 105,295 200,390" />
+                        <text x="100" y="345" text-anchor="middle" class="house-label">VI • RIPU</text>
+                        <text x="100" y="360" text-anchor="middle" class="sub-label">OPTIMIZATION</text>
+                    </g>
+
+                    <!-- House 7: Bottom Center Diamond (Partnership / Collab) -->
+                    <g class="chart-house" id="house-7" onclick="selectHouse(7)">
+                        <polygon points="200,200 295,295 200,390 105,295" />
+                        <text x="200" y="295" text-anchor="middle" class="house-label">VII • JAYA</text>
+                        <text x="200" y="315" text-anchor="middle" class="sub-label">COLLABORATION</text>
+                    </g>
+
+                    <!-- House 8: Bottom Right Triangle -->
+                    <g class="chart-house" id="house-8" onclick="selectHouse(8)">
+                        <polygon points="200,390 295,295 390,390" />
+                        <text x="300" y="345" text-anchor="middle" class="house-label">VIII • AYUR</text>
+                        <text x="300" y="360" text-anchor="middle" class="sub-label">RELIABILITY</text>
+                    </g>
+
+                    <!-- House 9: Far Right Lower Triangle (Dharma / Principles) -->
+                    <g class="chart-house" id="house-9" onclick="selectHouse(9)">
+                        <polygon points="390,200 295,295 390,390" />
+                        <text x="350" y="295" text-anchor="middle" class="house-label">IX • DHARMA</text>
+                        <text x="350" y="310" text-anchor="middle" class="sub-label">ARCHITECTURE</text>
+                    </g>
+
+                    <!-- House 10: Right Center Diamond (Karma / Career Zenith) -->
+                    <g class="chart-house" id="house-10" onclick="selectHouse(10)">
+                        <polygon points="200,200 295,105 390,200 295,295" />
+                        <text x="295" y="195" text-anchor="middle" class="house-label">X • KARMA</text>
+                        <text x="295" y="215" text-anchor="middle" class="sub-label">LEADERSHIP</text>
+                    </g>
+
+                    <!-- House 11: Far Right Upper Triangle (Labha / Yield) -->
+                    <g class="chart-house" id="house-11" onclick="selectHouse(11)">
+                        <polygon points="390,10 390,200 295,105" />
+                        <text x="350" y="105" text-anchor="middle" class="house-label">XI • LABHA</text>
+                        <text x="350" y="120" text-anchor="middle" class="sub-label">OUTCOMES</text>
+                    </g>
+
+                    <!-- House 12: Top Right Triangle -->
+                    <g class="chart-house" id="house-12" onclick="selectHouse(12)">
+                        <polygon points="200,10 390,10 295,105" />
+                        <text x="300" y="45" text-anchor="middle" class="house-label">XII • VYAYA</text>
+                        <text x="300" y="60" text-anchor="middle" class="sub-label">EDGE DEPLOY</text>
+                    </g>
+                </svg>
+            </div>
+
+            <!-- Interactive House Telemetry Inspector -->
+            <div class="inspector-panel">
+                <div>
+                    <div class="inspector-header">
+                        <div class="inspector-bhava" id="inspector-bhava">I • TANU BHAVA (LAGNA)</div>
+                        <div class="inspector-deg" id="inspector-deg">SAGITTARIUS // 14°28'24"</div>
+                    </div>
+                    
+                    <div class="inspector-content">
+                        <h3 id="inspector-title">Self, Architecture &amp; Core Vision</h3>
+                        <p id="inspector-desc">
+                            The First House establishes the primary structural blueprint. Focuses on architecting deterministic agentic systems, deterministic RAG pipelines, and high-efficiency runtime executions.
+                        </p>
+
+                        <div class="section-label">ASSOCIATED ARTIFACTS &amp; SYSTEMS</div>
+                        <ul class="inspector-list" id="inspector-list">
+                            <li class="inspector-item">
+                                <span class="inspector-item-title">LANGGRAPH MULTI-AGENT SWARMS</span>
+                                <span class="inspector-item-badge">AUTONOMOUS</span>
+                            </li>
+                            <li class="inspector-item">
+                                <span class="inspector-item-title">STATEFUL RAG WITH VECTOR RE-RANKING</span>
+                                <span class="inspector-item-badge">PRODUCTION</span>
+                            </li>
+                            <li class="inspector-item">
+                                <span class="inspector-item-title">ESP32 EDGE SENSOR TOPOLOGY</span>
+                                <span class="inspector-item-badge">FIRMWARE</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div style="border-top: 1px solid var(--border-brass); padding-top: 16px; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--gold-dim);">GRAHA LORD: JUPITER (♃)</span>
+                    <a href="docs/Sparsh_khanna_Resume_gndu-18.pdf" target="_blank" class="theme-btn" style="border-color: var(--gold-primary);">↓ ACQUIRE RESUME (PDF)</a>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Shadbala (Segmented Six-Fold Strength) System -->
+        <section class="shadbala-section">
+            <div class="section-label">SHADBALA // SIX-FOLD STRENGTH EVALUATION MATRIX</div>
+            
+            <div class="shadbala-grid">
+                
+                <!-- Meter 1 -->
+                <div class="shadbala-card">
+                    <div class="shadbala-header">
+                        <span class="shadbala-metric">STHANA BALA (POSITIONAL)</span>
+                        <span class="shadbala-rupa">9.84 RŪPAS [EXALTED]</span>
+                    </div>
+                    <div class="meter-rail">
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled exalted"></div>
+                        <div class="meter-segment filled exalted"></div>
+                    </div>
+                    <div class="shadbala-tags">
+                        <span>DOMAIN: PYTHON &amp; FASTAPI</span>
+                        <span>CONFIDENCE: 98.4%</span>
+                    </div>
+                </div>
+
+                <!-- Meter 2 -->
+                <div class="shadbala-card">
+                    <div class="shadbala-header">
+                        <span class="shadbala-metric">DIG BALA (DIRECTIONAL)</span>
+                        <span class="shadbala-rupa">9.62 RŪPAS [POWERFUL]</span>
+                    </div>
+                    <div class="meter-rail">
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment"></div>
+                    </div>
+                    <div class="shadbala-tags">
+                        <span>DOMAIN: AGENTIC AI (LANGGRAPH)</span>
+                        <span>CONFIDENCE: 96.2%</span>
+                    </div>
+                </div>
+
+                <!-- Meter 3 -->
+                <div class="shadbala-card">
+                    <div class="shadbala-header">
+                        <span class="shadbala-metric">KALA BALA (TEMPORAL)</span>
+                        <span class="shadbala-rupa">9.45 RŪPAS [STRONG]</span>
+                    </div>
+                    <div class="meter-rail">
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment"></div>
+                    </div>
+                    <div class="shadbala-tags">
+                        <span>DOMAIN: GNDU PLACEMENT LEADERSHIP</span>
+                        <span>MEASURABLE: +200%</span>
+                    </div>
+                </div>
+
+                <!-- Meter 4 -->
+                <div class="shadbala-card">
+                    <div class="shadbala-header">
+                        <span class="shadbala-metric">CHESHTA BALA (MOTIONAL)</span>
+                        <span class="shadbala-rupa">8.95 RŪPAS [BALANCED]</span>
+                    </div>
+                    <div class="meter-rail">
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment"></div>
+                        <div class="meter-segment"></div>
+                    </div>
+                    <div class="shadbala-tags">
+                        <span>DOMAIN: ESP32 / C++ FIRMWARE</span>
+                        <span>CONFIDENCE: 89.5%</span>
+                    </div>
+                </div>
+
+                <!-- Meter 5 -->
+                <div class="shadbala-card">
+                    <div class="shadbala-header">
+                        <span class="shadbala-metric">NAISARGIKA BALA (NATURAL)</span>
+                        <span class="shadbala-rupa">9.12 RŪPAS [HIGH]</span>
+                    </div>
+                    <div class="meter-rail">
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment"></div>
+                    </div>
+                    <div class="shadbala-tags">
+                        <span>DOMAIN: RELATIONAL POSTGRESQL &amp; DRF</span>
+                        <span>CONFIDENCE: 91.2%</span>
+                    </div>
+                </div>
+
+                <!-- Meter 6 -->
+                <div class="shadbala-card">
+                    <div class="shadbala-header">
+                        <span class="shadbala-metric">DRIK BALA (ASPECTUAL)</span>
+                        <span class="shadbala-rupa">9.30 RŪPAS [SHARP]</span>
+                    </div>
+                    <div class="meter-rail">
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment filled"></div>
+                        <div class="meter-segment"></div>
+                    </div>
+                    <div class="shadbala-tags">
+                        <span>DOMAIN: SYSTEM DESIGN &amp; MCP PROTOCOL</span>
+                        <span>CONFIDENCE: 93.0%</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        DETERMINISTIC JYOTISH OBSERVATORY &amp; EPHEMERIS ENGINE // SPARSH KHANNA // AMBITUS OF SYSTEMS ARCHITECTURE
+    </footer>
+
+    <script>
+        // Live Sidereal Ephemeris Clock Simulation
+        function updateSiderealTime() {
+            const now = new Date();
+            const hrs = String(now.getUTCHours()).padStart(2, '0');
+            const mins = String(now.getUTCMinutes()).padStart(2, '0');
+            const secs = String(now.getUTCSeconds()).padStart(2, '0');
+            const el = document.getElementById('sidereal-time');
+            if (el) {
+                el.innerText = `${hrs}h ${mins}m ${secs}s`;
+            }
+        }
+        setInterval(updateSiderealTime, 1000);
+        updateSiderealTime();
+
+        // House Inspection Data Dictionary
+        const houseData = {
+            1: {
+                bhava: "I • TANU BHAVA (LAGNA)",
+                deg: "SAGITTARIUS // 14°28'24\"",
+                title: "Core Identity & Systems Architecture",
+                desc: "The ascendant anchor. Focuses on architecting deterministic agentic systems, deterministic RAG pipelines, and high-efficiency runtime executions.",
+                artifacts: [
+                    { title: "LANGGRAPH MULTI-AGENT SWARMS", badge: "AUTONOMOUS" },
+                    { title: "STATEFUL RAG WITH VECTOR RE-RANKING", badge: "PRODUCTION" },
+                    { title: "ESP32 EDGE SENSOR TOPOLOGY", badge: "FIRMWARE" }
+                ],
+                lord: "JUPITER (♃)"
+            },
+            2: {
+                bhava: "II • DHANA BHAVA (RESOURCES)",
+                deg: "CAPRICORN // 09°12'11\"",
+                title: "Data Pipelines, Warehousing & Persistence",
+                desc: "Governs structured capital and persistence layers. Scaled PostgreSQL schemas, Redis caches, and optimized vector index structures.",
+                artifacts: [
+                    { title: "POSTGRESQL RELATIONAL SCHEMAS", badge: "DATABASE" },
+                    { title: "VECTOR EMBEDDINGS STORAGE", badge: "AI ASSETS" },
+                    { title: "REDIS IN-MEMORY QUEUES", badge: "CACHE" }
+                ],
+                lord: "SATURN (♄)"
+            },
+            3: {
+                bhava: "III • SAHAJA BHAVA (INITIATIVE)",
+                deg: "AQUARIUS // 22°04'50\"",
+                title: "Rapid Prototyping & Edge Engineering",
+                desc: "Governs manual dexterity and edge execution. Low-level embedded programming with ESP32 microcontrollers and physical computing sensors.",
+                artifacts: [
+                    { title: "ESP32 C++ FIRMWARE", badge: "EMBEDDED" },
+                    { title: "SERIAL PROTOCOLS (UART/SPI/I2C)", badge: "HARDWARE" },
+                    { title: "EDGE INFERENCE AGENTS", badge: "IOT" }
+                ],
+                lord: "SATURN (♄)"
+            },
+            4: {
+                bhava: "IV • SUKHA BHAVA (FOUNDATION)",
+                deg: "PISCES // 16°38'02\"",
+                title: "Backend Frameworks & Infrastructure",
+                desc: "The inner sanctum and stable roots. Reliable web engines powered by FastAPI and Django Rest Framework with modular design patterns.",
+                artifacts: [
+                    { title: "FASTAPI ASYNC REST ENDPOINTS", badge: "CORE API" },
+                    { title: "DJANGO REST FRAMEWORK", badge: "BACKEND" },
+                    { title: "DOCKER RUNTIMES", badge: "DEVOPS" }
+                ],
+                lord: "JUPITER (♃)"
+            },
+            5: {
+                bhava: "V • VIDYA BHAVA (INTELLECT & AI)",
+                deg: "ARIES // 08°50'14\"",
+                title: "Agentic AI, Reasoning & Generative Graphing",
+                desc: "The seat of higher creative intellect and algorithmic innovation. Multi-agent state machines orchestrating autonomous tooling.",
+                artifacts: [
+                    { title: "LANGGRAPH AGENT TOPOLOGIES", badge: "STATEFUL" },
+                    { title: "MCP (MODEL CONTEXT PROTOCOL) ADAPTERS", badge: "INTEGRATION" },
+                    { title: "AUTOMATED RESEARCH WORKFLOWS", badge: "REASONING" }
+                ],
+                lord: "MARS (♂)"
+            },
+            6: {
+                bhava: "VI • RIPU BHAVA (OPTIMIZATION & DEBUGGING)",
+                deg: "TAURUS // 27°19'44\"",
+                title: "Fault Tolerance, Bottlenecks & Testing",
+                desc: "Resolving system friction and performance degradation. Profiling async bottlenecks, memory leaks, and distributed race conditions.",
+                artifacts: [
+                    { title: "ASYNC CONCURRENCY TUNING", badge: "0.4MS LATENCY" },
+                    { title: "AUTOMATED PYTEST HARNESSES", badge: "CI/CD" },
+                    { title: "TRACE LOGGING WITH OPEN-TELEMETRY", badge: "OBSERVABILITY" }
+                ],
+                lord: "VENUS (♀)"
+            },
+            7: {
+                bhava: "VII • JAYA BHAVA (COLLABORATION)",
+                deg: "GEMINI // 14°28'24\"",
+                title: "Open Source Ecosystem & Developer Comms",
+                desc: "The public interface and technical diplomacy. Engaging with engineering communities, building developer tools, and transparent git practices.",
+                artifacts: [
+                    { title: "OPEN-SOURCE TOOLING CONTRIBS", badge: "COMMUNITY" },
+                    { title: "CROSS-FUNCTIONAL WORKFLOWS", badge: "AGILE" },
+                    { title: "API DOCUMENTATION (OPENAPI)", badge: "STANDARDS" }
+                ],
+                lord: "MERCURY (☿)"
+            },
+            8: {
+                bhava: "VIII • AYUR BHAVA (RESILIENCE)",
+                deg: "CANCER // 09°12'11\"",
+                title: "Fault Recovery & System Longevity",
+                desc: "Transformation and resilience under stress. Graceful fallback modes for distributed nodes and persistent state snapshots.",
+                artifacts: [
+                    { title: "DISASTER RECOVERY SNAPSHOTS", badge: "PERSISTENCE" },
+                    { title: "FAILSAFE RE-TRY MECHANISMS", badge: "RESILIENCE" },
+                    { title: "SECURE SECRETS MANAGEMENT", badge: "SECURITY" }
+                ],
+                lord: "MOON (☽)"
+            },
+            9: {
+                bhava: "IX • DHARMA BHAVA (PRINCIPLES)",
+                deg: "LEO // 22°04'50\"",
+                title: "Clean Architecture & First Principles",
+                desc: "The higher philosophical paradigm of software construction. Separation of concerns, deterministic reproducibility, and maintainability.",
+                artifacts: [
+                    { title: "CLEAN ARCHITECTURE BLUEPRINTS", badge: "DESIGN" },
+                    { title: "EVENT-DRIVEN PATTERNS", badge: "DECOUPLING" },
+                    { title: "TYPE SAFETY (MYPY / TYPING)", badge: "RIGOR" }
+                ],
+                lord: "SUN (☉)"
+            },
+            10: {
+                bhava: "X • KARMA BHAVA (CAREER ZENITH)",
+                deg: "VIRGO // 16°38'02\" [MERCURY EXALTED]",
+                title: "GNDU Placement Leadership & Executive Impact",
+                desc: "The midheaven of visible worldly accomplishment. Direct leadership of placement operations across thousands of candidates, surging throughput by +200%.",
+                artifacts: [
+                    { title: "+200% OPERATIONAL THROUGHPUT", badge: "VERIFIED IMPACT" },
+                    { title: "INSTITUTIONAL CORPORATE OUTREACH", badge: "RELATIONS" },
+                    { title: "LARGE-SCALE RECRUITMENT LOGISTICS", badge: "LEADERSHIP" }
+                ],
+                lord: "MERCURY (☿)"
+            },
+            11: {
+                bhava: "XI • LABHA BHAVA (OUTCOMES & NETWORK)",
+                deg: "LIBRA // 08°50'14\"",
+                title: "Measurable Alpha, Yield & Metrics",
+                desc: "Realized dividends of engineering rigor. Scaled throughput, successful production deployments, and career compounding.",
+                artifacts: [
+                    { title: "PRODUCTION SERVICE SLA: 99.9%", badge: "UPTIME" },
+                    { title: "RECRUITER HIRING VELOCITY PEAK", badge: "METRICS" },
+                    { title: "ENTERPRISE ADOPTION OF TOOLS", badge: "DELIVERY" }
+                ],
+                lord: "VENUS (♀)"
+            },
+            12: {
+                bhava: "XII • VYAYA BHAVA (TRANSCENDENCE & EDGE)",
+                deg: "SCORPIO // 27°19'44\"",
+                title: "Far-Edge Deployment & Boundary Exploration",
+                desc: "Transcending centralized data centers into autonomous edge devices, offline runtimes, and distributed decentralized nodes.",
+                artifacts: [
+                    { title: "OFFLINE-FIRST EDGE STORAGE", badge: "ISOLATION" },
+                    { title: "LOCAL EMBEDDED LLM RUNTIMES", badge: "ON-DEVICE" },
+                    { title: "MINIMAL FOOTPRINT C++ CODEBASES", badge: "EFFICIENCY" }
+                ],
+                lord: "MARS (♂)"
+            }
+        };
+
+        function selectHouse(num) {
+            // Remove selection class from all houses
+            document.querySelectorAll('.chart-house').forEach(el => el.classList.remove('selected'));
+            
+            // Add to selected
+            const activeEl = document.getElementById(`house-${num}`);
+            if (activeEl) {
+                activeEl.classList.add('selected');
+            }
+
+            const data = houseData[num];
+            if (!data) return;
+
+            document.getElementById('inspector-bhava').innerText = data.bhava;
+            document.getElementById('inspector-deg').innerText = data.deg;
+            document.getElementById('inspector-title').innerText = data.title;
+            document.getElementById('inspector-desc').innerText = data.desc;
+
+            const listEl = document.getElementById('inspector-list');
+            listEl.innerHTML = '';
+            data.artifacts.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'inspector-item';
+                li.innerHTML = `
+                    <span class="inspector-item-title">${item.title}</span>
+                    <span class="inspector-item-badge">${item.badge}</span>
+                `;
+                listEl.appendChild(li);
+            });
+        }
+
+        function selectDasha(idx) {
+            const periods = document.querySelectorAll('.dasha-period');
+            periods.forEach((p, i) => {
+                if (i === idx) p.classList.add('active');
+                else p.classList.remove('active');
+            });
+        }
+    </script>
+</body>
+
+</html>
