@@ -1,6 +1,6 @@
 Sys = {};
 
-Sys.events = ['onbeforeunload', 'oncontextmenu', 'onfocus', 'onkeydown', 'onkeyup', 'onmousedown', 'onmouseup', 'onmousewheel', 'onunload', 'onwheel'];
+Sys.events = ['oncontextmenu', 'onfocus', 'onkeydown', 'onkeyup', 'onmousedown', 'onmouseup', 'onmousewheel', 'onunload', 'onwheel'];
 
 Sys.Quit = function()
 {
@@ -149,8 +149,12 @@ Sys.InitEngine = function()
 	Sys.Print('Host.Init\n');
 	Host.Init();
 
-	for (i = 0; i < Sys.events.length; ++i)
+	for (i = 0; i < Sys.events.length; ++i) {
 		window[Sys.events[i]] = Sys[Sys.events[i]];
+		document[Sys.events[i]] = Sys[Sys.events[i]];
+	}
+	document.addEventListener('keydown', Sys.onkeydown, false);
+	document.addEventListener('keyup', Sys.onkeyup, false);
 
 	function loop()
 	{
@@ -268,10 +272,7 @@ window.onload = function()
 	});
 };
 
-Sys.onbeforeunload = function()
-{
-	return 'Are you sure you want to quit?';
-};
+Sys.onbeforeunload = null;
 
 Sys.oncontextmenu = function(e)
 {
@@ -292,6 +293,9 @@ Sys.onkeydown = function(e)
 {
 	if (e.keyCode === 13 && e.altKey) {
 		e.preventDefault();
+		// Release stuck ALT key state
+		Key.Event(Key.k.alt);
+		Key.down[Key.k.alt] = false;
 		if (typeof toggleFullscreen === 'function') {
 			toggleFullscreen();
 		}
