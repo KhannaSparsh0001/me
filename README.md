@@ -57,7 +57,7 @@ The main entry point to the portfolio:
 - **Backend / Persistence:** GitHub Issues REST API (serverless guestbook), IndexedDB asset caching, LocalStorage/SessionStorage.
 
 ---
-
+<!--
 ## 🚀 Run Locally
 
 The site requires no compilation, build pipelines, or heavy dependencies:
@@ -71,7 +71,7 @@ cd me
 python3 -m http.server 4173
 # or: npx serve .
 ```
-
+-->
 Navigate to `http://localhost:4173` in your browser.
 
 ---
