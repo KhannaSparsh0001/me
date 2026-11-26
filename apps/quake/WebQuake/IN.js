@@ -114,9 +114,16 @@ IN.Move = function()
 	IN.MouseMove();
 };
 
+IN.InjectDelta = function(dx, dy)
+{
+	IN.mouse_x += (dx || 0);
+	IN.mouse_y += (dy || 0);
+};
+
 IN.onclick = function()
 {
-	if (document[IN.pointerLockElement] !== this)
+	try { this.focus(); } catch (e) {}
+	if (document[IN.pointerLockElement] !== this && typeof this[IN.requestPointerLock] === 'function')
 		this[IN.requestPointerLock]();
 };
 
@@ -124,14 +131,16 @@ IN.onmousemove = function(e)
 {
 	if (document[IN.pointerLockElement] !== VID.mainwindow)
 		return;
-	IN.mouse_x += e[IN.movementX];
-	IN.mouse_y += e[IN.movementY];
+	IN.mouse_x += (e[IN.movementX] || 0);
+	IN.mouse_y += (e[IN.movementY] || 0);
 };
 
 IN.onpointerlockchange = function()
 {
 	if (document[IN.pointerLockElement] === VID.mainwindow)
 		return;
-	Key.Event(Key.k.escape, true);
-	Key.Event(Key.k.escape);
+	if (Key.dest && Key.dest.value === Key.dest.game) {
+		Key.Event(Key.k.escape, true);
+		Key.Event(Key.k.escape);
+	}
 };

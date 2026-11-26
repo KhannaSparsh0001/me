@@ -276,7 +276,7 @@
             <span id="end2" style="display: none;"></span>
         </div>
 
-        <canvas id="mainwindow"></canvas>
+        <canvas id="mainwindow" tabindex="0"></canvas>
         <img id="loading" alt="Loading" style="display: none; position: fixed;">
     </div>
 
@@ -776,29 +776,58 @@ void main(void)
         }
 
         function toggleFullscreen() {
-            const vp = document.getElementById('viewport');
+            // Coordinate with parent window manager if embedded
+            try {
+                if (window.parent && window.parent !== window && typeof window.parent.toggleGameWindowFullscreen === 'function') {
+                    window.parent.toggleGameWindowFullscreen();
+                    if (window.SCR) SCR.recalc_refdef = true;
+                    return;
+                }
+            } catch (e) {}
+
+            const vp = document.getElementById('viewport') || document.documentElement;
             const isFull = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement);
             if (!isFull) {
-                if (vp.requestFullscreen) {
-                    vp.requestFullscreen();
-                } else if (vp.webkitRequestFullscreen) {
-                    vp.webkitRequestFullscreen();
-                } else if (vp.mozRequestFullScreen) {
-                    vp.mozRequestFullScreen();
-                }
+                const req = vp.requestFullscreen || vp.webkitRequestFullscreen || vp.mozRequestFullScreen || vp.msRequestFullscreen;
+                if (req) req.call(vp);
             } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                } else if (document.mozCancelFullScreen) {
-                    document.mozCancelFullScreen();
-                }
+                const exit = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+                if (exit) exit.call(document);
             }
             if (window.SCR) {
                 SCR.recalc_refdef = true;
             }
         }
+
+        // Canvas focus on pointer down
+        const canvasEl = document.getElementById('mainwindow');
+        if (canvasEl) {
+            canvasEl.addEventListener('pointerdown', () => {
+                try { canvasEl.focus(); } catch (e) {}
+            });
+        }
+
+        // External touch/gamepad event bridge from parent container
+        window.addEventListener('message', (ev) => {
+            if (!ev.data) return;
+            if (ev.data.type === 'quake_key') {
+                if (window.Sys) {
+                    if (ev.data.action === 'down') {
+                        Sys.onkeydown({ keyCode: ev.data.keyCode, preventDefault: () => {} });
+                    } else if (ev.data.action === 'up') {
+                        Sys.onkeyup({ keyCode: ev.data.keyCode, preventDefault: () => {} });
+                    }
+                }
+            } else if (ev.data.type === 'quake_mouse') {
+                if (window.IN && typeof window.IN.InjectDelta === 'function') {
+                    window.IN.InjectDelta(ev.data.dx, ev.data.dy);
+                }
+            } else if (ev.data.type === 'quake_cmd') {
+                if (window.Cmd && ev.data.cmd) {
+                    Cmd.text += ev.data.cmd + '\n';
+                }
+            }
+        });
 
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && e.altKey) {
