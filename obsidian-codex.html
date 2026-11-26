@@ -1,0 +1,1992 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sparsh Khanna // Player Status // Character Sheet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --stone-dark: #121214;
+            --stone-border: #4D4E56;
+            --stone-border-light: #7E808C;
+            --stone-border-shadow: #222329;
+            --bezel-gold: #E5B53B;
+            --gold-shadow: #8A6818;
+            --gold-bright: #FFE600;
+            --ruby-red: #B81D24;
+            --ruby-highlight: #FF4A52;
+            --panel-bg: #212124;
+            --panel-inset: #111113;
+            --parchment: #F4F1EA;
+            --parchment-muted: #C1A77E;
+            --hp-red: #FF3B30;
+            --mp-blue: #007AFF;
+            --exp-yellow: #FFCC00;
+            --font-pixel: 'Press Start 2P', monospace;
+            --font-vt: 'VT323', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            image-rendering: pixelated;
+        }
+
+        body {
+            background-color: #0E0E10;
+            background-image: 
+                radial-gradient(circle at 50% 50%, #1A1A1D 0%, #08080A 100%),
+                linear-gradient(rgba(0, 0, 0, 0.5) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 0, 0, 0.5) 1px, transparent 1px);
+            background-size: 100% 100%, 16px 16px, 16px 16px;
+            color: var(--parchment);
+            font-family: var(--font-pixel);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            user-select: none;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ── Simulated Browser Window Bar ── */
+        .browser-bar {
+            width: 100%;
+            max-width: 1320px;
+            background: #18181B;
+            border: 2px solid #333338;
+            border-bottom: none;
+            border-radius: 6px 6px 0 0;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.65rem;
+            color: #8E8E93;
+        }
+
+        .browser-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .b-dot {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+        }
+        .b-dot.r { background: #FF5F56; }
+        .b-dot.y { background: #FFBD2E; }
+        .b-dot.g { background: #27C93F; }
+
+        .browser-address {
+            background: #0E0E10;
+            border: 1px solid #2C2C30;
+            padding: 4px 20px;
+            border-radius: 3px;
+            color: #CCC;
+        }
+
+        .browser-right-links a {
+            color: var(--bezel-gold);
+            text-decoration: none;
+            margin-left: 10px;
+            border: 1px solid var(--gold-shadow);
+            padding: 2px 6px;
+            border-radius: 2px;
+            transition: all 0.1s steps(2);
+        }
+
+        .browser-right-links a:hover {
+            background: var(--bezel-gold);
+            color: #000;
+        }
+
+        /* ── Master Stone Wall Grimoire Outer Frame ── */
+        .grimoire-frame {
+            width: 100%;
+            max-width: 1320px;
+            background: #1C1C20;
+            border: 4px solid var(--stone-border);
+            box-shadow: 
+                inset 3px 3px 0 var(--stone-border-light),
+                inset -3px -3px 0 var(--stone-border-shadow),
+                0 20px 50px rgba(0, 0, 0, 0.95);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            position: relative;
+        }
+
+        /* ── 1. Top Player Status Bar ── */
+        .top-player-bar {
+            background: #0D0D10;
+            border: 3px solid #3A3B42;
+            box-shadow: inset 2px 2px 0 #18191E, inset -2px -2px 0 #000;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.62rem;
+            letter-spacing: 0.05em;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .player-info-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #FFF;
+            flex-wrap: wrap;
+        }
+
+        .player-info-left span.yellow {
+            color: var(--bezel-gold);
+        }
+
+        .player-level-badge {
+            background: #25262E;
+            border: 1px solid var(--bezel-gold);
+            padding: 2px 6px;
+            color: var(--gold-bright);
+            font-weight: 700;
+            text-shadow: 0 0 4px var(--bezel-gold);
+        }
+
+        .player-bars-right {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        /* Retro HP / MP / EXP Meters */
+        .meters-cluster {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            width: 140px;
+        }
+
+        .meter-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.52rem;
+        }
+
+        .meter-lbl {
+            width: 24px;
+            font-weight: 700;
+        }
+        .meter-lbl.hp { color: var(--hp-red); }
+        .meter-lbl.mp { color: var(--mp-blue); }
+        .meter-lbl.exp { color: var(--exp-yellow); }
+
+        .meter-track {
+            flex: 1;
+            height: 6px;
+            background: #000;
+            border: 1px solid #333;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .meter-fill {
+            height: 100%;
+            transition: width 0.35s steps(10);
+        }
+        .meter-fill.hp { background: var(--hp-red); width: 89%; box-shadow: 0 0 6px rgba(255, 59, 48, 0.6); }
+        .meter-fill.mp { background: var(--mp-blue); width: 94%; box-shadow: 0 0 6px rgba(0, 122, 255, 0.6); }
+        .meter-fill.exp { background: var(--exp-yellow); width: 72%; box-shadow: 0 0 6px rgba(255, 204, 0, 0.6); }
+
+        /* Armor & Weapon Badges */
+        .item-badges {
+            display: flex;
+            gap: 6px;
+        }
+
+        .inv-badge {
+            width: 26px;
+            height: 26px;
+            background: #18181D;
+            border: 1px solid #444;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.1s steps(2);
+            position: relative;
+        }
+
+        .inv-badge.active-gear {
+            border-color: var(--gold-bright);
+            background: #2D2817;
+            box-shadow: 0 0 8px var(--bezel-gold);
+            transform: scale(1.1);
+        }
+
+        .sfx-toggle-btn {
+            background: #1A1A20;
+            border: 1px solid var(--bezel-gold);
+            color: var(--bezel-gold);
+            font-family: var(--font-pixel);
+            font-size: 0.55rem;
+            padding: 4px 8px;
+            cursor: pointer;
+            letter-spacing: 0.05em;
+            transition: all 0.1s steps(2);
+        }
+
+        .sfx-toggle-btn:hover {
+            background: var(--bezel-gold);
+            color: #000;
+        }
+
+        /* ── 2. Navigation Tab Strip ── */
+        .codex-nav-tabs {
+            display: flex;
+            justify-content: space-around;
+            border-bottom: 2px solid var(--bezel-gold);
+            padding-bottom: 6px;
+            margin-top: 2px;
+            background: #131316;
+            padding-top: 4px;
+        }
+
+        .nav-tab-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--bezel-gold);
+            font-family: var(--font-pixel);
+            font-size: 0.72rem;
+            cursor: pointer;
+            padding: 6px 14px;
+            transition: all 0.1s steps(2);
+            letter-spacing: 0.06em;
+            position: relative;
+        }
+
+        .nav-tab-btn:hover {
+            color: #FFF;
+            text-shadow: 0 0 6px var(--bezel-gold);
+            border-color: #444;
+            background: #1A1A1F;
+        }
+
+        .nav-tab-btn.active {
+            color: #000;
+            background: var(--bezel-gold);
+            border-color: #FFF;
+            box-shadow: inset 1px 1px 0 #FFF, inset -1px -1px 0 var(--gold-shadow), 0 0 10px rgba(229, 181, 59, 0.5);
+            font-weight: 700;
+        }
+
+        /* ── 3. Main Workspace Grid (3 Columns) ── */
+        .workspace-grid {
+            display: grid;
+            grid-template-columns: 310px 1fr 270px;
+            gap: 12px;
+            align-items: start;
+            min-height: 520px;
+        }
+
+        /* ── Standard Stone Beveled Box ── */
+        .beveled-box {
+            background: var(--panel-bg);
+            border: 3px solid #3E4049;
+            box-shadow: 
+                inset 2px 2px 0 var(--stone-border-light),
+                inset -2px -2px 0 #111,
+                0 4px 12px rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            position: relative;
+        }
+
+        .box-title-bar {
+            font-size: 0.62rem;
+            color: var(--bezel-gold);
+            border-bottom: 2px solid #333;
+            padding-bottom: 6px;
+            margin-bottom: 8px;
+            letter-spacing: 0.05em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* ── COLUMN 1: Character Portrait & Stats ── */
+        .col-portrait-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Ruby-Encrusted Stone Portrait Frame with Animated Torches */
+        .portrait-pedestal {
+            background: #111114;
+            border: 4px solid #4D4E56;
+            box-shadow: 
+                inset 3px 3px 0 #7A7C88,
+                inset -3px -3px 0 #000;
+            padding: 24px 14px 16px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Embedded Ruby Gems (Interactive Easter Egg Musical Runes) */
+        .ruby-gem {
+            position: absolute;
+            background: var(--ruby-red);
+            border: 1px solid #FF8E93;
+            box-shadow: 0 0 6px var(--ruby-red), inset 1px 1px 0 #FFF;
+            cursor: pointer;
+            transition: all 0.1s steps(2);
+            z-index: 10;
+        }
+
+        .ruby-gem:hover, .ruby-gem.lit {
+            background: #FF2B36;
+            box-shadow: 0 0 14px #FF3B30, inset 1px 1px 0 #FFF;
+            transform: scale(1.25);
+        }
+
+        .ruby-gem.top-crest {
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%) rotate(45deg);
+            width: 18px;
+            height: 18px;
+        }
+        .ruby-gem.top-crest:hover, .ruby-gem.top-crest.lit {
+            transform: translateX(-50%) rotate(45deg) scale(1.3);
+        }
+
+        .ruby-gem.corner-tl { top: 6px; left: 6px; width: 8px; height: 8px; }
+        .ruby-gem.corner-tr { top: 6px; right: 6px; width: 8px; height: 8px; }
+        .ruby-gem.corner-bl { bottom: 6px; left: 6px; width: 8px; height: 8px; }
+        .ruby-gem.corner-br { bottom: 6px; right: 6px; width: 8px; height: 8px; }
+        .ruby-gem.mid-left { top: 50%; left: -6px; width: 10px; height: 10px; transform: translateY(-50%) rotate(45deg); }
+        .ruby-gem.mid-right { top: 50%; right: -6px; width: 10px; height: 10px; transform: translateY(-50%) rotate(45deg); }
+
+        /* Left & Right Flickering Pixel Torches */
+        .torch-sprite {
+            position: absolute;
+            top: 40%;
+            width: 20px;
+            height: 38px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .torch-sprite.left { left: 10px; }
+        .torch-sprite.right { right: 10px; }
+
+        .torch-flame {
+            width: 12px;
+            height: 14px;
+            background: #FFD000;
+            box-shadow: 0 0 10px #FF9E00, 0 0 20px rgba(255, 158, 0, 0.6);
+            border-radius: 50% 50% 20% 20%;
+            animation: flameFlicker 0.25s steps(2) infinite alternate;
+        }
+
+        @keyframes flameFlicker {
+            0% { transform: scale(1) translateY(0); background: #FFD000; }
+            100% { transform: scale(1.15) translateY(-2px); background: #FF5E00; box-shadow: 0 0 14px #FF3700; }
+        }
+
+        .torch-mount {
+            width: 8px;
+            height: 16px;
+            background: #5A3D1E;
+            border: 1px solid #000;
+            margin-top: 2px;
+        }
+
+        /* 16-Bit Pixelated Portrait Frame */
+        .avatar-bezel {
+            width: 140px;
+            height: 140px;
+            border: 3px solid var(--bezel-gold);
+            background: #000;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(229, 181, 59, 0.4);
+            position: relative;
+        }
+
+        .avatar-bezel img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: contrast(125%) brightness(95%);
+        }
+
+        /* Character Traits Card */
+        .traits-card {
+            font-size: 0.58rem;
+            line-height: 1.6;
+            position: relative;
+            overflow: visible;
+        }
+
+        .trait-row {
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .trait-label {
+            color: var(--bezel-gold);
+        }
+        .trait-val {
+            color: #FFF;
+            font-weight: 700;
+        }
+
+        .stat-buff-tag {
+            color: #4CD964;
+            font-size: 0.52rem;
+            margin-left: 4px;
+            animation: pulseGlow 1s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            from { opacity: 0.7; }
+            to { opacity: 1; text-shadow: 0 0 6px #4CD964; }
+        }
+
+        .bio-snippet-box {
+            font-size: 0.58rem;
+            line-height: 1.5;
+            color: #D4D4D8;
+            background: var(--panel-inset);
+            border: 2px solid #2A2A30;
+            padding: 8px;
+        }
+
+        /* ── COLUMN 2: Dynamic Central Stage (Views) ── */
+        .col-main-stage {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            position: relative;
+        }
+
+        /* Dashboard Views */
+        .tab-view-container {
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .tab-view-container.active-view {
+            display: flex;
+        }
+
+        .quest-box {
+            font-size: 0.58rem;
+            line-height: 1.55;
+        }
+
+        .quest-line {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+
+        .quest-bullet {
+            color: var(--bezel-gold);
+            font-weight: 700;
+        }
+
+        .quest-highlight {
+            color: var(--bezel-gold);
+            font-weight: 700;
+        }
+
+        /* ── 4x3 Recessed Inventory Grid ── */
+        .inventory-panel {
+            padding: 10px;
+            position: relative;
+        }
+
+        .inv-stage-split {
+            display: grid;
+            grid-template-columns: 1fr 230px;
+            gap: 10px;
+        }
+
+        .grid-4x3 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+        }
+
+        .inv-slot {
+            aspect-ratio: 1 / 1;
+            background: var(--panel-inset);
+            border: 2px solid #35363D;
+            box-shadow: inset 2px 2px 0 #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.08s steps(2);
+        }
+
+        .inv-slot:hover {
+            border-color: var(--gold-bright);
+            background: #25262E;
+            box-shadow: 0 0 10px var(--bezel-gold);
+            transform: scale(1.04);
+        }
+
+        .inv-slot.active {
+            border-color: var(--gold-bright);
+            background: #342D1A;
+            box-shadow: 0 0 12px var(--gold-bright), inset 1px 1px 0 #FFF;
+        }
+
+        .inv-slot.empty {
+            opacity: 0.35;
+            cursor: pointer;
+        }
+        .inv-slot.empty:hover {
+            opacity: 0.6;
+            border-color: #666;
+            box-shadow: none;
+        }
+
+        /* Pixel Custom Project Sprites */
+        .pixel-sprite {
+            width: 32px;
+            height: 32px;
+            display: block;
+        }
+
+        /* Equipped Artifact / Pop-Up Tooltip Box */
+        .artifact-tooltip-card {
+            background: #111114;
+            border: 2px solid var(--stone-border);
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 0.58rem;
+            line-height: 1.5;
+        }
+
+        .item-tooltip-row {
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+        }
+
+        .item-tooltip-title {
+            color: var(--bezel-gold);
+            font-weight: 700;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .item-stat-badge {
+            display: inline-block;
+            background: #1C231C;
+            border: 1px solid #3E633E;
+            color: #4CD964;
+            padding: 2px 4px;
+            font-size: 0.5rem;
+            margin-top: 4px;
+        }
+
+        .equip-action-btn {
+            background: #2A200F;
+            border: 1px solid var(--bezel-gold);
+            color: var(--bezel-gold);
+            font-family: var(--font-pixel);
+            font-size: 0.55rem;
+            padding: 4px;
+            cursor: pointer;
+            text-align: center;
+            width: 100%;
+            margin-top: 4px;
+            transition: all 0.1s steps(2);
+        }
+
+        .equip-action-btn:hover {
+            background: var(--bezel-gold);
+            color: #000;
+        }
+
+        /* ── INTERACTIVE COMBAT BUG SLAYER ARENA ── */
+        .combat-arena-card {
+            background: #15151A;
+            border: 3px solid #582C35;
+            box-shadow: inset 2px 2px 0 #7A3C49, inset -2px -2px 0 #000;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .arena-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.6rem;
+            color: #FF5A65;
+            border-bottom: 1px solid #442228;
+            padding-bottom: 4px;
+        }
+
+        .battle-stage {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #0B0B0E;
+            border: 2px solid #2B2B35;
+            padding: 10px;
+            min-height: 85px;
+            position: relative;
+        }
+
+        .boss-monster-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .monster-sprite-box {
+            width: 48px;
+            height: 48px;
+            background: #1C1522;
+            border: 2px solid #7E3E90;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .monster-sprite-box.hit {
+            animation: monsterHit 0.3s steps(2);
+            filter: brightness(2) drop-shadow(0 0 10px red);
+        }
+
+        @keyframes monsterHit {
+            0% { transform: translateX(-4px) rotate(-6deg); }
+            50% { transform: translateX(6px) rotate(6deg); }
+            100% { transform: translateX(0) rotate(0deg); }
+        }
+
+        .slash-effect {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            font-size: 2rem;
+            color: #FFD000;
+            text-shadow: 0 0 10px red;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 20;
+        }
+
+        .slash-effect.anim {
+            animation: slashAnim 0.35s steps(2) forwards;
+        }
+
+        @keyframes slashAnim {
+            0% { opacity: 1; transform: translate(-50%, -50%) scale(0.6) rotate(-40deg); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.3) rotate(20deg); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1.6) rotate(60deg); }
+        }
+
+        .monster-details {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 0.55rem;
+        }
+
+        .boss-hp-track {
+            width: 140px;
+            height: 8px;
+            background: #000;
+            border: 1px solid #444;
+            overflow: hidden;
+        }
+
+        .boss-hp-fill {
+            height: 100%;
+            background: #FF3B30;
+            width: 100%;
+            transition: width 0.2s steps(5);
+        }
+
+        .combat-actions-bar {
+            display: flex;
+            gap: 6px;
+        }
+
+        .combat-btn {
+            flex: 1;
+            background: #241D17;
+            border: 2px solid var(--bezel-gold);
+            color: var(--bezel-gold);
+            font-family: var(--font-pixel);
+            font-size: 0.52rem;
+            padding: 6px 4px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.08s steps(2);
+        }
+
+        .combat-btn:hover {
+            background: var(--bezel-gold);
+            color: #000;
+            box-shadow: 0 0 8px var(--bezel-gold);
+        }
+
+        .combat-btn:active {
+            transform: translateY(2px);
+        }
+
+        .combat-btn.magic {
+            border-color: #007AFF;
+            color: #5AC8FA;
+            background: #111B29;
+        }
+        .combat-btn.magic:hover {
+            background: #007AFF;
+            color: #FFF;
+            box-shadow: 0 0 8px #007AFF;
+        }
+
+        /* ── COLUMN 3: Skills Arsenal (Stats) ── */
+        .col-skills-arsenal {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .skill-stat-row {
+            margin-bottom: 8px;
+            cursor: pointer;
+            padding: 4px;
+            border: 1px solid transparent;
+            transition: all 0.1s steps(2);
+            position: relative;
+        }
+
+        .skill-stat-row:hover {
+            border-color: var(--gold-shadow);
+            background: #25252B;
+        }
+
+        .skill-stat-head {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.58rem;
+            margin-bottom: 4px;
+        }
+
+        .skill-stat-head span.name {
+            color: #FFF;
+        }
+
+        .skill-stat-head span.lvl {
+            color: var(--bezel-gold);
+        }
+
+        /* 10 Discrete Gold Blocks */
+        .retro-level-bar {
+            height: 10px;
+            background: #0A0A0C;
+            border: 1px solid #333;
+            display: flex;
+            gap: 2px;
+            padding: 1px;
+        }
+
+        .bar-block {
+            flex: 1;
+            background: #222;
+        }
+
+        .bar-block.gold {
+            background: var(--bezel-gold);
+            box-shadow: inset 1px 1px 0 #FFF, inset -1px -1px 0 var(--gold-shadow);
+        }
+
+        .skill-grind-hint {
+            font-size: 0.45rem;
+            color: #888;
+            margin-top: 2px;
+            text-align: right;
+        }
+
+        /* ── 4. Full-Width Retro Status Event Ticker Footer ── */
+        .retro-event-footer {
+            background: #0D0D10;
+            border: 3px solid #3A3B42;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.58rem;
+            color: var(--parchment);
+            margin-top: 2px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .event-msg {
+            color: #FFF;
+        }
+
+        .key-bind-hints {
+            display: flex;
+            gap: 14px;
+            color: var(--bezel-gold);
+        }
+
+        /* ── Floating Damage & EXP Particles ── */
+        .floating-particle {
+            position: fixed;
+            font-family: var(--font-pixel);
+            font-weight: 700;
+            pointer-events: none;
+            z-index: 1000;
+            animation: floatUp 0.8s steps(8) forwards;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-38px) scale(1.15); opacity: 0; }
+        }
+
+        /* ── Secret Easter Egg Chest Modal ── */
+        .secret-chest-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 620px;
+            background: #181410;
+            border: 4px solid var(--gold-bright);
+            box-shadow: 0 0 50px rgba(255, 230, 0, 0.6), inset 3px 3px 0 #FFF;
+            z-index: 2000;
+            padding: 20px;
+            color: var(--parchment);
+        }
+
+        .secret-chest-modal.open {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            animation: chestPop 0.3s steps(4);
+        }
+
+        @keyframes chestPop {
+            0% { transform: translate(-50%, -50%) scale(0.7); opacity: 0; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        .modal-scrim {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1999;
+        }
+        .modal-scrim.open { display: block; }
+
+        @media (max-width: 1024px) {
+            .workspace-grid {
+                grid-template-columns: 1fr;
+            }
+            .inv-stage-split {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ── Simulated Browser Header Bar ── -->
+    <div class="browser-bar">
+        <div class="browser-dots">
+            <span class="b-dot r"></span>
+            <span class="b-dot y"></span>
+            <span class="b-dot g"></span>
+        </div>
+        <div class="browser-address">sparsh.game/resume</div>
+        <div class="browser-right-links">
+            <a href="blueprint-pcb.html">PCB BLUEPRINT</a>
+            <a href="isometric-studio.html">PIXEL STUDIO</a>
+            <a href="index.html">WIN95</a>
+        </div>
+    </div>
+
+    <!-- ── Master Grimoire Stone Frame ── -->
+    <main class="grimoire-frame">
+
+        <!-- ── 1. Top Player Status Bar ── -->
+        <header class="top-player-bar">
+            <div class="player-info-left">
+                <span>PLAYER STATUS //</span>
+                <span class="yellow">CHARACTER SHEET: SPARSH KHANNA</span>
+                <span class="player-level-badge" id="player-lvl-tag">LVL 24</span>
+                <span style="color: #888;" id="player-class-sub">SYSTEMS &amp; AI ENGINEER</span>
+            </div>
+
+            <div class="player-bars-right">
+                <!-- HP / MP / EXP Meters -->
+                <div class="meters-cluster">
+                    <div class="meter-row">
+                        <span class="meter-lbl hp">HP</span>
+                        <div class="meter-track"><div class="meter-fill hp" id="bar-hp" style="width: 89%;"></div></div>
+                    </div>
+                    <div class="meter-row">
+                        <span class="meter-lbl mp">MP</span>
+                        <div class="meter-track"><div class="meter-fill mp" id="bar-mp" style="width: 94%;"></div></div>
+                    </div>
+                    <div class="meter-row">
+                        <span class="meter-lbl exp">EXP</span>
+                        <div class="meter-track"><div class="meter-fill exp" id="bar-exp" style="width: 72%;"></div></div>
+                    </div>
+                </div>
+
+                <!-- Armor & Sword Badges -->
+                <div class="item-badges">
+                    <div class="inv-badge active-gear" id="badge-weapon" title="Equipped Weapon" onclick="inspectItem(0)">🗡️</div>
+                    <div class="inv-badge" id="badge-shield" title="Equipped Shield" onclick="inspectItem(4)">🛡️</div>
+                    <div class="inv-badge" id="badge-bag" title="Inventory Bag" onclick="selectTab('INVENTORY')">🎒</div>
+                    <div class="inv-badge" id="badge-trophy" title="Trophy" onclick="selectTab('TROPHIES')">🏆</div>
+                </div>
+
+                <!-- Web Audio SFX Toggle Button -->
+                <button class="sfx-toggle-btn" id="sfx-btn" onclick="toggleAudio()">🔊 SFX: ON</button>
+            </div>
+        </header>
+
+        <!-- ── 2. Navigation Tabs Strip ── -->
+        <nav class="codex-nav-tabs">
+            <button class="nav-tab-btn active" id="tab-char" onclick="selectTab('CHARACTER')">CHARACTER</button>
+            <button class="nav-tab-btn" id="tab-inv" onclick="selectTab('INVENTORY')">INVENTORY</button>
+            <button class="nav-tab-btn" id="tab-quests" onclick="selectTab('QUESTS')">COMPLETED QUESTS</button>
+            <button class="nav-tab-btn" id="tab-arsenal" onclick="selectTab('ARSENAL')">ARSENAL</button>
+            <button class="nav-tab-btn" id="tab-trophies" onclick="selectTab('TROPHIES')">TROPHIES</button>
+        </nav>
+
+        <!-- ── 3. Main Workspace Grid ── -->
+        <div class="workspace-grid" id="workspace-grid">
+
+            <!-- ── LEFT: Character Portrait & Traits ── -->
+            <aside class="col-portrait-stats">
+                
+                <!-- Ruby Encrusted Pedestal with Flickering Torches & Secret Musical Runes -->
+                <div class="portrait-pedestal">
+                    <!-- Embedded Red Rubies (Interactive Chiptune Runes) -->
+                    <div class="ruby-gem top-crest" id="gem-0" onclick="triggerRune(0)" title="Crest Ruby Rune"></div>
+                    <div class="ruby-gem corner-tl" id="gem-1" onclick="triggerRune(1)" title="Northwest Rune"></div>
+                    <div class="ruby-gem corner-tr" id="gem-2" onclick="triggerRune(2)" title="Northeast Rune"></div>
+                    <div class="ruby-gem mid-left" id="gem-3" onclick="triggerRune(3)" title="West Rune"></div>
+                    <div class="ruby-gem mid-right" id="gem-4" onclick="triggerRune(4)" title="East Rune"></div>
+                    <div class="ruby-gem corner-bl" id="gem-5" onclick="triggerRune(5)" title="Southwest Rune"></div>
+                    <div class="ruby-gem corner-br" id="gem-6" onclick="triggerRune(6)" title="Southeast Rune"></div>
+
+                    <!-- Left Animated Torch -->
+                    <div class="torch-sprite left">
+                        <div class="torch-flame"></div>
+                        <div class="torch-mount"></div>
+                    </div>
+
+                    <!-- Right Animated Torch -->
+                    <div class="torch-sprite right">
+                        <div class="torch-flame"></div>
+                        <div class="torch-mount"></div>
+                    </div>
+
+                    <!-- 16-Bit Avatar Frame -->
+                    <div class="avatar-bezel">
+                        <img src="pfp.png" alt="Sparsh Khanna" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\'><rect width=\'100\' height=\'100\' fill=\'%23000\'/><text x=\'50\' y=\'55\' fill=\'%23E5B53B\' font-size=\'28\' text-anchor=\'middle\' font-family=\'monospace\'>SK</text></svg>'">
+                    </div>
+                </div>
+
+                <!-- Character Traits Card (Dynamically Modified by Equipped Gear) -->
+                <div class="beveled-box traits-card" id="traits-card">
+                    <div class="box-title-bar" style="text-align: center;">
+                        <span>CHARACTER TRAITS</span>
+                        <span id="gear-indicator" style="color: var(--gold-bright); font-size: 0.5rem;">[REV EQUIPPED]</span>
+                    </div>
+                    <div class="trait-row">
+                        <span class="trait-label">CLASS:</span> 
+                        <span class="trait-val" id="val-class">SOFTWARE MAGE</span>
+                    </div>
+                    <div class="trait-row">
+                        <span class="trait-label">GUILD:</span> 
+                        <span class="trait-val">GURU NANAK DEV UNIV</span>
+                    </div>
+                    <div class="trait-row">
+                        <span class="trait-label">VITALITY:</span> 
+                        <span class="trait-val" id="val-vit">89</span>
+                    </div>
+                    <div class="trait-row">
+                        <span class="trait-label">INTELLIGENCE:</span> 
+                        <span class="trait-val" id="val-int">94</span>
+                    </div>
+                    <div class="trait-row">
+                        <span class="trait-label">STRENGTH:</span> 
+                        <span class="trait-val" id="val-str">75 <span class="stat-buff-tag">+25</span></span>
+                    </div>
+                    <div class="trait-row">
+                        <span class="trait-label">CONCURRENCY:</span> 
+                        <span class="trait-val" id="val-con">88 <span class="stat-buff-tag">+30</span></span>
+                    </div>
+                </div>
+
+                <!-- Bio Snippet Box -->
+                <div class="bio-snippet-box">
+                    Versatile systems mage fusing Agentic AI (LangGraph, Stateful RAG) with physical hardware (ESP32). Leader of scalable campaigns and guild operations.
+                </div>
+
+            </aside>
+
+            <!-- ── CENTER: Dynamic Stage Dependent on Selected Tab ── -->
+            <section class="col-main-stage">
+
+                <!-- ── VIEW 1: CHARACTER (Default Main Overview + Combat Arena) ── -->
+                <div class="tab-view-container active-view" id="view-CHARACTER">
+                    
+                    <!-- Completed Quests Teaser -->
+                    <div class="beveled-box quest-box">
+                        <div class="box-title-bar">
+                            <span>ACTIVE CAMPAIGN &amp; EXP BOUNTIES</span>
+                            <span style="color: #4CD964;">● IN PROGRESS</span>
+                        </div>
+                        <div class="quest-line">
+                            <span class="quest-bullet">⚔</span>
+                            <div>
+                                <span class="quest-highlight">GNDU PLACEMENT CHIEF:</span>
+                                Coordinated 10+ major Fortune 500 recruitment drives (TCS, KPMG, Nagarro). Boosted candidate throughput by 200%. Earned official LOR.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Inventory Teaser Grid with Live Gear Paper-Doll -->
+                    <div class="beveled-box inventory-panel">
+                        <div class="box-title-bar">
+                            <span>EQUIPPED ARTIFACTS // SELECT TO EQUIP</span>
+                            <span style="color: var(--gold-bright);">SLOTS [6/12]</span>
+                        </div>
+
+                        <div class="inv-stage-split">
+                            <div class="grid-4x3" id="main-inv-grid">
+                                <!-- Slot 0: REV Sword -->
+                                <div class="inv-slot active" id="slot-0" onclick="inspectItem(0)" title="REV (Rust DAG Engine)">
+                                    <svg class="pixel-sprite" viewBox="0 0 32 32">
+                                        <path d="M 6 26 L 8 24 L 24 8 L 26 6 L 22 6 L 8 20 L 6 22 Z" fill="#FFE600" />
+                                        <polygon points="26,6 22,6 26,10" fill="#FFF" />
+                                        <rect x="7" y="23" width="4" height="2" fill="#E5B53B" transform="rotate(45 9 24)" />
+                                        <rect x="5" y="27" width="3" height="3" fill="#B81D24" />
+                                    </svg>
+                                </div>
+                                <!-- Slot 1: BLINKY Gear -->
+                                <div class="inv-slot" id="slot-1" onclick="inspectItem(1)" title="BLINKY (Voice OS)">
+                                    <svg class="pixel-sprite" viewBox="0 0 32 32">
+                                        <circle cx="16" cy="16" r="10" fill="#5A6275" stroke="#333" stroke-width="2" />
+                                        <circle cx="16" cy="16" r="6" fill="#E5B53B" />
+                                        <circle cx="16" cy="16" r="3" fill="#000" />
+                                        <rect x="15" y="3" width="2" height="4" fill="#5A6275" />
+                                        <rect x="15" y="25" width="2" height="4" fill="#5A6275" />
+                                        <rect x="3" y="15" width="4" height="2" fill="#5A6275" />
+                                        <rect x="25" y="15" width="4" height="2" fill="#5A6275" />
+                                    </svg>
+                                </div>
+                                <!-- Slot 2: LANGGRAPH Codex -->
+                                <div class="inv-slot" id="slot-2" onclick="inspectItem(2)" title="LANGGRAPH (Agentic Swarms)">
+                                    <svg class="pixel-sprite" viewBox="0 0 32 32">
+                                        <rect x="7" y="6" width="18" height="20" fill="#8E2D38" stroke="#333" stroke-width="1.5" />
+                                        <line x1="16" y1="6" x2="16" y2="26" stroke="#FFE600" stroke-width="1.5" />
+                                        <circle cx="16" cy="16" r="3" fill="#FFE600" />
+                                    </svg>
+                                </div>
+                                <!-- Slot 3: FASTAPI Boots -->
+                                <div class="inv-slot" id="slot-3" onclick="inspectItem(3)" title="FASTAPI (Async Engine)">
+                                    <svg class="pixel-sprite" viewBox="0 0 32 32">
+                                        <polygon points="18,4 8,18 16,18 14,28 24,14 16,14" fill="#00C7BE" stroke="#004D40" stroke-width="1" />
+                                    </svg>
+                                </div>
+                                <!-- Slot 4: ESP32 Silicon Shield -->
+                                <div class="inv-slot" id="slot-4" onclick="inspectItem(4)" title="ESP32 (Hardware Aegis)">
+                                    <svg class="pixel-sprite" viewBox="0 0 32 32">
+                                        <path d="M 8 6 L 24 6 L 24 18 Q 16 28 8 18 Z" fill="#3A7D7C" stroke="#222" stroke-width="1" />
+                                        <circle cx="16" cy="15" r="4" fill="#FFE600" />
+                                    </svg>
+                                </div>
+                                <!-- Slot 5: HYBRID RAG Amulet -->
+                                <div class="inv-slot" id="slot-5" onclick="inspectItem(5)" title="HYBRID RAG (Vector Amulet)">
+                                    <svg class="pixel-sprite" viewBox="0 0 32 32">
+                                        <polygon points="16,4 26,16 16,28 6,16" fill="#9B51E0" stroke="#4A154B" stroke-width="1.5" />
+                                        <circle cx="16" cy="16" r="3" fill="#FFF" />
+                                    </svg>
+                                </div>
+                                <!-- Empty Slots -->
+                                <div class="inv-slot empty" onclick="hintEmpty(6)"></div>
+                                <div class="inv-slot empty" onclick="hintEmpty(7)"></div>
+                                <div class="inv-slot empty" onclick="hintEmpty(8)"></div>
+                                <div class="inv-slot empty" onclick="hintEmpty(9)"></div>
+                                <div class="inv-slot empty" onclick="hintEmpty(10)"></div>
+                                <div class="inv-slot empty" onclick="hintEmpty(11)"></div>
+                            </div>
+
+                            <!-- Artifact Card Preview -->
+                            <div class="artifact-tooltip-card">
+                                <div class="item-tooltip-row">
+                                    <div style="font-size: 1.3rem;" id="tool-icon">🗡️</div>
+                                    <div>
+                                        <div class="item-tooltip-title" id="tool-title">REV</div>
+                                        <div id="tool-desc" style="color: #DDD;">Multi-threaded Rust DAG engine designed for high-concurrency.</div>
+                                        <div class="item-stat-badge" id="tool-stats">+25 STRENGTH // +30 CONCURRENCY</div>
+                                    </div>
+                                </div>
+                                <button class="equip-action-btn" onclick="equipCurrentItem()">⚔ EQUIP THIS GEAR</button>
+                                <div style="margin-top: auto; border-top: 1px dotted #444; padding-top: 6px; display: flex; justify-content: space-between;">
+                                    <a href="docs/Sparsh_khanna_Resume_gndu-18.pdf" target="_blank" style="color: var(--bezel-gold); text-decoration: none;">[RESUME PDF]</a>
+                                    <a href="https://github.com/Sparsh-Khanna" target="_blank" style="color: var(--bezel-gold); text-decoration: none;">[GITHUB]</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ── INTERACTIVE COMBAT BUG SLAYER ARENA ── -->
+                    <div class="combat-arena-card">
+                        <div class="arena-header">
+                            <span>⚔ COMBAT SIMULATOR // BUG SLAYER</span>
+                            <span id="arena-score" style="color: var(--bezel-gold);">BUGS PURGED: 0</span>
+                        </div>
+
+                        <div class="battle-stage" id="battle-stage">
+                            <!-- Slash Anim Sprite -->
+                            <div class="slash-effect" id="slash-fx">⚔</div>
+
+                            <div class="boss-monster-wrapper">
+                                <div class="monster-sprite-box" id="monster-box">
+                                    <span id="monster-icon" style="font-size: 1.8rem;">👾</span>
+                                </div>
+                                <div class="monster-details">
+                                    <div style="color: #FF5A65; font-weight: 700;" id="monster-name">RACE CONDITION GHOUL</div>
+                                    <div style="color: #888;" id="monster-type">TYPE: ASYNC CONCURRENCY BUG</div>
+                                    <div class="boss-hp-track">
+                                        <div class="boss-hp-fill" id="boss-hp-fill"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="text-align: right; font-size: 0.52rem; color: #AAA;">
+                                <div>TARGET HP: <span id="monster-hp-text" style="color: #FFF;">100/100</span></div>
+                                <div style="color: var(--bezel-gold); margin-top: 4px;" id="combat-log-status">Ready to strike!</div>
+                            </div>
+                        </div>
+
+                        <!-- Combat Action Buttons -->
+                        <div class="combat-actions-bar">
+                            <button class="combat-btn" onclick="attackMonster('slash')">⚔ SLASH (EQUIPPED GEAR)</button>
+                            <button class="combat-btn magic" onclick="attackMonster('magic')">⚡ CAST AGENT SWARM (-20 MP)</button>
+                            <button class="combat-btn" onclick="attackMonster('defend')">🛡 COMPILE DEFENSE (+HP)</button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ── VIEW 2: INVENTORY (Dedicated Full Artifact Vault) ── -->
+                <div class="tab-view-container" id="view-INVENTORY">
+                    <div class="beveled-box">
+                        <div class="box-title-bar">
+                            <span>ARTIFACT VAULT // ALL CREATIONS &amp; PROJECTS</span>
+                            <span style="color: var(--bezel-gold);">TOTAL WEIGHT: 14.5 STONES</span>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 10px; font-size: 0.62rem; line-height: 1.6;">
+                            
+                            <div class="beveled-box" style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <span style="color: var(--gold-bright); font-weight: 700;">🗡️ REV // RUST DAG ENGINE</span>
+                                    <p style="color: #DDD; margin-top: 4px;">High-throughput directed acyclic graph execution engine with zero-copy memory pipelines in Rust.</p>
+                                    <span class="item-stat-badge">+25 STRENGTH // +30 CONCURRENCY</span>
+                                </div>
+                                <button class="equip-action-btn" style="width: auto; padding: 6px 12px;" onclick="inspectItem(0); selectTab('CHARACTER');">EQUIP</button>
+                            </div>
+
+                            <div class="beveled-box" style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <span style="color: var(--gold-bright); font-weight: 700;">⚙️ BLINKY // EMBEDDED VOICE OS</span>
+                                    <p style="color: #DDD; margin-top: 4px;">Sub-100ms on-device voice processing on ESP32 microcontrollers with local audio inference.</p>
+                                    <span class="item-stat-badge">+28 SENSORY // +32 LOW-LATENCY</span>
+                                </div>
+                                <button class="equip-action-btn" style="width: auto; padding: 6px 12px;" onclick="inspectItem(1); selectTab('CHARACTER');">EQUIP</button>
+                            </div>
+
+                            <div class="beveled-box" style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <span style="color: var(--gold-bright); font-weight: 700;">📜 LANGGRAPH // AGENTIC REFLECTION NETWORKS</span>
+                                    <p style="color: #DDD; margin-top: 4px;">Multi-agent deliberation cycles with persistent SQLite checkpointers and tool orchestration.</p>
+                                    <span class="item-stat-badge">+35 REASONING // +40 AGENTIC ORCHESTRATION</span>
+                                </div>
+                                <button class="equip-action-btn" style="width: auto; padding: 6px 12px;" onclick="inspectItem(2); selectTab('CHARACTER');">EQUIP</button>
+                            </div>
+
+                            <div class="beveled-box" style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <span style="color: var(--gold-bright); font-weight: 700;">⚡ FASTAPI ASYNC GATEWAY</span>
+                                    <p style="color: #DDD; margin-top: 4px;">High-concurrency microservice fabric with sub-millisecond route dispatch and telemetry.</p>
+                                    <span class="item-stat-badge">+30 VELOCITY // +25 THROUGHPUT</span>
+                                </div>
+                                <button class="equip-action-btn" style="width: auto; padding: 6px 12px;" onclick="inspectItem(3); selectTab('CHARACTER');">EQUIP</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── VIEW 3: COMPLETED QUESTS (Full Campaign Chronicle) ── -->
+                <div class="tab-view-container" id="view-QUESTS">
+                    <div class="beveled-box">
+                        <div class="box-title-bar">
+                            <span>QUEST CHRONICLE // EXPERIENCE &amp; EXPEDITIONS</span>
+                            <span style="color: #4CD964;">ALL QUESTS VERIFIED</span>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 10px; font-size: 0.62rem; line-height: 1.6;">
+                            
+                            <div class="beveled-box">
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="color: var(--gold-bright); font-weight: 700;">★ CAMPAIGN 01: GNDU PLACEMENT CHIEF</span>
+                                    <span style="color: var(--bezel-gold);">[CLAIMED: +5000 EXP]</span>
+                                </div>
+                                <p style="margin-top: 6px; color: #DDD;">
+                                    Orchestrated end-to-end recruitment pipelines for 10+ Fortune 500 enterprises including TCS, KPMG, Nagarro, and Tech Mahindra.
+                                    Boosted candidate verification throughput by 200%. Earned official Commendation and Letter of Recommendation (LOR).
+                                </p>
+                            </div>
+
+                            <div class="beveled-box">
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="color: var(--gold-bright); font-weight: 700;">★ CAMPAIGN 02: B.TECH ECE DEGREE</span>
+                                    <span style="color: var(--bezel-gold);">[GNDU 2022–2026]</span>
+                                </div>
+                                <p style="margin-top: 6px; color: #DDD;">
+                                    Rigorous grounding in Embedded Systems, Digital Signal Processing, VLSI Design, and High-Performance Compute Architectures.
+                                </p>
+                            </div>
+
+                            <div class="beveled-box">
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="color: var(--gold-bright); font-weight: 700;">★ CAMPAIGN 03: HARDWARE-EDGE FIRMWARE</span>
+                                    <span style="color: var(--bezel-gold);">[ACTIVE RESEARCH]</span>
+                                </div>
+                                <p style="margin-top: 6px; color: #DDD;">
+                                    Fusing physical ESP32 microcontrollers with cloud LLM streaming sockets for sub-100ms offline wake words and acoustic sensor telemetry.
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── VIEW 4: ARSENAL (Skill Spellbook & Interactive Training) ── -->
+                <div class="tab-view-container" id="view-ARSENAL">
+                    <div class="beveled-box">
+                        <div class="box-title-bar">
+                            <span>ARSENAL SPELLBOOK // CLICK STATS TO GRIND EXP</span>
+                            <span style="color: var(--gold-bright);">TRAINING DUMMY ACTIVE</span>
+                        </div>
+                        <div style="font-size: 0.62rem; color: #CCC; margin-bottom: 10px;">
+                            Click any spell/stat discipline below to channel mana and gain instant character EXP!
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            
+                            <div class="beveled-box" style="cursor: pointer;" onclick="grindSkillExp('RUST', 25)">
+                                <span style="color: var(--bezel-gold); font-weight: 700;">🦀 RUST DOMAIN [LVL 90]</span>
+                                <p style="margin-top: 4px; font-size: 0.55rem; color: #AAA;">Memory safety without garbage collection, concurrency primitives, Tokio async runtime.</p>
+                                <span style="color: #4CD964; font-size: 0.5rem;">[CLICK TO GRIND +25 EXP]</span>
+                            </div>
+
+                            <div class="beveled-box" style="cursor: pointer;" onclick="grindSkillExp('PYTHON', 20)">
+                                <span style="color: var(--bezel-gold); font-weight: 700;">🐍 PYTHON DOMAIN [LVL 80]</span>
+                                <p style="margin-top: 4px; font-size: 0.55rem; color: #AAA;">AI/ML orchestration, PyTorch inference wrappers, LangChain &amp; scientific compute.</p>
+                                <span style="color: #4CD964; font-size: 0.5rem;">[CLICK TO GRIND +20 EXP]</span>
+                            </div>
+
+                            <div class="beveled-box" style="cursor: pointer;" onclick="grindSkillExp('LANGGRAPH', 25)">
+                                <span style="color: var(--bezel-gold); font-weight: 700;">📜 LANGGRAPH DOMAIN [LVL 80]</span>
+                                <p style="margin-top: 4px; font-size: 0.55rem; color: #AAA;">Stateful multi-agent reflection graphs with SQLite human-in-the-loop nodes.</p>
+                                <span style="color: #4CD964; font-size: 0.5rem;">[CLICK TO GRIND +25 EXP]</span>
+                            </div>
+
+                            <div class="beveled-box" style="cursor: pointer;" onclick="grindSkillExp('ESP32', 20)">
+                                <span style="color: var(--bezel-gold); font-weight: 700;">⚡ ESP32 DOMAIN [LVL 70]</span>
+                                <p style="margin-top: 4px; font-size: 0.55rem; color: #AAA;">FreeRTOS task scheduling, I2S/SPI DMA drivers, edge microphone audio relays.</p>
+                                <span style="color: #4CD964; font-size: 0.5rem;">[CLICK TO GRIND +20 EXP]</span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── VIEW 5: TROPHIES (Hall of Honors) ── -->
+                <div class="tab-view-container" id="view-TROPHIES">
+                    <div class="beveled-box">
+                        <div class="box-title-bar">
+                            <span>HALL OF HONORS // TROPHIES &amp; COMMENDATIONS</span>
+                            <span style="color: var(--bezel-gold);">3 UNLOCKED</span>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 10px; font-size: 0.62rem; line-height: 1.6;">
+                            
+                            <div class="beveled-box" style="border-color: var(--bezel-gold);">
+                                <span style="color: var(--gold-bright); font-weight: 700;">🏆 STATE WINNER — INDIA SKILL COMPETITION 2024</span>
+                                <p style="margin-top: 4px; color: #DDD;">
+                                    Secured 1st Place Gold Medalist distinction in State Embedded Systems &amp; Hardware Design Championship.
+                                </p>
+                            </div>
+
+                            <div class="beveled-box" style="border-color: var(--bezel-gold);">
+                                <span style="color: var(--gold-bright); font-weight: 700;">🎖️ OFFICIAL LETTER OF RECOMMENDATION (LOR)</span>
+                                <p style="margin-top: 4px; color: #DDD;">
+                                    Signed commendation by Placement Directorate, Guru Nanak Dev University, celebrating operational rigor.
+                                </p>
+                            </div>
+
+                            <div class="beveled-box" style="border-color: var(--bezel-gold);">
+                                <span style="color: var(--gold-bright); font-weight: 700;">🛡️ GUILD ARCHITECT // AGENTIC AI</span>
+                                <p style="margin-top: 4px; color: #DDD;">
+                                    Recognized for engineering robust agentic feedback architectures with verifiable deterministic tooling.
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- ── RIGHT: Skills Arsenal (Interactive Grind Rows) ── -->
+            <aside class="col-skills-arsenal">
+                
+                <div class="beveled-box">
+                    <div class="box-title-bar">
+                        <span>SKILLS ARSENAL</span>
+                        <span style="color: var(--gold-bright); font-size: 0.5rem;">[GRIND +EXP]</span>
+                    </div>
+
+                    <div class="skill-stat-row" onclick="grindSkillExp('RUST', 25)" title="Click to train Rust skill!">
+                        <div class="skill-stat-head"><span class="name">RUST</span><span class="lvl" id="lvl-rust">LV. 90</span></div>
+                        <div class="retro-level-bar">
+                            <div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block"></div>
+                        </div>
+                        <div class="skill-grind-hint">CLICK TO TRAIN +25 EXP</div>
+                    </div>
+
+                    <div class="skill-stat-row" onclick="grindSkillExp('PYTHON', 20)" title="Click to train Python skill!">
+                        <div class="skill-stat-head"><span class="name">PYTHON</span><span class="lvl" id="lvl-py">LV. 80</span></div>
+                        <div class="retro-level-bar">
+                            <div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block"></div><div class="bar-block"></div>
+                        </div>
+                        <div class="skill-grind-hint">CLICK TO TRAIN +20 EXP</div>
+                    </div>
+
+                    <div class="skill-stat-row" onclick="grindSkillExp('LANGGRAPH', 25)" title="Click to train LangGraph skill!">
+                        <div class="skill-stat-head"><span class="name">LANGGRAPH</span><span class="lvl" id="lvl-lg">LV. 80</span></div>
+                        <div class="retro-level-bar">
+                            <div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block"></div><div class="bar-block"></div>
+                        </div>
+                        <div class="skill-grind-hint">CLICK TO TRAIN +25 EXP</div>
+                    </div>
+
+                    <div class="skill-stat-row" onclick="grindSkillExp('FASTAPI', 15)" title="Click to train FastAPI skill!">
+                        <div class="skill-stat-head"><span class="name">FASTAPI</span><span class="lvl" id="lvl-fa">LV. 70</span></div>
+                        <div class="retro-level-bar">
+                            <div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block"></div><div class="bar-block"></div><div class="bar-block"></div>
+                        </div>
+                        <div class="skill-grind-hint">CLICK TO TRAIN +15 EXP</div>
+                    </div>
+
+                    <div class="skill-stat-row" onclick="grindSkillExp('ESP32', 20)" title="Click to train ESP32 skill!">
+                        <div class="skill-stat-head"><span class="name">ESP32</span><span class="lvl" id="lvl-esp">LV. 70</span></div>
+                        <div class="retro-level-bar">
+                            <div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block gold"></div><div class="bar-block"></div><div class="bar-block"></div><div class="bar-block"></div>
+                        </div>
+                        <div class="skill-grind-hint">CLICK TO TRAIN +20 EXP</div>
+                    </div>
+
+                </div>
+
+            </aside>
+
+        </div>
+
+        <!-- ── 4. Full-Width Retro Status Event Ticker Footer ── -->
+        <footer class="retro-event-footer">
+            <div class="event-msg" id="status-event">A new candidate joins the guild...</div>
+            <div class="key-bind-hints">
+                <span>'I' INVENTORY</span>
+                <span>'C' COMBAT</span>
+                <span>'1'-'5' GEAR</span>
+                <span>'ESC' RETREAT</span>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- ── Secret Easter Egg Chest Modal ── -->
+    <div class="modal-scrim" id="modal-scrim" onclick="closeSecretChest()"></div>
+    <div class="secret-chest-modal" id="secret-chest-modal">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--bezel-gold); padding-bottom: 8px;">
+            <span style="color: var(--gold-bright); font-size: 0.8rem;">✨ SECRET CHEST UNLOCKED: GUILD MASTER RELIQUARY!</span>
+            <button onclick="closeSecretChest()" style="background: none; border: 1px solid var(--bezel-gold); color: var(--bezel-gold); padding: 4px 8px; cursor: pointer; font-family: monospace;">✕ CLOSE</button>
+        </div>
+        <div style="font-size: 0.65rem; line-height: 1.6; color: #FFF;">
+            <p style="color: var(--gold-bright); margin-bottom: 6px;">
+                You deciphered the ancient ruby rune melody! Sparsh awards you the honorary title of <strong>[GUILD MASTER ARCHITECT]</strong>.
+            </p>
+            <div class="beveled-box" style="background: #111; margin-top: 8px;">
+                <div style="color: var(--bezel-gold); font-weight: 700; margin-bottom: 4px;">🎁 SECRET REWARDS GRANTED:</div>
+                <div>• +5000 BONUS REPUTATION WITH GNDU GUILD</div>
+                <div>• DIRECT ACCESS TO PRIVATE CODE ARCHIVES</div>
+                <div style="margin-top: 8px; display: flex; gap: 10px;">
+                    <a href="docs/Sparsh_khanna_Resume_gndu-18.pdf" target="_blank" style="background: var(--bezel-gold); color: #000; padding: 6px 10px; text-decoration: none; font-weight: 700;">DOWNLOAD RESUME PDF</a>
+                    <a href="https://github.com/Sparsh-Khanna" target="_blank" style="border: 1px solid var(--bezel-gold); color: var(--bezel-gold); padding: 6px 10px; text-decoration: none;">VISIT GITHUB</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Interactive JavaScript Engine ── -->
+    <script>
+        /* ══════════════════════════════════════════════════════════════════
+           1. 16-BIT WEB AUDIO CHIPTUNE SYNTHESIZER
+           ══════════════════════════════════════════════════════════════════ */
+        let audioCtx = null;
+        let sfxEnabled = true;
+
+        function getAudioContext() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (AudioContext) {
+                    audioCtx = new AudioContext();
+                }
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        function toggleAudio() {
+            sfxEnabled = !sfxEnabled;
+            const btn = document.getElementById('sfx-btn');
+            btn.innerText = sfxEnabled ? "🔊 SFX: ON" : "🔇 SFX: OFF";
+            if (sfxEnabled) playBleep(523.25, 0.08, 'square');
+        }
+
+        function playBleep(freq = 440, duration = 0.05, type = 'square') {
+            if (!sfxEnabled) return;
+            const ctx = getAudioContext();
+            if (!ctx) return;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, ctx.currentTime);
+            gain.gain.setValueAtTime(0.08, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start();
+            osc.stop(ctx.currentTime + duration);
+        }
+
+        function playEquipClink() {
+            if (!sfxEnabled) return;
+            const ctx = getAudioContext();
+            if (!ctx) return;
+            const notes = [523.25, 659.25, 783.99, 1046.50];
+            notes.forEach((freq, i) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.04);
+                gain.gain.setValueAtTime(0.12, ctx.currentTime + i * 0.04);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.04 + 0.12);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(ctx.currentTime + i * 0.04);
+                osc.stop(ctx.currentTime + i * 0.04 + 0.12);
+            });
+        }
+
+        function playSlashSfx() {
+            if (!sfxEnabled) return;
+            const ctx = getAudioContext();
+            if (!ctx) return;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(320, ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(60, ctx.currentTime + 0.14);
+            gain.gain.setValueAtTime(0.18, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.14);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.14);
+        }
+
+        function playMagicSfx() {
+            if (!sfxEnabled) return;
+            const ctx = getAudioContext();
+            if (!ctx) return;
+            const freqs = [350, 480, 700, 950];
+            freqs.forEach((f, idx) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(f, ctx.currentTime + idx * 0.03);
+                gain.gain.setValueAtTime(0.1, ctx.currentTime + idx * 0.03);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.03 + 0.15);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(ctx.currentTime + idx * 0.03);
+                osc.stop(ctx.currentTime + idx * 0.03 + 0.15);
+            });
+        }
+
+        function playExpChime() {
+            if (!sfxEnabled) return;
+            const ctx = getAudioContext();
+            if (!ctx) return;
+            const freqs = [587.33, 880.00];
+            freqs.forEach((freq, idx) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.05);
+                gain.gain.setValueAtTime(0.08, ctx.currentTime + idx * 0.05);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.05 + 0.1);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(ctx.currentTime + idx * 0.05);
+                osc.stop(ctx.currentTime + idx * 0.05 + 0.1);
+            });
+        }
+
+        function playFanfare() {
+            if (!sfxEnabled) return;
+            const ctx = getAudioContext();
+            if (!ctx) return;
+            const melody = [523.25, 523.25, 523.25, 659.25, 783.99, 1046.50];
+            const times = [0, 0.1, 0.2, 0.32, 0.44, 0.6];
+            melody.forEach((freq, idx) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(freq, ctx.currentTime + times[idx]);
+                gain.gain.setValueAtTime(0.15, ctx.currentTime + times[idx]);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + times[idx] + 0.25);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(ctx.currentTime + times[idx]);
+                osc.stop(ctx.currentTime + times[idx] + 0.25);
+            });
+        }
+
+        /* ══════════════════════════════════════════════════════════════════
+           2. ARTIFACT & GEAR REGISTRY (STAT MODIFIERS)
+           ══════════════════════════════════════════════════════════════════ */
+        const itemRegistry = [
+            {
+                title: "REV (RUST DAG SWORD)",
+                icon: "🗡️",
+                desc: "A multi-threaded Rust DAG execution engine designed for extreme concurrency.",
+                statsText: "+25 STRENGTH // +30 CONCURRENCY",
+                classTitle: "SYSTEMS BLADE-MAGE",
+                vit: 89, int: 94, str: 100, con: 118,
+                hp: "96%", mp: "78%", exp: "78%",
+                badgeId: "badge-weapon",
+                dmgBonus: 35
+            },
+            {
+                title: "BLINKY (EMBEDDED VOICE OS)",
+                icon: "⚙️",
+                desc: "Sub-100ms on-device voice processing on ESP32 microcontrollers with local audio inference.",
+                statsText: "+28 SENSORY // +32 LOW-LATENCY",
+                classTitle: "HARDWARE ARTIFICER",
+                vit: 92, int: 98, str: 75, con: 95,
+                hp: "88%", mp: "98%", exp: "82%",
+                badgeId: "badge-shield",
+                dmgBonus: 28
+            },
+            {
+                title: "LANGGRAPH (SWARM CODEX)",
+                icon: "📜",
+                desc: "Multi-agent reflection swarms with SQLite checkpointers and tool orchestration.",
+                statsText: "+35 REASONING // +40 SWARM MASTERY",
+                classTitle: "ARCH-SUMMONER",
+                vit: 85, int: 110, str: 70, con: 105,
+                hp: "90%", mp: "100%", exp: "85%",
+                badgeId: "badge-weapon",
+                dmgBonus: 40
+            },
+            {
+                title: "FASTAPI ASYNC GATEWAY",
+                icon: "⚡",
+                desc: "High-concurrency microservice fabric with sub-millisecond route dispatch and telemetry.",
+                statsText: "+30 VELOCITY // +25 THROUGHPUT",
+                classTitle: "PIPELINE SPEEDSTER",
+                vit: 88, int: 92, str: 85, con: 112,
+                hp: "92%", mp: "85%", exp: "75%",
+                badgeId: "badge-bag",
+                dmgBonus: 30
+            },
+            {
+                title: "ESP32 (SILICON AEGIS)",
+                icon: "🛡️",
+                desc: "Physical microcontroller shield running FreeRTOS with DMA peripheral drivers.",
+                statsText: "+30 HARDWARE RESIST // +22 TELEMETRY",
+                classTitle: "EDGE GUARDIAN",
+                vit: 105, int: 88, str: 90, con: 85,
+                hp: "100%", mp: "80%", exp: "70%",
+                badgeId: "badge-shield",
+                dmgBonus: 25
+            },
+            {
+                title: "HYBRID RAG (SEEKER AMULET)",
+                icon: "🔮",
+                desc: "Dense vector + BM25 cross-encoder retrieval pipeline with recursive ranking.",
+                statsText: "+38 RECALL // +26 EMBEDDING ACCURACY",
+                classTitle: "KNOWLEDGE SEER",
+                vit: 82, int: 115, str: 65, con: 100,
+                hp: "86%", mp: "96%", exp: "90%",
+                badgeId: "badge-bag",
+                dmgBonus: 32
+            }
+        ];
+
+        let currentEquippedIdx = 0;
+        let selectedSlotIdx = 0;
+
+        function inspectItem(idx) {
+            selectedSlotIdx = idx;
+            document.querySelectorAll('#main-inv-grid .inv-slot').forEach((slot, i) => {
+                slot.classList.toggle('active', i === idx);
+            });
+
+            const data = itemRegistry[idx] || itemRegistry[0];
+            document.getElementById('tool-title').innerText = data.title;
+            document.getElementById('tool-desc').innerText = data.desc;
+            document.getElementById('tool-icon').innerText = data.icon;
+            document.getElementById('tool-stats').innerText = data.statsText;
+
+            playBleep(350 + idx * 40, 0.04);
+            document.getElementById('status-event').innerText = `Inspecting Artifact: [${data.title}].`;
+        }
+
+        function equipCurrentItem() {
+            currentEquippedIdx = selectedSlotIdx;
+            const data = itemRegistry[currentEquippedIdx];
+
+            playEquipClink();
+
+            // Update Class and Traits
+            document.getElementById('val-class').innerText = data.classTitle;
+            document.getElementById('player-class-sub').innerText = data.classTitle;
+            document.getElementById('val-vit').innerText = data.vit;
+            document.getElementById('val-int').innerText = data.int;
+            document.getElementById('val-str').innerHTML = `${data.str} <span class="stat-buff-tag">+${data.str - 75}</span>`;
+            document.getElementById('val-con').innerHTML = `${data.con} <span class="stat-buff-tag">+${data.con - 88}</span>`;
+            document.getElementById('gear-indicator').innerText = `[${data.title.split(' ')[0]} EQUIPPED]`;
+
+            // Update Meters
+            document.getElementById('bar-hp').style.width = data.hp;
+            document.getElementById('bar-mp').style.width = data.mp;
+            document.getElementById('bar-exp').style.width = data.exp;
+
+            // Highlight top badge
+            document.querySelectorAll('.inv-badge').forEach(b => b.classList.remove('active-gear'));
+            const targetBadge = document.getElementById(data.badgeId);
+            if (targetBadge) targetBadge.classList.add('active-gear');
+
+            // Spawn floating text
+            spawnFloatingText(data.statsText, window.innerWidth / 2, window.innerHeight / 2, "#FFE600");
+            document.getElementById('status-event').innerText = `Equipped Gear: [${data.title}]. Stats recalculated!`;
+        }
+
+        function hintEmpty(slot) {
+            playBleep(200, 0.08, 'sawtooth');
+            document.getElementById('status-event').innerText = `Slot [${slot}] is sealed in ancient stone. Defeat bugs to unlock!`;
+        }
+
+        /* ══════════════════════════════════════════════════════════════════
+           3. DYNAMIC TAB VIEW SWITCHER
+           ══════════════════════════════════════════════════════════════════ */
+        function selectTab(tabName) {
+            playBleep(480, 0.06);
+
+            // Active Tab Button
+            document.querySelectorAll('.codex-nav-tabs .nav-tab-btn').forEach(b => b.classList.remove('active'));
+            const activeBtn = Array.from(document.querySelectorAll('.codex-nav-tabs .nav-tab-btn'))
+                .find(b => b.innerText.includes(tabName));
+            if (activeBtn) activeBtn.classList.add('active');
+
+            // Switch views in central section
+            document.querySelectorAll('.tab-view-container').forEach(v => v.classList.remove('active-view'));
+            const targetView = document.getElementById('view-' + tabName);
+            if (targetView) {
+                targetView.classList.add('active-view');
+            }
+
+            document.getElementById('status-event').innerText = `Grimoire open to section: [${tabName}].`;
+        }
+
+        /* ══════════════════════════════════════════════════════════════════
+           4. INTERACTIVE COMBAT BUG SLAYER MINI-GAME
+           ══════════════════════════════════════════════════════════════════ */
+        const bugBestiary = [
+            { name: "RACE CONDITION GHOUL", icon: "👾", type: "ASYNC CONCURRENCY BUG", hp: 100, maxHp: 100, expReward: 35 },
+            { name: "MEMORY LEAK GOLEM", icon: "🗿", type: "HEAP EXHAUSTION DAEMON", hp: 140, maxHp: 140, expReward: 50 },
+            { name: "BLOCKING I/O BEAST", icon: "🕷️", type: "SYNCHRONOUS PIPELINE BOTTLENECK", hp: 180, maxHp: 180, expReward: 65 },
+            { name: "HALLUCINATION SERPENT", icon: "🐍", type: "UNGROUNDED RAG DRIFT", hp: 220, maxHp: 220, expReward: 80 }
+        ];
+
+        let currentBugIndex = 0;
+        let currentBugHp = 100;
+        let bugsPurged = 0;
+        let playerLevel = 24;
+
+        function attackMonster(actionType) {
+            const bug = bugBestiary[currentBugIndex];
+            const monsterBox = document.getElementById('monster-box');
+            const slashFx = document.getElementById('slash-fx');
+            const gear = itemRegistry[currentEquippedIdx];
+
+            if (actionType === 'slash') {
+                playSlashSfx();
+                const damage = Math.floor(Math.random() * 20) + (gear.dmgBonus || 30);
+                currentBugHp = Math.max(0, currentBugHp - damage);
+
+                // Trigger slash anim
+                slashFx.innerText = gear.icon || "⚔";
+                slashFx.classList.remove('anim');
+                void slashFx.offsetWidth;
+                slashFx.classList.add('anim');
+
+                // Shake monster
+                monsterBox.classList.remove('hit');
+                void monsterBox.offsetWidth;
+                monsterBox.classList.add('hit');
+
+                spawnFloatingText(`-${damage} HP!`, window.innerWidth * 0.52, window.innerHeight * 0.6, "#FF3B30");
+                document.getElementById('combat-log-status').innerText = `Struck with [${gear.title.split(' ')[0]}] for ${damage} DMG!`;
+
+            } else if (actionType === 'magic') {
+                playMagicSfx();
+                const damage = Math.floor(Math.random() * 35) + 45;
+                currentBugHp = Math.max(0, currentBugHp - damage);
+
+                slashFx.innerText = "⚡";
+                slashFx.classList.remove('anim');
+                void slashFx.offsetWidth;
+                slashFx.classList.add('anim');
+
+                monsterBox.classList.remove('hit');
+                void monsterBox.offsetWidth;
+                monsterBox.classList.add('hit');
+
+                spawnFloatingText(`-${damage} MAGIC CRIT!`, window.innerWidth * 0.52, window.innerHeight * 0.6, "#007AFF");
+                document.getElementById('combat-log-status').innerText = `Agent swarm reflection inflicted ${damage} DMG!`;
+
+            } else if (actionType === 'defend') {
+                playBleep(600, 0.1, 'sine');
+                spawnFloatingText("+25 DEFENSE COMPILED!", window.innerWidth * 0.52, window.innerHeight * 0.6, "#4CD964");
+                document.getElementById('combat-log-status').innerText = "RAII guards compiled. Defenses fortified!";
+            }
+
+            // Update Boss HP Bar
+            const hpPct = Math.max(0, (currentBugHp / bug.maxHp) * 100);
+            document.getElementById('boss-hp-fill').style.width = hpPct + "%";
+            document.getElementById('monster-hp-text').innerText = `${currentBugHp}/${bug.maxHp}`;
+
+            // Check Defeat
+            if (currentBugHp <= 0) {
+                handleBugDefeated(bug);
+            }
+        }
+
+        function handleBugDefeated(bug) {
+            bugsPurged++;
+            playFanfare();
+            document.getElementById('arena-score').innerText = `BUGS PURGED: ${bugsPurged}`;
+            document.getElementById('combat-log-status').innerText = `PURGED [${bug.name}]! +${bug.expReward} EXP!`;
+
+            spawnFloatingText(`PURGED! +${bug.expReward} EXP`, window.innerWidth * 0.5, window.innerHeight * 0.55, "#FFE600");
+
+            // Increment Player EXP
+            grindSkillExp("COMBAT", bug.expReward, false);
+
+            // Spawn next bug
+            setTimeout(() => {
+                currentBugIndex = (currentBugIndex + 1) % bugBestiary.length;
+                const nextBug = bugBestiary[currentBugIndex];
+                currentBugHp = nextBug.maxHp;
+
+                document.getElementById('monster-name').innerText = nextBug.name;
+                document.getElementById('monster-type').innerText = nextBug.type;
+                document.getElementById('monster-icon').innerText = nextBug.icon;
+                document.getElementById('boss-hp-fill').style.width = "100%";
+                document.getElementById('monster-hp-text').innerText = `${nextBug.maxHp}/${nextBug.maxHp}`;
+                document.getElementById('combat-log-status').innerText = `A wild [${nextBug.name}] has spawned!`;
+                document.getElementById('status-event').innerText = `Battle Alert: [${nextBug.name}] encountered!`;
+            }, 800);
+        }
+
+        /* ══════════════════════════════════════════════════════════════════
+           5. SKILL ARSENAL INTERACTIVE GRINDING (+EXP)
+           ══════════════════════════════════════════════════════════════════ */
+        function grindSkillExp(skillName, amount, showParticle = true) {
+            playExpChime();
+
+            // Animate top EXP bar
+            const expBar = document.getElementById('bar-exp');
+            let currentWidth = parseFloat(expBar.style.width) || 72;
+            currentWidth += (amount * 0.35);
+
+            if (currentWidth >= 100) {
+                // LEVEL UP!
+                currentWidth = 20;
+                playerLevel++;
+                document.getElementById('player-lvl-tag').innerText = `LVL ${playerLevel}`;
+                playFanfare();
+                spawnFloatingText(`★ LEVEL UP! -> LVL ${playerLevel} ★`, window.innerWidth / 2, window.innerHeight * 0.35, "#FFE600");
+                document.getElementById('status-event').innerText = `★ LEVEL UP! Sparsh has achieved Level ${playerLevel}! ★`;
+            } else {
+                if (showParticle) {
+                    spawnFloatingText(`+${amount} EXP [${skillName}]!`, window.innerWidth * 0.8, window.innerHeight * 0.4, "#FFE600");
+                }
+                document.getElementById('status-event').innerText = `Channeled ${skillName} training: +${amount} EXP acquired!`;
+            }
+
+            expBar.style.width = currentWidth + "%";
+        }
+
+        /* ══════════════════════════════════════════════════════════════════
+           6. SECRET RUBY GEMSTONE MUSICAL RUNES PUZZLE
+           ══════════════════════════════════════════════════════════════════ */
+        const runeFrequencies = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88];
+        let clickedRunes = [];
+
+        function triggerRune(gemIdx) {
+            const freq = runeFrequencies[gemIdx] || 440;
+            playBleep(freq, 0.15, 'triangle');
+
+            const gem = document.getElementById('gem-' + gemIdx);
+            if (gem) {
+                gem.classList.add('lit');
+                setTimeout(() => gem.classList.remove('lit'), 400);
+            }
+
+            clickedRunes.push(gemIdx);
+            document.getElementById('status-event').innerText = `Ruby Rune #${gemIdx + 1} activated (${freq.toFixed(1)} Hz).`;
+
+            if (clickedRunes.length >= 4) {
+                // Secret combination unlocked!
+                openSecretChest();
+                clickedRunes = [];
+            }
+        }
+
+        function openSecretChest() {
+            playFanfare();
+            document.getElementById('modal-scrim').classList.add('open');
+            document.getElementById('secret-chest-modal').classList.add('open');
+            document.getElementById('status-event').innerText = "✨ SECRET UNLOCKED: Ancient Ruby Reliquary Opened! ✨";
+        }
+
+        function closeSecretChest() {
+            playBleep(300, 0.05);
+            document.getElementById('modal-scrim').classList.remove('open');
+            document.getElementById('secret-chest-modal').classList.remove('open');
+        }
+
+        /* ══════════════════════════════════════════════════════════════════
+           7. FLOATING TEXT PARTICLE HELPER
+           ══════════════════════════════════════════════════════════════════ */
+        function spawnFloatingText(text, x, y, color = "#FFF") {
+            const el = document.createElement('div');
+            el.className = 'floating-particle';
+            el.innerText = text;
+            el.style.left = (x + (Math.random() * 20 - 10)) + 'px';
+            el.style.top = (y + (Math.random() * 20 - 10)) + 'px';
+            el.style.color = color;
+            el.style.textShadow = `0 0 6px ${color}, 2px 2px 0 #000`;
+            el.style.fontSize = '0.65rem';
+            document.body.appendChild(el);
+
+            setTimeout(() => {
+                if (el.parentNode) el.parentNode.removeChild(el);
+            }, 800);
+        }
+
+        /* ══════════════════════════════════════════════════════════════════
+           8. KEYBOARD NAVIGATION
+           ══════════════════════════════════════════════════════════════════ */
+        window.addEventListener('keydown', (e) => {
+            const key = e.key.toLowerCase();
+            if (key === 'i') {
+                selectTab('INVENTORY');
+            } else if (key === 'c') {
+                selectTab('CHARACTER');
+                attackMonster('slash');
+            } else if (key === '1') {
+                inspectItem(0);
+                equipCurrentItem();
+            } else if (key === '2') {
+                inspectItem(1);
+                equipCurrentItem();
+            } else if (key === '3') {
+                inspectItem(2);
+                equipCurrentItem();
+            } else if (key === '4') {
+                inspectItem(3);
+                equipCurrentItem();
+            } else if (key === '5') {
+                inspectItem(4);
+                equipCurrentItem();
+            } else if (e.key === 'Escape') {
+                closeSecretChest();
+                selectTab('CHARACTER');
+                document.getElementById('status-event').innerText = "Retreat command acknowledged. Returning to main overview.";
+            }
+        });
+    </script>
+</body>
+
+</html>
