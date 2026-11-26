@@ -1,244 +1,87 @@
-**Deployed:** [SparshKhanna.xyz](https://www.sparshkhanna.xyz/)   [domain expired, will be updated soon]
+# Sparsh Khanna — Interactive Portfolio
 
----
+A Windows 95-inspired personal portfolio that turns a developer website into an explorable desktop experience.
 
-# Building a Windows 95 Operating System Inside a Browser
+**Live site:** [khannasparsh.cv](https://khannasparsh.cv)
 
+## Overview
 
-> *"Every project starts with a simple idea. This one somehow ended with me trying to make DOOM run inside a browser."*
+This project explores a simple idea: opening a portfolio should feel as interesting as opening an application.
 
----
+Instead of a conventional scrolling landing page, the site presents a desktop interface with:
 
-## The Idea
-This repository didn't begin as a portfolio.
+- draggable and resizable application windows
+- desktop shortcuts and taskbar navigation
+- native-style menus and dialogs
+- games and interactive applications
+- a terminal, resume, projects, guestbook, and music player
+- responsive layouts for desktop and smaller screens
 
-It began as an experiment.
+The portfolio is designed to feel tactile and intentional, while remaining a fully static deployment.
 
-I wanted something that didn't feel like every other developer portfolio on the internet. Instead of another scrolling landing page filled with glassmorphism cards and endless animations, I wanted visitors to feel like they had just booted an actual operating system.
+## Featured Sections
 
-Not a simulation.
+- **My Computer** — system and repository information
+- **Terminal** — command-style exploration
+- **Projects** — selected engineering work
+- **Resume** — professional and technical background
+- **About Me** — personal introduction
+- **Music Player** — an interactive listening experience
+- **Guestbook** — visitor entries powered through GitHub Issues
+- **DOOM** — an in-browser desktop experiment
 
-Not a video.
+## Technology
 
-A desktop.
+- HTML
+- CSS
+- JavaScript
+- C and C++ experiments
+- static assets and shell tooling
 
-Every icon should launch a real application.
-Every window should behave like a native Win95 window.
-Everything should run entirely inside the browser.
-And somehow...
+The main site requires no server-side application framework or database.
 
-...all of it should still deploy as a completely static website.
+## Run Locally
 
-That constraint shaped almost every engineering decision in this repository.
----
-# Phase 1 — Building the Desktop
-The first milestone was creating a functional desktop environment.
-Instead of treating every page as a route, everything became an application.
+Because the portfolio is largely static, any local web server is sufficient.
 
-```
-Desktop
-│
-├── My Computer
-├── Terminal
-├── Projects
-├── Resume
-├── About Me
-├── Music Player
-├── Guestbook
-├── Settings
-└── DOOM (work in progress)
-```
-Every application lives in its own isolated environment and is managed by a central window manager.
-
-Applications can be:
-- opened
-- minimized
-- maximized
-- dragged
-- focused
-- restored
-
-just like a real desktop operating system.
----
-# Phase 2 — Preserving the Illusion
-
-One of the biggest problems early on was that many applications still looked like web pages.
-The window manager had a title bar.
-The applications had another title bar.
-The result looked like a browser embedding another browser.
-That completely broke the illusion.
-
-
-So every application was redesigned to behave like native software.
-We removed redundant borders, duplicate window chrome and unnecessary padding.
-Applications now occupy their entire client area and allow the operating system itself to provide the surrounding window decorations.
-
-It seems like a tiny detail.
-It completely changed how the project feels.
-
----
-# Phase 3 — The Guestbook
-
-This became one of my favourite architectural decisions.
-Originally the "Sign Guestbook" button simply redirected visitors to GitHub Issues.
-
-Technically it worked.
-User experience wise...
-
-...it was awful.
-Visitors immediately left the desktop and landed on GitHub.
-That wasn't acceptable.
-So the architecture changed.
-
-Instead of GitHub being the interface...
-GitHub became the database.
-Visitors now write their entire guestbook entry inside a native Windows 95 application.
-
-
-The application collects:
-- name
-- website
-- mood
-- optional metadata
-- message
-
-Everything is then converted into structured Markdown with versioned YAML frontmatter before opening GitHub's "New Issue" page.
-
-GitHub is now used only for:
-- authentication
-- spam protection
-- persistence
-- moderation
-
-The visitor spends almost the entire interaction inside the operating system.
-Exactly as intended.
----
-
-# Phase 4 — Going Fully Static
-
-
-One rule never changed.
-No backend.
-No serverless functions.
-No database.
-No secrets.
-No authentication server.
-
-Everything needed to work on a completely static Vercel deployment.
-This forced some surprisingly interesting solutions.
-Instead of introducing infrastructure, existing services were repurposed.
-GitHub Issues became a database.
-GitHub authentication became the login system.
-The GitHub REST API became the backend.
-The entire project remained deployable with zero server-side code.
-
----
-# Phase 5 — Making It Responsive
-
-Making an operating system responsive is...
-
-
-interesting.
-Traditional websites simply stack content vertically.
-
-Operating systems don't.
-Windows overlap.
-Applications resize.
-Taskbars exist.
-Launchers exist.
-Desktop icons exist.
-
-Getting all of that to work on smaller screens required redesigning several components.
-The dock was reorganized.
-Desktop applications now scale correctly.
-Complex layouts collapse intelligently without breaking the desktop metaphor.
-The goal wasn't simply "mobile support."
-The goal was making **it still feel like Windows.**
-
----
-# Phase 6 — The Resume
-
-The portfolio isn't only an operating system.
-It's also meant to represent me professionally.
-The resume section went through multiple revisions.
-Projects were rewritten using measurable engineering outcomes.
-
-Descriptions became more concise.
-Technical depth increased.
-
-
-The emphasis shifted toward:
-- Agentic AI
-- Multi-agent systems
-- LangGraph
-- ESP32 development
-- Edge AI
-- Systems engineering
-
-The result is something that reflects both the projects themselves and the engineering behind them.
-
----
-
-# Phase 7 — Repository Cleanup
-
-As the project grew, so did the repository.
-Development artifacts started piling up.
-Unused archives.
-Temporary scripts.
-Large dependency folders.
-Old experiments.
-
-...**Everything was audited** and unnecessary files were removed to keep deployments lean and the repository maintainable.
-
----
-
-# Current Expedition — DOOM
-
-[Learn More](https://github.com/KhannaSparsh0001/freedoom_implementation)
-
-Because apparently building a desktop operating system wasn't enough. 😭🤣🫠
-The current experiment is integrating Chocolate DOOM directly into the portfolio.
-The goal is ambitious:
-Launch DOOM as if it were another native desktop application.
-
-
-### Current progress:
-- ✅ Chocolate DOOM compiles successfully with Emscripten.
-- ✅ JavaScript is generated.
-- ✅ WebAssembly is generated.
-- ✅ FreeDoom assets load correctly.
-- ✅ The virtual filesystem initializes.
-- ✅ The engine starts.
-
-Current blocker:
-
-```
-I\_Init: Setting up machine state.
+```bash
+git clone https://github.com/KhannaSparsh0001/me.git
+cd me
+python3 -m http.server 4173
 ```
 
-Execution hangs immediately afterwards.
-The build pipeline is working.
-The runtime isn't.
+Open `http://localhost:4173` in your browser.
 
-**This experiment remains unfinished.**
+## Project Structure
 
+```text
+apps/        Desktop applications and interactive features
+docs/        Project documentation and supporting material
+shared/      Shared styles, scripts, and components
+games_Dev/   Game-development experiments
+assets/      Images and other static resources
+icons/       Desktop and application icons
+index.html   Main portfolio entry point
+style.css    Primary desktop styling
+```
 
-## For now.
+## Architecture
+
+The repository uses independent static pages and applications connected through a shared visual system. Application windows manage their own content, while the desktop shell provides navigation, window behavior, sound effects, and responsive presentation.
+
+The guestbook uses GitHub Issues as its data and moderation layer, allowing the website to remain deployable without a conventional backend.
+
+## Deployment
+
+The site is a static website and can be hosted by platforms such as GitHub Pages or Vercel.
+
+## Author
+
+**Sparsh Khanna**
+
+- Website: [khannasparsh.cv](https://khannasparsh.cv)
+- GitHub: [@KhannaSparsh0001](https://github.com/KhannaSparsh0001)
 
 ---
 
-# Philosophy
-
-This project has never been about recreating Windows 95.
-It's about creating software that feels tangible.
-Modern websites often feel disposable.
-I wanted something visitors could explore.
-**Something that rewards curiosity.**
-Something where opening an application feels different from opening another browser tab.
-**If you find yourself clicking around for longer than you intended...**
-**...then I probably achieved exactly what I set out to build.**
-
----
-
-_**"Still under construction.**
-**Just like every good operating system."**_
+*Still under construction — just like every good operating system.*
