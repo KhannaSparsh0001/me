@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>sparsh@portfolio: ~ (bash)</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <meta name="description" content="Sparsh Khanna - Systems & Agentic AI Software Engineer (LangGraph, ESP32, Stateful RAG). State Winner at India Skill Competition 2024.">
+    <meta property="og:title" content="Sparsh Khanna // Linux Shell Terminal">
+    <meta property="og:description" content="Interactive bash shell portfolio: LangGraph DAG state machines, ESP32 firmware telemetry, and systems architecture.">
+    <meta property="og:image" content="pfp.png">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -725,10 +731,31 @@
 
                 case 'sudo':
                     if (trimmed.includes('rm -rf')) {
-                        printLine(`<span class="c-red c-bold">Nice try! Permission denied.</span> This system is protected against catastrophic deletion.`);
+                        printLine(`<span class="c-red c-bold">CRITICAL: Kernel memory corrupted! Unmounting reality bus...</span>`);
+                        setTimeout(() => {
+                            if (window.Multiverse) Multiverse.glitch();
+                            else window.location.href = 'secret.html';
+                        }, 700);
                     } else {
                         printLine(`<span class="c-yellow">sparsh is in the sudoers file. This incident will be reported to Santa Claus.</span>`);
                     }
+                    break;
+
+                case 'gcc':
+                case 'compile':
+                    printLine(`<span class="c-cyan">Compiling payload.c with -O3 -Wall...</span>`);
+                    setTimeout(() => {
+                        printLine(`<span class="c-green c-bold">Build succeeded: resume_crack.bin created.</span>`);
+                        if (window.MultiverseInventory) {
+                            MultiverseInventory.addItem({
+                                id: 'compiled_binary',
+                                name: 'resume_crack.bin',
+                                icon: '💾',
+                                desc: 'High-performance ELF binary compiled in Linux Shell. Mounts on Windows 95 desktop!'
+                            });
+                        }
+                        printLine(`<span class="c-yellow">Artifact mounted to global Multiverse Backpack! (Check Windows 95 desktop)</span>`);
+                    }, 500);
                     break;
 
                 case 'curl':
@@ -1114,8 +1141,14 @@ sparsh     101  0.0  0.1   5201  1840 pts/0    Ss   09:50   0:01 bash
                 title.innerText = "Wolfenstein 3D // ECWolf HTML5";
                 iframe.src = "apps/wolf3d/index.html";
                 modal.classList.add('show');
+            } else if (target === 'logic_analyzer' || target === 'logic') {
+                printLine(`<span class="c-green">Launching live ESP32 digital logic oscilloscope...</span>`);
+                if (window.LogicAnalyzer) LogicAnalyzer.open();
+            } else if (target === 'backpack' || target === 'inventory') {
+                printLine(`<span class="c-green">Opening Multiverse Inventory Backpack...</span>`);
+                if (window.MultiverseInventory) MultiverseInventory.openModal();
             } else {
-                printLine(`<span class="c-red">run: Application not recognized.</span> Try <span class="c-green">./run doom</span>, <span class="c-green">./run quake</span>, or <span class="c-green">./run wolf3d</span>.`);
+                printLine(`<span class="c-red">run: Application not recognized.</span> Try <span class="c-green">./run logic_analyzer</span>, <span class="c-green">./run doom</span>, <span class="c-green">./run quake</span>, or <span class="c-green">./run wolf3d</span>.`);
             }
         }
 
@@ -1231,5 +1264,12 @@ sparsh     101  0.0  0.1   5201  1840 pts/0    Ss   09:50   0:01 bash
             focusInput();
         });
     </script>
+
+    <!-- Multiverse Master Bus Integration -->
+    <script src="shared/multiverseCore.js"></script>
+    <script src="shared/multiverseRadio.js"></script>
+    <script src="shared/multiverseDaemon.js"></script>
+    <script src="shared/multiverseInventory.js"></script>
+    <script src="shared/logicAnalyzer.js"></script>
 </body>
 </html>

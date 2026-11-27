@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>THE DAILY KHANNA — "All The Code That's Fit To Ship"</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <meta name="description" content="The Daily Khanna - Broadsheet newspaper portfolio of Sparsh Khanna, Systems & AI Engineer. State Winner at India Skill Competition 2024.">
+    <meta property="og:title" content="The Daily Khanna // Broadsheet Edition">
+    <meta property="og:description" content="All the code that's fit to ship. Autonomous Agent systems, ESP32 telemetry hardware, and placement operations.">
+    <meta property="og:image" content="pfp.png">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400&family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Special+Elite&display=swap" rel="stylesheet">
@@ -551,5 +557,12 @@
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         dateElem.innerText = now.toLocaleDateString('en-US', options).toUpperCase();
     </script>
+
+    <!-- Multiverse Master Bus Integration -->
+    <script src="shared/multiverseCore.js"></script>
+    <script src="shared/multiverseRadio.js"></script>
+    <script src="shared/multiverseDaemon.js"></script>
+    <script src="shared/multiverseInventory.js"></script>
+    <script src="shared/logicAnalyzer.js"></script>
 </body>
 </html>

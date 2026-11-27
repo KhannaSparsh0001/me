@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SPARSH ARCADE // 1986 SYNTHWAVE CABINET</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <meta name="description" content="Sparsh Khanna - 1986 Synthwave Arcade Cabinet Portfolio. Systems Engineer, LangGraph DAGs, and ESP32 Microcontrollers.">
+    <meta property="og:title" content="Sparsh Khanna // 1986 Synthwave Arcade">
+    <meta property="og:description" content="Retro CRT arcade cabinet portfolio with Web Audio chiptune synth, boss rush, and high scores table.">
+    <meta property="og:image" content="pfp.png">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
@@ -1059,6 +1065,15 @@
             document.getElementById('screen-credits').innerText = `CREDIT: ${credits.toString().padStart(2, '0')}`;
             playCoinSound();
 
+            if (window.MultiverseInventory) {
+                MultiverseInventory.addItem({
+                    id: 'arcade_token',
+                    name: '25¢ Token',
+                    icon: '🪙',
+                    desc: 'Solid brass token minted for the 1986 Outrun cabinet. Usable across dimensions!'
+                });
+            }
+
             setTimeout(() => {
                 document.getElementById('view-attract').classList.remove('active');
                 document.getElementById('view-menu').classList.add('active');
@@ -1162,5 +1177,12 @@
             }
         });
     </script>
+
+    <!-- Multiverse Master Bus Integration -->
+    <script src="shared/multiverseCore.js"></script>
+    <script src="shared/multiverseRadio.js"></script>
+    <script src="shared/multiverseDaemon.js"></script>
+    <script src="shared/multiverseInventory.js"></script>
+    <script src="shared/logicAnalyzer.js"></script>
 </body>
 </html>

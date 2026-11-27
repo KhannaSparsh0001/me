@@ -1,0 +1,338 @@
+/* ==========================================================================
+   MULTIVERSE MASTER CSS // SPARSH KHANNA PORTFOLIO
+   Shared styling for the Analog Radio Dial, CRT Desync Wipe,
+   Blinky Agentic Daemon, and Global Inventory Backpack.
+   ========================================================================== */
+
+/* ── CRT Reality Warp Transition Screen Overlay ── */
+#multiverse-warp-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999999;
+    pointer-events: none;
+    opacity: 0;
+    background: radial-gradient(circle at center, rgba(16, 24, 48, 0.95) 0%, rgba(2, 4, 10, 0.98) 100%);
+    transition: opacity 0.15s ease-out;
+}
+
+#multiverse-warp-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+    animation: crtDesyncWipe 0.35s steps(6) forwards;
+}
+
+@keyframes crtDesyncWipe {
+    0% {
+        transform: scaleY(1) skewX(0deg);
+        filter: brightness(2) contrast(2);
+    }
+    30% {
+        transform: scaleY(0.04) scaleX(1.3) skewX(12deg);
+        filter: hue-rotate(90deg) invert(0.8);
+    }
+    60% {
+        transform: scaleY(1.1) scaleX(0.9) skewX(-8deg);
+        filter: hue-rotate(180deg);
+    }
+    100% {
+        transform: scaleY(1) scaleX(1) skewX(0deg);
+        filter: none;
+    }
+}
+
+/* ── Floating Multiverse Rotary Radio Tuner Widget ── */
+.multiverse-radio-anchor {
+    position: fixed;
+    bottom: 22px;
+    right: 22px;
+    z-index: 999990;
+    font-family: 'JetBrains Mono', monospace;
+    user-select: none;
+}
+
+/* The Skeuomorphic Knurled Rotary Dial Button */
+.radio-dial-knob {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #2a313d, #0d1117);
+    border: 3px solid #485466;
+    box-shadow: 
+        0 6px 20px rgba(0, 0, 0, 0.7), 
+        inset 0 0 10px rgba(0, 0, 0, 0.9),
+        0 0 15px rgba(88, 166, 255, 0.3);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+}
+
+.radio-dial-knob:hover {
+    transform: scale(1.08);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.8), 0 0 20px rgba(86, 240, 224, 0.6);
+}
+
+.radio-dial-knob:active {
+    transform: scale(0.95);
+}
+
+/* Tactile Knurled Grip Ridges */
+.dial-ridges {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: repeating-conic-gradient(from 0deg, rgba(255, 255, 255, 0.12) 0deg 4deg, transparent 4deg 12deg);
+    pointer-events: none;
+}
+
+/* Glowing Indicator Needle */
+.dial-needle {
+    position: absolute;
+    top: 6px;
+    width: 4px;
+    height: 14px;
+    background: #ff5f56;
+    border-radius: 2px;
+    box-shadow: 0 0 8px #ff5f56;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.dial-center-badge {
+    position: relative;
+    z-index: 2;
+    color: #e6edf3;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* ── Expanded Frequency Aperture Selector ── */
+.frequency-aperture-panel {
+    position: absolute;
+    bottom: 74px;
+    right: 0;
+    width: 320px;
+    background: rgba(13, 17, 23, 0.94);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(88, 166, 255, 0.4);
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(88, 166, 255, 0.2);
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+    color: #e6edf3;
+    animation: apertureOpen 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.frequency-aperture-panel.open {
+    display: flex;
+}
+
+@keyframes apertureOpen {
+    0% { opacity: 0; transform: translateY(12px) scale(0.96); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.aperture-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 8px;
+    font-size: 11px;
+    color: #8b949e;
+}
+
+.frequency-display-bar {
+    background: #06090e;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 8px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: #39d353;
+}
+
+.channel-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+.channel-list::-webkit-scrollbar { width: 5px; }
+.channel-list::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
+
+.channel-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 11px;
+    transition: all 0.12s ease;
+    border: 1px solid transparent;
+}
+
+.channel-item:hover, .channel-item.active {
+    background: rgba(88, 166, 255, 0.15);
+    border-color: rgba(88, 166, 255, 0.4);
+    color: #58a6ff;
+}
+
+.channel-freq {
+    font-size: 10px;
+    color: #8b949e;
+}
+
+/* Aperture Footer Actions */
+.aperture-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 8px;
+}
+
+.aperture-btn {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #c9d1d9;
+    font-family: inherit;
+    font-size: 10px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-align: center;
+}
+
+.aperture-btn:hover {
+    background: rgba(88, 166, 255, 0.2);
+    border-color: #58a6ff;
+    color: #fff;
+}
+
+/* ── "Blinky" Agentic Daemon Companion Sprite ── */
+.blinky-daemon-anchor {
+    position: fixed;
+    bottom: 22px;
+    left: 22px;
+    z-index: 999980;
+    font-family: 'JetBrains Mono', monospace;
+    user-select: none;
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.blinky-orb {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #56f0e0, #007799);
+    border: 2px solid #56f0e0;
+    box-shadow: 0 0 16px rgba(86, 240, 224, 0.6);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+    font-weight: 700;
+    font-size: 13px;
+    animation: blinkyFloat 3s ease-in-out infinite;
+    flex-shrink: 0;
+}
+
+@keyframes blinkyFloat {
+    0%, 100% { transform: translateY(0); box-shadow: 0 0 14px rgba(86, 240, 224, 0.5); }
+    50% { transform: translateY(-6px); box-shadow: 0 0 22px rgba(86, 240, 224, 0.8); }
+}
+
+.blinky-speech-bubble {
+    background: rgba(10, 16, 28, 0.94);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(86, 240, 224, 0.4);
+    border-radius: 10px 10px 10px 2px;
+    padding: 10px 14px;
+    max-width: 280px;
+    color: #e6edf3;
+    font-size: 11px;
+    line-height: 1.5;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+    display: none;
+    animation: bubblePop 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.blinky-speech-bubble.show {
+    display: block;
+}
+
+@keyframes bubblePop {
+    0% { opacity: 0; transform: scale(0.9) translateY(4px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ── Global Cross-Universe Inventory Modal ── */
+.inventory-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90vw;
+    max-width: 440px;
+    background: #0d1117;
+    border: 2px solid #58a6ff;
+    border-radius: 12px;
+    padding: 18px;
+    z-index: 999995;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(88, 166, 255, 0.3);
+    font-family: 'JetBrains Mono', monospace;
+    color: #e6edf3;
+}
+
+.inventory-modal.open {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.inv-slot {
+    height: 72px;
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.inv-slot:hover {
+    border-color: #58a6ff;
+    background: rgba(88, 166, 255, 0.1);
+}
+
+.inv-slot-icon { font-size: 20px; }
+.inv-slot-label { font-size: 9px; color: #8b949e; text-align: center; }

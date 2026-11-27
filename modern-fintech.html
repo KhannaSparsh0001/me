@@ -5,6 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SPARSH.K // HFT Portfolio Terminal</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <meta name="description" content="SPARSH.K HFT Portfolio Terminal - Quantitative metrics, LangGraph DAGs, ESP32 telemetry hardware, and placement operations.">
+    <meta property="og:title" content="SPARSH.K // HFT Portfolio Terminal">
+    <meta property="og:description" content="Quantitative portfolio terminal: real-time telemetry, orderbook execution, and systems engineering benchmarks.">
+    <meta property="og:image" content="pfp.png">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="stylesheet" href="fintech.css">
 </head>
 
@@ -29,6 +35,7 @@
 
             <div class="bar-right">
                 <span class="latency-pill" id="sys-clock">00:00:00 · 0.4ms</span>
+                <button class="term-switch-btn" onclick="if(window.LogicAnalyzer) LogicAnalyzer.open()">⚡ Logic Scope</button>
                 <button class="term-switch-btn" onclick="window.location.href='resume.html'">≡ NORMAL</button>
                 <button class="term-switch-btn" onclick="window.location.href='space-theme.html'">✦ Space</button>
                 <button class="term-switch-btn" onclick="window.location.href='index.html'">⊞ Win95 OS</button>
@@ -640,6 +647,12 @@
         });
     </script>
 
+    <!-- Multiverse Master Bus Integration -->
+    <script src="shared/multiverseCore.js"></script>
+    <script src="shared/multiverseRadio.js"></script>
+    <script src="shared/multiverseDaemon.js"></script>
+    <script src="shared/multiverseInventory.js"></script>
+    <script src="shared/logicAnalyzer.js"></script>
 </body>
 
 </html>
