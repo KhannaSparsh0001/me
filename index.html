@@ -2076,6 +2076,11 @@
             <div class="menu-item-container">
                 <span id="window-menu-btn">Window</span>
                 <div class="dropdown-menu" id="window-dropdown">
+                    <div onclick="openApp('Terminal (Linux Bash Shell)', 'terminal.html', '820px', '560px')">
+                        Linux Bash Shell (Terminal)</div>
+                    <div onclick="window.location.href='secret.html'">
+                        *** Crash to BSOD (0x000000DE) ***</div>
+                    <div class="dropdown-separator"></div>
                     <div onclick="openGameModal('Mahjong Solitaire', 'games_Dev/mah-main/dist/index.html')">Play Mahjong
                     </div>
                     <div onclick="openGameModal('2048', 'games_Dev/2048-master/index.html')">Play 2048</div>
@@ -2111,6 +2116,10 @@
                 title="Notepad">
             <img src="icons/paint.png" onclick="openApp('Paint','apps/paint/index.html', '700px', '500px')"
                 title="Paint">
+            <img src="icons/terminal.svg" onclick="openApp('Terminal (Linux Bash Shell)','terminal.html', '820px', '560px')"
+                title="Linux Terminal (Bash Shell)" style="cursor:pointer;">
+            <img src="icons/bsod.svg" onclick="window.location.href='secret.html'"
+                title="*** STOP: 0x000000DE (BSOD Recovery) ***" style="cursor:pointer;">
             <img src="icons/winamp.png" onclick="openApp('Winamp','apps/winamp/index.html', '290px', '375px')"
                 title="Winamp">
             <img src="icons/system-monitor.png"
@@ -2554,6 +2563,22 @@
             <button class="portal-sheet-close" id="portal-sheet-close-btn" aria-label="Close dialog">X</button>
         </div>
         <div class="portal-sheet-body">
+            <button class="portal-card-btn card-terminal" onclick="window.location.href='terminal.html'" style="border-color:#39d353;">
+                <div class="card-title-row">
+                    <span style="color:#39d353;">$ LINUX BASH SHELL</span>
+                    <span>→</span>
+                </div>
+                <div class="card-desc">Interactive terminal environment with system diagnostics and game loaders.</div>
+            </button>
+
+            <button class="portal-card-btn card-bsod" onclick="window.location.href='secret.html'" style="border-color:#01cdfe;">
+                <div class="card-title-row">
+                    <span style="color:#ff71ce;">*** REALITY FRACTURE (BSOD)</span>
+                    <span>→</span>
+                </div>
+                <div class="card-desc">STOP: 0x000000DE recovery console & secret developer backdoor.</div>
+            </button>
+
             <button class="portal-card-btn card-space" onclick="enterDimension('space-theme.html', 'space')">
                 <div class="card-title-row">
                     <span>✦ SPACE OBSERVATORY</span>

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <!-- Retro Monitor Frame -->
+  <rect x="3" y="3" width="42" height="34" rx="2" fill="#d4d0c8" stroke="#ffffff" stroke-width="1.5"/>
+  <rect x="4" y="4" width="40" height="32" rx="1" fill="none" stroke="#808080" stroke-width="1.5" stroke-dasharray="0,41,73,0"/>
+  <!-- Blue Screen Display -->
+  <rect x="7" y="7" width="34" height="26" fill="#0000aa"/>
+  <!-- Header Bar -->
+  <rect x="11" y="9" width="26" height="4" fill="#aaaaaa"/>
+  <text x="13" y="12.5" font-family="monospace" font-size="3.5" font-weight="bold" fill="#0000aa">STOP:0xDE</text>
+  <!-- BSOD text lines -->
+  <rect x="9" y="16" width="22" height="1.5" fill="#ffffff"/>
+  <rect x="9" y="19" width="30" height="1.5" fill="#ffffff"/>
+  <rect x="9" y="22" width="18" height="1.5" fill="#ffffff"/>
+  <rect x="9" y="26" width="26" height="1.8" fill="#ff71ce"/>
+  <!-- Monitor Stand -->
+  <polygon points="18,37 30,37 33,43 15,43" fill="#808080"/>
+  <rect x="12" y="43" width="24" height="2" fill="#c0c0c0"/>
+</svg>
