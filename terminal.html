@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>sparsh@portfolio: ~ (bash)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #0c1017;
+            --term-header: #161b22;
+            --border-color: #30363d;
+            --text-main: #39d353;
+            --text-dim: #7ee787;
+            --text-muted: #8b949e;
+            --text-white: #f0f6fc;
+            --cyan: #58a6ff;
+            --yellow: #f2cc60;
+            --magenta: #bc8cff;
+            --red: #ff7b72;
+            --prompt-user: #58a6ff;
+            --prompt-host: #39d353;
+            --prompt-path: #f2cc60;
+            --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            font-family: var(--font-mono);
+            font-size: 14px;
+            line-height: 1.5;
+            overflow: hidden;
+            user-select: text;
+        }
+
+        /* Scanline CRT overlay */
+        .crt-scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 2px, 3px 100%;
+            z-index: 999;
+            opacity: 0.7;
+        }
+
+        .terminal-container {
+            display: flex;
+            flex-direction: column;
+            width: 100vw;
+            height: 100vh;
+            background: #090d13;
+        }
+
+        /* Terminal Window Header (macOS / Linux Window Chrome) */
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--term-header);
+            border-bottom: 1px solid var(--border-color);
+            padding: 8px 14px;
+            font-size: 12px;
+            color: var(--text-muted);
+            user-select: none;
+            flex-shrink: 0;
+        }
+
+        .header-dots {
+            display: flex;
+            gap: 7px;
+            align-items: center;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+        .dot:hover { transform: scale(1.15); }
+        .dot.red { background: #ff5f56; }
+        .dot.yellow { background: #ffbd2e; }
+        .dot.green { background: #27c93f; }
+
+        .header-title {
+            font-weight: 600;
+            color: var(--text-white);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 3px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+        .header-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--text-white);
+        }
+
+        /* Screen & Output Area */
+        .terminal-screen {
+            flex: 1;
+            padding: 16px 20px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            cursor: text;
+        }
+
+        .terminal-screen::-webkit-scrollbar {
+            width: 8px;
+        }
+        .terminal-screen::-webkit-scrollbar-track {
+            background: #090d13;
+        }
+        .terminal-screen::-webkit-scrollbar-thumb {
+            background: #30363d;
+            border-radius: 4px;
+        }
+
+        .log-entry {
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .prompt-line {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .prompt-user { color: var(--prompt-user); font-weight: 700; }
+        .prompt-at { color: var(--text-muted); }
+        .prompt-host { color: var(--prompt-host); font-weight: 700; }
+        .prompt-colon { color: var(--text-muted); }
+        .prompt-path { color: var(--prompt-path); font-weight: 600; }
+        .prompt-dollar { color: var(--text-white); font-weight: 700; }
+
+        .input-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            margin-top: 4px;
+            padding-bottom: 20px;
+        }
+
+        .cmd-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-family: inherit;
+            font-size: 14px;
+            color: var(--text-white);
+            caret-color: var(--text-main);
+            padding: 0;
+            width: 100%;
+        }
+
+        /* Text colors and badges */
+        .c-green { color: #39d353; }
+        .c-cyan { color: #58a6ff; }
+        .c-yellow { color: #f2cc60; }
+        .c-magenta { color: #bc8cff; }
+        .c-red { color: #ff7b72; }
+        .c-white { color: #f0f6fc; }
+        .c-muted { color: #8b949e; }
+        .c-bold { font-weight: 700; }
+
+        .tag {
+            display: inline-block;
+            padding: 1px 6px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 600;
+            margin: 0 2px;
+        }
+        .tag-ai { background: rgba(88, 166, 255, 0.2); color: #58a6ff; border: 1px solid rgba(88, 166, 255, 0.4); }
+        .tag-sys { background: rgba(57, 211, 83, 0.2); color: #39d353; border: 1px solid rgba(57, 211, 83, 0.4); }
+        .tag-iot { background: rgba(242, 204, 96, 0.2); color: #f2cc60; border: 1px solid rgba(242, 204, 96, 0.4); }
+
+        a.term-link {
+            color: var(--cyan);
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        a.term-link:hover {
+            color: #79c0ff;
+            background: rgba(88, 166, 255, 0.15);
+        }
+
+        .file-item {
+            display: inline-block;
+            margin-right: 18px;
+            margin-bottom: 4px;
+        }
+        .file-dir { color: #58a6ff; font-weight: 700; }
+        .file-dir::after { content: '/'; }
+        .file-exec { color: #39d353; font-weight: 700; }
+        .file-exec::after { content: '*'; }
+        .file-txt { color: #f0f6fc; }
+
+        /* Neofetch grid */
+        .neofetch-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 28px;
+            margin: 10px 0;
+            padding: 8px 0;
+        }
+
+        .ascii-art {
+            color: var(--cyan);
+            font-weight: 700;
+            white-space: pre;
+            line-height: 1.25;
+            font-size: 13px;
+        }
+
+        .neofetch-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .color-palette-bar {
+            display: flex;
+            margin-top: 8px;
+            gap: 6px;
+        }
+        .color-block {
+            width: 22px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        /* Steam Locomotive animation */
+        @keyframes slMove {
+            0% { transform: translateX(100vw); }
+            100% { transform: translateX(-120%); }
+        }
+        .sl-container {
+            position: fixed;
+            bottom: 60px;
+            left: 0;
+            white-space: pre;
+            color: var(--yellow);
+            font-family: monospace;
+            font-size: 12px;
+            animation: slMove 6s linear forwards;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Quick Bar for Mobile & Shortcuts */
+        .quick-actions-bar {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            background: #11161f;
+            border-top: 1px solid var(--border-color);
+            padding: 6px 12px;
+            flex-shrink: 0;
+        }
+        .quick-chip {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            border-radius: 12px;
+            padding: 3px 10px;
+            font-size: 11px;
+            cursor: pointer;
+            white-space: nowrap;
+            user-select: none;
+            transition: all 0.2s ease;
+        }
+        .quick-chip:hover {
+            color: var(--text-white);
+            border-color: var(--cyan);
+            background: rgba(88, 166, 255, 0.1);
+        }
+
+        /* Modal Iframe for Games */
+        .game-modal {
+            display: none;
+            position: fixed;
+            top: 5%;
+            left: 5%;
+            width: 90vw;
+            height: 90vh;
+            background: #000;
+            border: 2px solid var(--cyan);
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.4);
+            z-index: 10000;
+            border-radius: 8px;
+            overflow: hidden;
+            flex-direction: column;
+        }
+        .game-modal.show { display: flex; }
+        .game-modal-header {
+            background: #161b22;
+            padding: 8px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-white);
+            font-weight: 700;
+        }
+        .game-modal-close {
+            background: #ff5f56;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 2px 8px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+        .game-iframe {
+            flex: 1;
+            width: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="crt-scanlines"></div>
+
+    <div class="terminal-container">
+        <!-- Window Chrome Topbar -->
+        <header class="terminal-header">
+            <div class="header-dots">
+                <div class="dot red" title="Exit / Close" onclick="executeCommand('exit')"></div>
+                <div class="dot yellow" title="Clear Screen" onclick="executeCommand('clear')"></div>
+                <div class="dot green" title="Neofetch" onclick="executeCommand('neofetch')"></div>
+            </div>
+            <div class="header-title">
+                <span>sparsh@portfolio: ~ (bash 5.2.26)</span>
+            </div>
+            <div class="header-actions">
+                <button class="header-btn" id="sfx-toggle" onclick="toggleAudio()">🔊 SFX: ON</button>
+                <button class="header-btn" onclick="executeCommand('help')">? Help</button>
+                <button class="header-btn" onclick="window.location.href='index.html'">⊞ Win95</button>
+                <button class="header-btn" onclick="window.location.href='arcade.html'">🕹 Arcade</button>
+            </div>
+        </header>
+
+        <!-- Main Terminal Screen -->
+        <main class="terminal-screen" id="term-screen" onclick="focusInput()">
+            <div id="output-stream"></div>
+
+            <div class="input-row" id="input-container">
+                <div class="prompt-line">
+                    <span class="prompt-user">sparsh</span><span class="prompt-at">@</span><span class="prompt-host">portfolio</span><span class="prompt-colon">:</span><span class="prompt-path" id="prompt-cwd">~</span><span class="prompt-dollar">$</span>
+                </div>
+                <input type="text" id="cli-input" class="cmd-input" autocomplete="off" spellcheck="false" autofocus>
+            </div>
+        </main>
+
+        <!-- Quick Access Navigation Chips -->
+        <div class="quick-actions-bar">
+            <span class="quick-chip" onclick="executeCommand('neofetch')">neofetch</span>
+            <span class="quick-chip" onclick="executeCommand('whoami')">whoami</span>
+            <span class="quick-chip" onclick="executeCommand('cat skills/ai')">cat skills/ai</span>
+            <span class="quick-chip" onclick="executeCommand('ls projects/')">ls projects/</span>
+            <span class="quick-chip" onclick="executeCommand('cat experience.log')">cat experience.log</span>
+            <span class="quick-chip" onclick="executeCommand('./run doom')">./run doom</span>
+            <span class="quick-chip" onclick="executeCommand('./run quake')">./run quake</span>
+            <span class="quick-chip" onclick="executeCommand('sl')">sl (train)</span>
+            <span class="quick-chip" onclick="executeCommand('clear')">clear</span>
+        </div>
+    </div>
+
+    <!-- Modal for embedding retro games -->
+    <div class="game-modal" id="game-modal">
+        <div class="game-modal-header">
+            <span id="game-modal-title">Retro Game Engine</span>
+            <button class="game-modal-close" onclick="closeGameModal()">ESC / CLOSE</button>
+        </div>
+        <iframe class="game-iframe" id="game-iframe" src="about:blank"></iframe>
+    </div>
+
+    <script>
+        // Audio synthesis for realistic terminal key clicks and beeps
+        let audioCtx = null;
+        let sfxEnabled = true;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playKeyClick() {
+            if (!sfxEnabled) return;
+            initAudio();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(1400 + Math.random() * 600, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.015, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.03);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.03);
+        }
+
+        function playBeep(freq = 880, duration = 0.08) {
+            if (!sfxEnabled) return;
+            initAudio();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
+        }
+
+        function toggleAudio() {
+            sfxEnabled = !sfxEnabled;
+            document.getElementById('sfx-toggle').innerText = sfxEnabled ? "🔊 SFX: ON" : "🔇 SFX: OFF";
+        }
+
+        // Virtual File System
+        const VFS = {
+            '~': {
+                'type': 'dir',
+                'files': {
+                    'about.txt': { type: 'file', content: `SPARSH KHANNA — Systems & Software Engineer\nSpecializing in Agentic AI Architectures (LangGraph, Stateful RAG) and Edge Physical Computing (ESP32).\nRecognized as State Winner at the India Skill Competition 2024.\nLocation: Amritsar / Chandigarh, India (31.63° N, 74.87° E)` },
+                    'contact.txt': { type: 'file', content: `Email:    sparshkhanna0001@gmail.com\nGitHub:   https://github.com/KhannaSparsh0001\nLinkedIn: https://linkedin.com/in/sparshkhanna\nPhone:    +91-XXXXX-XXXXX (Available via Resume PDF)` },
+                    'resume.pdf': { type: 'file', content: `Opening PDF link: <a class="term-link" href="docs/Sparsh_khanna_Resume_gndu-18.pdf" target="_blank">docs/Sparsh_khanna_Resume_gndu-18.pdf</a>` },
+                    'experience.log': { type: 'file', content: `[2024 - PRESENT] Placement Core Member & Lead Coordinator // GNDU Placement Operations\n  - Automated student tracking pipelines; drove +200% placement throughput across 10+ corporate drives (TCS, KPMG, Nagarro).\n  - Interviewed & vetted 45+ candidate technical profiles.\n\n[2024] State Winner // India Skill Competition 2024 (IITSB)\n  - Ranked #1 in State for IT Software Solutions; validated high-concurrency systems design.\n\n[2022 - 2026] B.Tech in Computer Science & Engineering // Guru Nanak Dev University (GNDU)\n  - Focus: Distributed systems, Agentic state machines, RTOS microcontroller programming.` },
+                    'skills': {
+                        type: 'dir',
+                        files: {
+                            'ai': { type: 'file', content: `[AI & AGENTIC ORCHESTRATION]\n• LangGraph: Directed Acyclic Graph (DAG) state machines & multi-agent planner-executor loops.\n• Stateful RAG: Context-aware vector memory, chunking optimization, and hybrid re-ranking.\n• Frameworks: LangChain, LangFlow, n8n automated node workflows.\n• Audio/Vision: Whisper STT, ElevenLabs/Kokoro TTS, bounded local vision clicks.` },
+                            'systems': { type: 'file', content: `[SYSTEMS & BACKEND]\n• Python: FastAPI, Django REST Framework, WebSockets, Asyncio concurrency.\n• C / C++: Low-level memory management, UART/SPI driver timing, pointer arithmetic.\n• Databases: PostgreSQL, MySQL, Redis caching, SQLite.\n• Linux: Bash scripting, systemd, Docker, process isolation.` },
+                            'embedded': { type: 'file', content: `[EDGE HARDWARE & PHYSICAL COMPUTING]\n• ESP32 / Arduino: FreeRTOS task scheduling, ISR interrupt handlers.\n• Sensor Fusion: MPU6050 accelerometer/gyro, GPS NEO-6M, ultrasonic telemetry.\n• Protocols: UART, I2C, SPI, BLE 5.0, MQTT lightweight telemetry.` },
+                            'web': { type: 'file', content: `[MODERN WEB & UI]\n• Frontend: React.js, Next.js, Vite, HTML5 Canvas, SVG visualizers.\n• Styling: CSS Grid, Skewed Isometric transforms, Retro CRT shaders, Tailwind.` },
+                            'tools': { type: 'file', content: `[DEV TOOLS & WORKFLOW]\n• Git / GitHub: Submodules, CI/CD action runners, branch management.\n• Data: PowerBI, Pandas, NumPy, Matplotlib.\n• Automation: MCP (Model Context Protocol), Webhooks, Shell daemons.` }
+                        }
+                    },
+                    'projects': {
+                        type: 'dir',
+                        files: {
+                            'blinky': { type: 'file', content: `[BLINKY — Autonomous AI Screen Tutor]\n• Stack: Agentic AI, Local LLM Inference, Screen OCR, TTS Voice Feedback.\n• Features: Executes real-time safe-click desktop assistance loops based on live screen captures.` },
+                            'smart-helmet': { type: 'file', content: `[IoT Smart Helmet — Emergency Collision Hardware]\n• Stack: ESP32, C++, MPU6050 Accelerometer, GPS NEO-6M, Strava API.\n• Features: Sub-100ms impact shock detection with automated GSM emergency coordinates dispatch.` },
+                            'webnote': { type: 'file', content: `[webNote — Decoupled Workspace]\n• Stack: React.js, Django REST Framework, PostgreSQL, JWT Auth.\n• Features: High-throughput markdown organizer with strict relational CRUD security.` },
+                            'women-sos': { type: 'file', content: `[Women SOS Portal — Rapid Response System]\n• Stack: Next.js, Node.js, WebSockets, Geolocation API.\n• Features: Instant panic button dispatching live coordinates to nearby safe nodes; built for SkillSprint v2.` },
+                            'airpulse': { type: 'file', content: `[AirPulse: Japan — Environmental Analytics]\n• Stack: PowerBI, Python Pandas, Kaggle Datasets.\n• Features: Correlated industrial particulates with hospital admission spikes across prefectures.` },
+                            'cinematic-verse': { type: 'file', content: `[Cinematic Verse — Cinema Discovery Portal]\n• Stack: React, React Router, Vite, REST Feeds.\n• Features: Dynamic state-cached movie catalog with search debounce and trailer embeds.` }
+                        }
+                    },
+                    'games': {
+                        type: 'dir',
+                        files: {
+                            'doom': { type: 'exec', desc: 'Original js-dos classic DOOM shareware' },
+                            'quake': { type: 'exec', desc: '1996 WebQuake 3D with WASD movement' },
+                            'wolf3d': { type: 'exec', desc: 'Wolfenstein 3D classic raycasting shooter' }
+                        }
+                    }
+                }
+            }
+        };
+
+        let currentDir = '~';
+        let commandHistory = JSON.parse(sessionStorage.getItem('term_history') || '[]');
+        let historyIndex = commandHistory.length;
+
+        const outputStream = document.getElementById('output-stream');
+        const cliInput = document.getElementById('cli-input');
+        const promptCwd = document.getElementById('prompt-cwd');
+
+        function focusInput() {
+            cliInput.focus();
+        }
+
+        // Resolves a relative or absolute path against VFS
+        function resolvePath(path) {
+            let parts;
+            if (path.startsWith('~/')) {
+                parts = ['~', ...path.slice(2).split('/').filter(Boolean)];
+            } else if (path.startsWith('/')) {
+                parts = ['~', ...path.slice(1).split('/').filter(Boolean)];
+            } else if (path === '~') {
+                return ['~'];
+            } else {
+                const baseParts = currentDir.split('/').filter(Boolean);
+                const relParts = path.split('/').filter(Boolean);
+                parts = [...baseParts];
+                for (let p of relParts) {
+                    if (p === '.') continue;
+                    if (p === '..') {
+                        if (parts.length > 1) parts.pop();
+                    } else {
+                        parts.push(p);
+                    }
+                }
+            }
+            return parts;
+        }
+
+        function getTargetNode(parts) {
+            let node = VFS['~'];
+            if (parts.length === 1 && parts[0] === '~') return { node, type: 'dir', name: '~' };
+
+            for (let i = 1; i < parts.length; i++) {
+                const part = parts[i];
+                if (!node || node.type !== 'dir' || !node.files || !node.files[part]) {
+                    return null;
+                }
+                node = node.files[part];
+            }
+            return { node, type: node.type, name: parts[parts.length - 1] };
+        }
+
+        function printLine(html, className = 'log-entry') {
+            const div = document.createElement('div');
+            div.className = className;
+            div.innerHTML = html;
+            outputStream.appendChild(div);
+            scrollBottom();
+        }
+
+        function printPromptEcho(cmd) {
+            const div = document.createElement('div');
+            div.className = 'prompt-line';
+            div.innerHTML = `<span class="prompt-user">sparsh</span><span class="prompt-at">@</span><span class="prompt-host">portfolio</span><span class="prompt-colon">:</span><span class="prompt-path">${currentDir}</span><span class="prompt-dollar">$</span> <span class="c-white">${escapeHtml(cmd)}</span>`;
+            outputStream.appendChild(div);
+        }
+
+        function scrollBottom() {
+            const screen = document.getElementById('term-screen');
+            screen.scrollTop = screen.scrollHeight;
+        }
+
+        function escapeHtml(text) {
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        // Boot sequence banner
+        function runBootSequence() {
+            printLine(`<span class="c-cyan c-bold">BIOS v2.0.9 (c) SPARSH SYSTEMS INC.</span>`);
+            printLine(`Checking System RAM: 8192 MB OK`);
+            printLine(`Kernel: Linux 6.8.0-portfolio x86_64`);
+            printLine(`Mounting root filesystem (VFS ext4)... <span class="c-green">[OK]</span>`);
+            printLine(`Starting session for sparsh@portfolio... <span class="c-green">[DONE]</span>\n`);
+            printLine(`Welcome to <span class="c-yellow c-bold">Sparsh Khanna's Linux Terminal Portfolio</span>!`);
+            printLine(`Type <span class="c-cyan c-bold">'help'</span> to see available commands, or try <span class="c-cyan c-bold">'neofetch'</span> and <span class="c-cyan c-bold">'cat about.txt'</span>.\n`);
+        }
+
+        // Command handler
+        function executeCommand(rawCmd) {
+            const trimmed = rawCmd.trim();
+            if (!trimmed) {
+                printPromptEcho('');
+                return;
+            }
+
+            printPromptEcho(trimmed);
+
+            // History management
+            if (commandHistory[commandHistory.length - 1] !== trimmed) {
+                commandHistory.push(trimmed);
+                sessionStorage.setItem('term_history', JSON.stringify(commandHistory));
+            }
+            historyIndex = commandHistory.length;
+
+            playBeep(520, 0.04);
+
+            const args = trimmed.split(/\s+/);
+            const cmd = args[0].toLowerCase();
+            const param = args[1] || '';
+
+            switch (cmd) {
+                case 'help':
+                case '?':
+                case '--help':
+                    printHelp();
+                    break;
+
+                case 'whoami':
+                    printLine(`<span class="c-green c-bold">sparsh</span> — Systems & Software Engineer (Agentic AI, ESP32, Full-Stack)`);
+                    break;
+
+                case 'id':
+                    printLine(`uid=1000(sparsh) gid=1000(sparsh) groups=1000(sparsh),4(adm),24(cdrom),27(sudo),110(lxd),998(docker)`);
+                    break;
+
+                case 'uname':
+                    if (args[1] === '-a') {
+                        printLine(`Linux portfolio 6.8.0-45-generic #45-Ubuntu SMP PREEMPT_DYNAMIC Fri Oct 11 2024 x86_64 GNU/Linux`);
+                    } else {
+                        printLine(`Linux`);
+                    }
+                    break;
+
+                case 'date':
+                    printLine(new Date().toUTCString());
+                    break;
+
+                case 'uptime':
+                    const uptimeHours = Math.floor(performance.now() / 3600000);
+                    const uptimeMin = Math.floor((performance.now() % 3600000) / 60000);
+                    printLine(`up ${uptimeHours} hours, ${uptimeMin} minutes, 1 user, load average: 0.14, 0.09, 0.04`);
+                    break;
+
+                case 'clear':
+                case 'cls':
+                    outputStream.innerHTML = '';
+                    break;
+
+                case 'history':
+                    commandHistory.forEach((h, i) => {
+                        printLine(`  ${(i + 1).toString().padStart(3, ' ')}  ${escapeHtml(h)}`);
+                    });
+                    break;
+
+                case 'pwd':
+                    printLine(currentDir.replace('~', '/home/sparsh'));
+                    break;
+
+                case 'ls':
+                    handleLs(param);
+                    break;
+
+                case 'cd':
+                    handleCd(param);
+                    break;
+
+                case 'cat':
+                    handleCat(args.slice(1).join(' '));
+                    break;
+
+                case 'tree':
+                    handleTree();
+                    break;
+
+                case 'grep':
+                    handleGrep(args);
+                    break;
+
+                case 'neofetch':
+                    printNeofetch();
+                    break;
+
+                case 'man':
+                    if (param === 'sparsh' || !param) {
+                        printManSparsh();
+                    } else {
+                        printLine(`No manual entry for ${escapeHtml(param)}`);
+                    }
+                    break;
+
+                case 'sl':
+                    launchSteamLocomotive();
+                    break;
+
+                case 'cowsay':
+                    const cowMsg = args.slice(1).join(' ') || 'Hire Sparsh for high-performance agentic systems!';
+                    printCowsay(cowMsg);
+                    break;
+
+                case 'fortune':
+                    printFortune();
+                    break;
+
+                case 'ping':
+                    handlePing(param || 'google.com');
+                    break;
+
+                case 'top':
+                case 'htop':
+                    printHtop();
+                    break;
+
+                case 'ps':
+                    printProcessList();
+                    break;
+
+                case 'sudo':
+                    if (trimmed.includes('rm -rf')) {
+                        printLine(`<span class="c-red c-bold">Nice try! Permission denied.</span> This system is protected against catastrophic deletion.`);
+                    } else {
+                        printLine(`<span class="c-yellow">sparsh is in the sudoers file. This incident will be reported to Santa Claus.</span>`);
+                    }
+                    break;
+
+                case 'curl':
+                    if (trimmed.includes('contact')) {
+                        printLine(`<span class="c-red">HTTP/1.1 418 I'm a teapot</span>\nContent-Type: text/plain\n\nUse sparshkhanna0001@gmail.com or LinkedIn directly!`);
+                    } else {
+                        printLine(`curl: (6) Could not resolve host: ${escapeHtml(param || 'target')}`);
+                    }
+                    break;
+
+                case 'ssh':
+                    printLine(`sparsh@khanna.dev: Permission denied (publickey).\n<span class="c-muted">Try connecting via LinkedIn: https://linkedin.com/in/sparshkhanna</span>`);
+                    break;
+
+                case './run':
+                case 'run':
+                    handleRun(param);
+                    break;
+
+                case 'theme':
+                    handleTheme(param);
+                    break;
+
+                case 'exit':
+                    printLine(`<span class="c-yellow">logout: Session closed. (Refresh or use 'theme' to switch universes)</span>`);
+                    break;
+
+                default:
+                    // Check if user typed a direct file or game
+                    if (cmd.startsWith('./') && (cmd.includes('doom') || cmd.includes('quake') || cmd.includes('wolf3d'))) {
+                        handleRun(cmd.replace('./', ''));
+                    } else {
+                        printLine(`<span class="c-red">bash: ${escapeHtml(cmd)}: command not found</span>. Type <span class="c-cyan c-bold">'help'</span> for instructions.`);
+                    }
+                    break;
+            }
+
+            scrollBottom();
+        }
+
+        function printHelp() {
+            const helpText = `
+<span class="c-yellow c-bold">AVAILABLE COMMANDS &amp; UTILITIES:</span>
+
+  <span class="c-cyan c-bold">CORE IDENTITY &amp; BIO</span>
+    <span class="c-green">whoami</span>              Print user identity &amp; summary
+    <span class="c-green">neofetch</span>            System hardware &amp; technical profile banner
+    <span class="c-green">cat about.txt</span>       Full background, philosophy &amp; achievements
+    <span class="c-green">man sparsh</span>          UNIX manual format curriculum vitae
+    <span class="c-green">cat contact.txt</span>     Email, GitHub, and professional links
+
+  <span class="c-cyan c-bold">FILESYSTEM NAVIGATION</span>
+    <span class="c-green">ls [dir]</span>            List directory contents (<span class="c-muted">e.g. ls skills/, ls projects/</span>)
+    <span class="c-green">cd [dir]</span>            Change working directory (<span class="c-muted">e.g. cd skills, cd ..</span>)
+    <span class="c-green">pwd</span>                 Print working directory path
+    <span class="c-green">cat [file]</span>          Display file contents (<span class="c-muted">e.g. cat skills/ai, cat projects/blinky</span>)
+    <span class="c-green">tree</span>                ASCII directory layout tree
+    <span class="c-green">grep [term] [file]</span>  Search file for patterns (<span class="c-muted">e.g. grep -i "ai" experience.log</span>)
+
+  <span class="c-cyan c-bold">RETRO GAMES &amp; APPS</span>
+    <span class="c-green">./run doom</span>          Launch original js-dos DOOM shareware
+    <span class="c-green">./run quake</span>         Launch 1996 official WebQuake 3D engine (WASD ready)
+    <span class="c-green">./run wolf3d</span>        Launch classic Wolfenstein 3D
+
+  <span class="c-cyan c-bold">MULTIVERSE THEME SWITCHING</span>
+    <span class="c-green">theme [name]</span>        Switch portfolio theme:
+                        <span class="c-muted">[win95 | space | fintech | studio | codex | hud | arcade | pcb]</span>
+
+  <span class="c-cyan c-bold">DIAGNOSTICS &amp; FUN</span>
+    <span class="c-green">sl</span>                  Run the classic ASCII steam locomotive
+    <span class="c-green">cowsay [msg]</span>        ASCII bovine wisdom
+    <span class="c-green">fortune</span>             Engineering philosophy quote
+    <span class="c-green">top / ps</span>            Live virtual process table &amp; core stats
+    <span class="c-green">ping [host]</span>         ICMP echo test
+    <span class="c-green">clear</span>               Wipe terminal screen
+`;
+            printLine(helpText);
+        }
+
+        function handleLs(targetPath) {
+            let parts = targetPath ? resolvePath(targetPath) : resolvePath(currentDir);
+            let res = getTargetNode(parts);
+
+            if (!res || res.type !== 'dir') {
+                printLine(`<span class="c-red">ls: cannot access '${escapeHtml(targetPath)}': No such file or directory</span>`);
+                return;
+            }
+
+            let entries = [];
+            for (let name in res.node.files) {
+                const item = res.node.files[name];
+                if (item.type === 'dir') {
+                    entries.push(`<span class="file-item file-dir">${name}</span>`);
+                } else if (item.type === 'exec') {
+                    entries.push(`<span class="file-item file-exec">${name}</span>`);
+                } else {
+                    entries.push(`<span class="file-item file-txt">${name}</span>`);
+                }
+            }
+            printLine(entries.join(' ') || '<span class="c-muted">(empty directory)</span>');
+        }
+
+        function handleCd(target) {
+            if (!target || target === '~') {
+                currentDir = '~';
+                promptCwd.innerText = '~';
+                return;
+            }
+
+            const parts = resolvePath(target);
+            const res = getTargetNode(parts);
+
+            if (!res) {
+                printLine(`<span class="c-red">bash: cd: ${escapeHtml(target)}: No such file or directory</span>`);
+                return;
+            }
+            if (res.type !== 'dir') {
+                printLine(`<span class="c-red">bash: cd: ${escapeHtml(target)}: Not a directory</span>`);
+                return;
+            }
+
+            currentDir = parts.join('/');
+            promptCwd.innerText = currentDir;
+        }
+
+        function handleCat(filePath) {
+            if (!filePath) {
+                printLine(`<span class="c-muted">Usage: cat [filename]</span>`);
+                return;
+            }
+
+            const parts = resolvePath(filePath);
+            const res = getTargetNode(parts);
+
+            if (!res) {
+                printLine(`<span class="c-red">cat: ${escapeHtml(filePath)}: No such file or directory</span>`);
+                return;
+            }
+            if (res.type === 'dir') {
+                printLine(`<span class="c-red">cat: ${escapeHtml(filePath)}: Is a directory</span>`);
+                return;
+            }
+
+            printLine(res.node.content || `Executable binary [${res.name}]`);
+        }
+
+        function handleTree() {
+            let tree = `
+<span class="c-cyan c-bold">/home/sparsh</span>
+├── <span class="c-white">about.txt</span>
+├── <span class="c-white">contact.txt</span>
+├── <span class="c-white">experience.log</span>
+├── <span class="c-white">resume.pdf</span>
+├── <span class="file-dir">skills</span>
+│   ├── <span class="c-white">ai</span>
+│   ├── <span class="c-white">embedded</span>
+│   ├── <span class="c-white">systems</span>
+│   ├── <span class="c-white">web</span>
+│   └── <span class="c-white">tools</span>
+├── <span class="file-dir">projects</span>
+│   ├── <span class="c-white">blinky</span>
+│   ├── <span class="c-white">smart-helmet</span>
+│   ├── <span class="c-white">webnote</span>
+│   ├── <span class="c-white">women-sos</span>
+│   ├── <span class="c-white">airpulse</span>
+│   └── <span class="c-white">cinematic-verse</span>
+└── <span class="file-dir">games</span>
+    ├── <span class="file-exec">doom</span>
+    ├── <span class="file-exec">quake</span>
+    └── <span class="file-exec">wolf3d</span>
+`;
+            printLine(tree);
+        }
+
+        function handleGrep(args) {
+            if (args.length < 3) {
+                printLine(`<span class="c-muted">Usage: grep [-i] [pattern] [file]</span>`);
+                return;
+            }
+            const isCaseInsensitive = args[1] === '-i';
+            const pattern = isCaseInsensitive ? args[2] : args[1];
+            const file = isCaseInsensitive ? args[3] : args[2];
+
+            const parts = resolvePath(file);
+            const res = getTargetNode(parts);
+            if (!res || res.type !== 'file') {
+                printLine(`<span class="c-red">grep: ${escapeHtml(file)}: No such file</span>`);
+                return;
+            }
+
+            const regex = new RegExp(pattern, isCaseInsensitive ? 'gi' : 'g');
+            const lines = res.node.content.split('\n');
+            const matched = lines.filter(l => regex.test(l));
+
+            if (matched.length === 0) {
+                printLine(`<span class="c-muted">(no matches found)</span>`);
+            } else {
+                matched.forEach(l => {
+                    const highlighted = l.replace(regex, `<span class="c-red c-bold">$&</span>`);
+                    printLine(highlighted);
+                });
+            }
+        }
+
+        function printNeofetch() {
+            const ascii = `
+      ___          
+     /\\__\\         
+    /:/ _/_        
+   /:/ /\\  \\       
+  /:/ /::\\  \\      
+ /:/__\\/\\:\\__\\     
+ \\:\\  \\ /:/  /     
+  \\:\\  /:/  /      
+   \\:\\/:/  /       
+    \\::/  /        
+     \\/__/         `;
+
+            const html = `
+<div class="neofetch-wrap">
+    <div class="ascii-art">${ascii}</div>
+    <div class="neofetch-info">
+        <div><span class="c-cyan c-bold">sparsh</span><span class="c-muted">@</span><span class="c-cyan c-bold">portfolio</span></div>
+        <div>------------------------</div>
+        <div><span class="c-yellow c-bold">OS:</span> Sparsh Linux x86_64</div>
+        <div><span class="c-yellow c-bold">Host:</span> Guru Nanak Dev University (GNDU)</div>
+        <div><span class="c-yellow c-bold">Kernel:</span> 6.8.0-portfolio</div>
+        <div><span class="c-yellow c-bold">Uptime:</span> 4 years (B.Tech CSE Class of 2026)</div>
+        <div><span class="c-yellow c-bold">Shell:</span> bash 5.2.26</div>
+        <div><span class="c-yellow c-bold">Specialty:</span> Agentic AI (LangGraph, RAG) &amp; ESP32</div>
+        <div><span class="c-yellow c-bold">Award:</span> State Winner // India Skill Competition 2024</div>
+        <div><span class="c-yellow c-bold">Memory:</span> 16384MiB / 32768MiB (High Capacity)</div>
+        <div class="color-palette-bar">
+            <div class="color-block" style="background: #24292e;"></div>
+            <div class="color-block" style="background: #ff7b72;"></div>
+            <div class="color-block" style="background: #39d353;"></div>
+            <div class="color-block" style="background: #f2cc60;"></div>
+            <div class="color-block" style="background: #58a6ff;"></div>
+            <div class="color-block" style="background: #bc8cff;"></div>
+            <div class="color-block" style="background: #56f0e0;"></div>
+            <div class="color-block" style="background: #f0f6fc;"></div>
+        </div>
+    </div>
+</div>`;
+            printLine(html);
+        }
+
+        function printManSparsh() {
+            const man = `
+<span class="c-bold">SPARSH(1)                       General Commands Manual                      SPARSH(1)</span>
+
+<span class="c-yellow c-bold">NAME</span>
+    sparsh - Systems &amp; AI Software Engineer specializing in agentic loops &amp; edge hardware
+
+<span class="c-yellow c-bold">SYNOPSIS</span>
+    <span class="c-bold">sparsh</span> [--agentic-ai] [--embedded-esp32] [--full-stack] [--hire]
+
+<span class="c-yellow c-bold">DESCRIPTION</span>
+    <span class="c-bold">sparsh</span> is an agile engineer proficient in orchestrating multi-agent state machines
+    using LangGraph, building production-grade RAG systems, and programming low-latency
+    microcontrollers in C/C++. Recognized as the State Winner at the India Skill Competition
+    2024 (IITSB).
+
+<span class="c-yellow c-bold">CORE CAPABILITIES</span>
+    <span class="c-cyan c-bold">-a, --agentic</span>
+        Designs LangGraph Directed Acyclic Graphs with memory checkpoints and self-correction.
+    <span class="c-cyan c-bold">-e, --embedded</span>
+        Writes real-time FreeRTOS tasks, ISR handlers, and UART sensor decoders for ESP32.
+    <span class="c-cyan c-bold">-f, --fullstack</span>
+        Deploys high-throughput APIs using FastAPI, Django, PostgreSQL, and React.js.
+
+<span class="c-yellow c-bold">SEE ALSO</span>
+    <span class="c-green">cat contact.txt</span>, <span class="c-green">cat experience.log</span>, <span class="c-green">theme arcade</span>
+
+SPARSH SYSTEMS                   November 2024                               SPARSH(1)
+`;
+            printLine(man);
+        }
+
+        function launchSteamLocomotive() {
+            const slAscii = `
+      ====        ________                ___________
+  _D _|  |_______/        \\__I_I_____===__|_________|
+   |(_)---  |   H\\________/ |   |        =|___ ___|  
+   /     |  |   H  |  |     |   |         ||_| |_||  
+  |      |  |   H  |__--------------------|       |  
+  | ________|___H__/__|_____/[][]~\\_______|       |  
+  |/ |   |_____I_____I_____/\\_____/ \\_____/ \\_____|  
+`;
+            const div = document.createElement('div');
+            div.className = 'sl-container';
+            div.innerText = slAscii;
+            document.body.appendChild(div);
+            setTimeout(() => div.remove(), 6200);
+        }
+
+        function printCowsay(msg) {
+            const len = msg.length;
+            const border = '-'.repeat(len + 2);
+            const cow = `
+ ${border}
+< ${escapeHtml(msg)} >
+ ${border}
+        \\   ^__^
+         \\  (oo)\\_______
+            (__)\\       )\\/\\
+                ||----w |
+                ||     ||
+`;
+            printLine(`<pre class="c-green">${cow}</pre>`);
+        }
+
+        function printFortune() {
+            const quotes = [
+                `"Premature optimization is the root of all evil — but so is writing uninstrumented code."`,
+                `"A distributed system is one in which the failure of a computer you didn't even know existed can render your own computer unusable." — Leslie Lamport`,
+                `"First make it work, then make it right, then make it fast." — Kent Beck`,
+                `"Any sufficiently advanced technology is indistinguishable from a well-orchestrated LangGraph state machine."`
+            ];
+            const q = quotes[Math.floor(Math.random() * quotes.length)];
+            printLine(`<span class="c-magenta">${q}</span>`);
+        }
+
+        function handlePing(host) {
+            printLine(`PING ${escapeHtml(host)} (142.250.190.46) 56(84) bytes of data.`);
+            let count = 0;
+            const interval = setInterval(() => {
+                count++;
+                const rtt = (38.2 + Math.random() * 8.4).toFixed(1);
+                printLine(`64 bytes from ${escapeHtml(host)}: icmp_seq=${count} ttl=118 time=${rtt} ms`);
+                if (count >= 4) {
+                    clearInterval(interval);
+                    printLine(`--- ${escapeHtml(host)} ping statistics ---`);
+                    printLine(`4 packets transmitted, 4 received, 0% packet loss, time 3004ms\n`);
+                }
+            }, 600);
+        }
+
+        function printHtop() {
+            const htopOutput = `
+<span class="c-cyan">  CPU[|||||||||||||||||||||||||||||         68.4%]</span>   Tasks: 42, 1 running
+<span class="c-yellow">  Mem[|||||||||||||||||||||                 4.81G/16.0G]</span>  Load average: 0.42 0.38 0.25
+<span class="c-magenta">  Swp[|                                     0.12G/4.00G]</span>  Uptime: 14 days, 08:22:19
+
+  <span class="c-white c-bold">PID  USER     PRI  NI  VIRT   RES   SHR S  CPU%  MEM%  TIME+   COMMAND</span>
+ 1337  sparsh    20   0  14.2g  3.4g  420m S  42.8  21.3  14:02   langgraph_state_machine
+ 2024  sparsh    20   0   4.1g  1.1g  180m S  14.2   6.9   8:44   fastapi_rag_server
+  848  sparsh    20   0  1800m  420m   88m S   8.4   2.6   3:12   esp32_uart_daemon
+ 4096  sparsh    20   0   920m  210m   45m S   4.1   1.3   1:50   webquake_engine
+ 1024  sparsh    20   0   240m   64m   18m S   0.8   0.4   0:15   systemd_monitor
+`;
+            printLine(htopOutput);
+        }
+
+        function printProcessList() {
+            printLine(`
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sparsh    1337 42.8 21.3 148902 34821 pts/0    Sl   10:00  14:02 python -m agent.langgraph
+sparsh    2024 14.2  6.9  42091 11204 pts/1    S    10:05   8:44 uvicorn app.main:api --workers 4
+sparsh     848  8.4  2.6  18492  4219 pts/2    S    10:02   3:12 /usr/local/bin/esp32_monitor /dev/ttyUSB0
+sparsh     101  0.0  0.1   5201  1840 pts/0    Ss   09:50   0:01 bash
+`);
+        }
+
+        function handleRun(app) {
+            const target = (app || '').toLowerCase();
+            const modal = document.getElementById('game-modal');
+            const iframe = document.getElementById('game-iframe');
+            const title = document.getElementById('game-modal-title');
+
+            if (target === 'doom') {
+                printLine(`<span class="c-green">Launching DOOM classic DOS shareware...</span>`);
+                title.innerText = "DOOM (1993) // js-dos Engine";
+                iframe.src = "apps/doom/index.html";
+                modal.classList.add('show');
+            } else if (target === 'quake') {
+                printLine(`<span class="c-green">Launching official 1996 WebQuake engine (WASD movement enabled)...</span>`);
+                title.innerText = "QUAKE (1996) // WebQuake HTML5 Engine";
+                iframe.src = "apps/quake/index.html";
+                modal.classList.add('show');
+            } else if (target === 'wolf3d') {
+                printLine(`<span class="c-green">Launching Wolfenstein 3D classic raycasting engine...</span>`);
+                title.innerText = "Wolfenstein 3D // ECWolf HTML5";
+                iframe.src = "apps/wolf3d/index.html";
+                modal.classList.add('show');
+            } else {
+                printLine(`<span class="c-red">run: Application not recognized.</span> Try <span class="c-green">./run doom</span>, <span class="c-green">./run quake</span>, or <span class="c-green">./run wolf3d</span>.`);
+            }
+        }
+
+        function closeGameModal() {
+            const modal = document.getElementById('game-modal');
+            const iframe = document.getElementById('game-iframe');
+            iframe.src = "about:blank";
+            modal.classList.remove('show');
+            focusInput();
+        }
+
+        function handleTheme(name) {
+            const themes = {
+                'win95': 'index.html',
+                'space': 'space-theme.html',
+                'fintech': 'modern-fintech.html',
+                'studio': 'isometric-studio.html',
+                'codex': 'obsidian-codex.html',
+                'hud': 'interstellar-transit-hud.html',
+                'arcade': 'arcade.html',
+                'pcb': 'pcb-schematic.html'
+            };
+
+            const target = (name || '').toLowerCase();
+            if (themes[target]) {
+                printLine(`<span class="c-green">Warping to theme '${target}'...</span>`);
+                setTimeout(() => window.location.href = themes[target], 400);
+            } else {
+                printLine(`<span class="c-yellow">Available themes:</span>`);
+                Object.keys(themes).forEach(t => {
+                    printLine(`  • <span class="c-cyan c-bold" onclick="executeCommand('theme ${t}')" style="cursor:pointer">${t}</span> → ${themes[t]}`);
+                });
+                printLine(`<span class="c-muted">Usage: theme [name] (e.g. theme arcade)</span>`);
+            }
+        }
+
+        // Tab Autocomplete
+        function handleTab(inputVal) {
+            const tokens = inputVal.split(/\s+/);
+            const currentToken = tokens[tokens.length - 1] || '';
+
+            const commands = [
+                'whoami', 'neofetch', 'man', 'cat', 'ls', 'cd', 'pwd', 'tree', 'grep',
+                'clear', 'history', 'uptime', 'date', 'help', 'sl', 'cowsay', 'fortune',
+                'top', 'ps', 'ping', 'sudo', 'curl', 'ssh', 'run', './run', 'theme', 'exit'
+            ];
+
+            if (tokens.length <= 1) {
+                const matches = commands.filter(c => c.startsWith(currentToken));
+                if (matches.length === 1) {
+                    cliInput.value = matches[0] + ' ';
+                } else if (matches.length > 1) {
+                    printLine(matches.join('   '), 'c-muted');
+                }
+            } else {
+                // File autocomplete
+                const parentDir = currentDir;
+                const parts = resolvePath(parentDir);
+                const res = getTargetNode(parts);
+                if (res && res.type === 'dir') {
+                    const fileMatches = Object.keys(res.node.files).filter(f => f.startsWith(currentToken));
+                    if (fileMatches.length === 1) {
+                        tokens[tokens.length - 1] = fileMatches[0];
+                        cliInput.value = tokens.join(' ') + ' ';
+                    } else if (fileMatches.length > 1) {
+                        printLine(fileMatches.join('   '), 'c-muted');
+                    }
+                }
+            }
+        }
+
+        // Keyboard navigation and history listeners
+        cliInput.addEventListener('keydown', (e) => {
+            playKeyClick();
+
+            if (e.key === 'Enter') {
+                const cmd = cliInput.value;
+                cliInput.value = '';
+                executeCommand(cmd);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (historyIndex > 0) {
+                    historyIndex--;
+                    cliInput.value = commandHistory[historyIndex] || '';
+                }
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (historyIndex < commandHistory.length - 1) {
+                    historyIndex++;
+                    cliInput.value = commandHistory[historyIndex] || '';
+                } else {
+                    historyIndex = commandHistory.length;
+                    cliInput.value = '';
+                }
+            } else if (e.key === 'Tab') {
+                e.preventDefault();
+                handleTab(cliInput.value);
+            } else if (e.ctrlKey && e.key.toLowerCase() === 'l') {
+                e.preventDefault();
+                executeCommand('clear');
+            } else if (e.ctrlKey && e.key.toLowerCase() === 'c') {
+                e.preventDefault();
+                printPromptEcho(cliInput.value + '^C');
+                cliInput.value = '';
+            } else if (e.key === 'Escape') {
+                closeGameModal();
+            }
+        });
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            runBootSequence();
+            focusInput();
+        });
+    </script>
+</body>
+</html>

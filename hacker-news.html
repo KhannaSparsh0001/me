@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ask HN: Should I hire this guy? | Hacker News</title>
+    <style>
+        :root {
+            --hn-orange: #ff6600;
+            --hn-bg: #f6f6ef;
+            --hn-text: #222222;
+            --hn-muted: #828282;
+            --hn-link: #000000;
+            --hn-header-text: #222222;
+            --hn-comment-bg: transparent;
+            --hn-border: #e2e2d8;
+        }
+
+        body.dark-theme {
+            --hn-orange: #ff6600;
+            --hn-bg: #12151a;
+            --hn-text: #d8e2ec;
+            --hn-muted: #798696;
+            --hn-link: #f0f6fc;
+            --hn-header-text: #000000;
+            --hn-comment-bg: #181d24;
+            --hn-border: #262f3d;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #e6e6df;
+            font-family: Verdana, Geneva, sans-serif;
+            font-size: 10pt;
+            color: var(--hn-text);
+            padding: 8px 0;
+            display: flex;
+            justify-content: center;
+        }
+        body.dark-theme {
+            background-color: #0d1014;
+        }
+
+        .hn-main-container {
+            width: 85%;
+            max-width: 1040px;
+            background-color: var(--hn-bg);
+            border: 1px solid var(--hn-border);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .hn-main-container { width: 98%; }
+        }
+
+        /* ── Top Header Navigation Bar ── */
+        .hn-header {
+            background-color: var(--hn-orange);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 4px 8px;
+            font-size: 10pt;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .hn-logo-box {
+            border: 1px solid #ffffff;
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 11pt;
+            padding: 0px 4px;
+            margin-right: 4px;
+            user-select: none;
+        }
+
+        .hn-site-title {
+            font-weight: bold;
+            color: var(--hn-header-text);
+            text-decoration: none;
+        }
+
+        .hn-nav-links {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 9.5pt;
+        }
+        .hn-nav-links a {
+            color: var(--hn-header-text);
+            text-decoration: none;
+        }
+        .hn-nav-links a:hover {
+            text-decoration: underline;
+        }
+        .nav-separator {
+            color: rgba(0, 0, 0, 0.4);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 9pt;
+        }
+
+        .theme-toggle-btn {
+            background: rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(0, 0, 0, 0.25);
+            padding: 2px 6px;
+            font-size: 8pt;
+            cursor: pointer;
+            border-radius: 2px;
+            font-family: inherit;
+        }
+        .theme-toggle-btn:hover { background: rgba(0, 0, 0, 0.25); }
+
+        /* ── Main Submission Card ── */
+        .submission-card {
+            padding: 14px 12px 10px 12px;
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+        }
+
+        .upvote-btn {
+            cursor: pointer;
+            width: 14px;
+            height: 14px;
+            border: none;
+            background: transparent;
+            color: #828282;
+            font-size: 11pt;
+            line-height: 1;
+            padding: 0;
+            display: inline-block;
+            transition: transform 0.1s ease;
+        }
+        .upvote-btn:hover { color: var(--hn-orange); transform: scale(1.2); }
+        .upvote-btn.voted { color: var(--hn-orange); font-weight: bold; }
+
+        .submission-content {
+            flex: 1;
+        }
+
+        .post-title {
+            font-size: 11pt;
+            color: var(--hn-link);
+            font-weight: 500;
+            line-height: 1.3;
+        }
+        .post-site {
+            font-size: 8.5pt;
+            color: var(--hn-muted);
+            text-decoration: none;
+            margin-left: 4px;
+        }
+
+        .post-meta {
+            font-size: 8pt;
+            color: var(--hn-muted);
+            margin-top: 4px;
+        }
+        .post-meta a {
+            color: var(--hn-muted);
+            text-decoration: none;
+        }
+        .post-meta a:hover { text-decoration: underline; }
+
+        .post-body-text {
+            font-size: 9.5pt;
+            line-height: 1.5;
+            margin-top: 12px;
+            color: var(--hn-text);
+            max-width: 820px;
+        }
+
+        /* ── Comment Submission Box ── */
+        .comment-submit-area {
+            padding: 10px 14px 14px 34px;
+            border-bottom: 1px solid var(--hn-border);
+        }
+        .comment-input {
+            width: 90%;
+            max-width: 600px;
+            height: 60px;
+            font-family: inherit;
+            font-size: 9pt;
+            padding: 6px;
+            border: 1px solid #c0c0c0;
+            background: #fff;
+            color: #000;
+        }
+        body.dark-theme .comment-input {
+            background: #181d24;
+            border-color: #30363d;
+            color: #f0f6fc;
+        }
+        .submit-btn {
+            display: block;
+            margin-top: 8px;
+            font-size: 9pt;
+            padding: 3px 8px;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        /* ── Comments Tree ── */
+        .comments-section {
+            padding: 16px 14px 40px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .comment-thread {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .comment-item {
+            display: flex;
+            gap: 6px;
+            align-items: flex-start;
+        }
+
+        .comment-inner {
+            flex: 1;
+        }
+
+        .comment-header {
+            font-size: 8pt;
+            color: var(--hn-muted);
+            margin-bottom: 4px;
+        }
+        .comment-user {
+            color: var(--hn-muted);
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .comment-user.author {
+            color: var(--hn-orange);
+        }
+        .comment-user:hover { text-decoration: underline; }
+
+        .comment-toggle {
+            cursor: pointer;
+            color: var(--hn-muted);
+            text-decoration: none;
+            margin-left: 4px;
+        }
+
+        .comment-text {
+            font-size: 9.5pt;
+            line-height: 1.5;
+            color: var(--hn-text);
+        }
+
+        .comment-text p {
+            margin-bottom: 6px;
+        }
+
+        .comment-reply-link {
+            font-size: 8pt;
+            color: var(--hn-muted);
+            text-decoration: underline;
+            cursor: pointer;
+            margin-top: 4px;
+            display: inline-block;
+        }
+
+        /* Indentation for replies */
+        .indent-1 { margin-left: 28px; border-left: 1px dashed var(--hn-border); padding-left: 10px; }
+        .indent-2 { margin-left: 56px; border-left: 1px dashed var(--hn-border); padding-left: 10px; }
+        .indent-3 { margin-left: 84px; border-left: 1px dashed var(--hn-border); padding-left: 10px; }
+
+        .code-snippet {
+            font-family: monospace;
+            font-size: 9pt;
+            background: rgba(0, 0, 0, 0.05);
+            padding: 4px 8px;
+            border-radius: 3px;
+            display: block;
+            margin: 6px 0;
+            white-space: pre-wrap;
+        }
+        body.dark-theme .code-snippet {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        /* Footer */
+        .hn-footer {
+            border-top: 2px solid var(--hn-orange);
+            padding: 20px;
+            text-align: center;
+            font-size: 9pt;
+            color: var(--hn-muted);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .footer-portals {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .footer-portals a {
+            color: var(--hn-muted);
+            text-decoration: none;
+        }
+        .footer-portals a:hover {
+            color: var(--hn-orange);
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <main class="hn-main-container">
+        <!-- Top Hacker News Header -->
+        <header class="hn-header">
+            <div class="header-left">
+                <span class="hn-logo-box">Y</span>
+                <a href="#" class="hn-site-title">Hacker News</a>
+                <nav class="hn-nav-links">
+                    <a href="#about">about</a>
+                    <span class="nav-separator">|</span>
+                    <a href="#skills">skills</a>
+                    <span class="nav-separator">|</span>
+                    <a href="#projects">projects</a>
+                    <span class="nav-separator">|</span>
+                    <a href="#experience">experience</a>
+                    <span class="nav-separator">|</span>
+                    <a href="docs/Sparsh_khanna_Resume_gndu-18.pdf" target="_blank" style="font-weight:bold; color:#000;">resume.pdf</a>
+                </nav>
+            </div>
+            
+            <div class="header-right">
+                <button class="theme-toggle-btn" onclick="toggleTheme()" id="theme-btn">dark mode</button>
+                <span>sparsh_k (9940)</span>
+            </div>
+        </header>
+
+        <!-- Main Submission Entry -->
+        <article class="submission-card">
+            <button class="upvote-btn" id="post-upvote-btn" onclick="upvotePost()" title="upvote">▲</button>
+            <div class="submission-content">
+                <h1 class="post-title">
+                    Ask HN: Should I hire this guy? (Systems Engineer · Agentic AI &amp; ESP32)
+                    <a href="https://github.com/KhannaSparsh0001" target="_blank" class="post-site">(sparsh-k.dev)</a>
+                </h1>
+                
+                <div class="post-meta">
+                    <span id="post-points">847</span> points by 
+                    <a href="#" class="comment-user author">sparsh_k</a> 
+                    <span id="post-timestamp">6 hours ago</span> | 
+                    <a href="#">hide</a> | 
+                    <a href="#">past</a> | 
+                    <a href="#comments">312 comments</a>
+                </div>
+
+                <div class="post-body-text">
+                    Hey HN! I'm a final-year CS engineer at Guru Nanak Dev University (GNDU). I specialize in <strong>LangGraph DAG multi-agent workflows</strong>, <strong>Stateful RAG</strong> with contextual vector checkpointing, and <strong>ESP32 embedded firmware</strong> in C/C++. Recognized as the State Winner at the India Skill Competition 2024.
+                    <br><br>
+                    Looking for full-time systems or AI software engineering roles. Review my stack, tear apart my architecture, or roast my resume below.
+                </div>
+            </div>
+        </article>
+
+        <!-- Fake Add Comment Box -->
+        <div class="comment-submit-area">
+            <textarea class="comment-input" id="user-comment-input" placeholder="What are your thoughts on this candidate?"></textarea>
+            <button class="submit-btn" onclick="submitComment()">add comment</button>
+        </div>
+
+        <!-- Comments Tree -->
+        <section class="comments-section" id="comments">
+
+            <!-- THREAD 1: Technical Architecture Review -->
+            <div class="comment-thread" id="thread-1">
+                <div class="comment-item">
+                    <button class="upvote-btn" onclick="upvoteComment(this)">▲</button>
+                    <div class="comment-inner">
+                        <div class="comment-header">
+                            <a href="#" class="comment-user">throckmorton_j</a> 5 hours ago | 
+                            <span class="comment-toggle" onclick="toggleComment(this)">[–]</span>
+                        </div>
+                        <div class="comment-text">
+                            <p>Skimmed the repository and project orderbook. The <strong>LangGraph stateful agent</strong> (Blinky) is legitimately impressive. Not many new grads actually implement graph-based state machines properly — most just slap together a naive linear chain or basic prompt wrapper.</p>
+                            <p>The memory checkpointing and deterministic rollback cycle before executing desktop screen clicks solves the infinite hallucination loop problem. That's real systems design.</p>
+                        </div>
+                        <span class="comment-reply-link">reply</span>
+                    </div>
+                </div>
+
+                <!-- Reply from HN Moderator Dang -->
+                <div class="comment-item indent-1">
+                    <button class="upvote-btn" onclick="upvoteComment(this)">▲</button>
+                    <div class="comment-inner">
+                        <div class="comment-header">
+                            <a href="#" class="comment-user">dang</a> 4 hours ago | 
+                            <span class="comment-toggle" onclick="toggleComment(this)">[–]</span>
+                        </div>
+                        <div class="comment-text">
+                            <p>Please keep comments civil and focused on the technical work. Though I agree with your assessment, the code structure is clean.</p>
+                        </div>
+                        <span class="comment-reply-link">reply</span>
+                    </div>
+                </div>
+
+                <!-- Skeptical Comment -->
+                <div class="comment-item indent-1">
+                    <button class="upvote-btn" onclick="upvoteComment(this)">▲</button>
+                    <div class="comment-inner">
+                        <div class="comment-header">
+                            <a href="#" class="comment-user">naysayer_9000</a> 4 hours ago | 
+                            <span class="comment-toggle" onclick="toggleComment(this)">[–]</span>
+                        </div>
+                        <div class="comment-text">
+                            <p>Or he just cloned the LangGraph tutorial repository and called it "architecting". Where is the proof of production edge cases?</p>
+                        </div>
+                        <span class="comment-reply-link">reply</span>
+                    </div>
+                </div>
+
+                <!-- Sparsh Author Response -->
+                <div class="comment-item indent-2">
+                    <button class="upvote-btn" onclick="upvoteComment(this)">▲</button>
+                    <div class="comment-inner">
+                        <div class="comment-header">
+                            <a href="#" class="comment-user author">sparsh_k</a> [OP] 3 hours ago | 
+                            <span class="comment-toggle" onclick="toggleComment(this)">[–]</span>
+                        </div>
+                        <div class="comment-text">
+                            <p>Fair skepticism! The tutorial examples don't handle bounding box drift or recovery when an OS popup steals focus. Here is how our custom recovery node handles it:</p>
+                            <div class="code-snippet">def validate_desktop_state(state: AgentState) -> Command[Literal["execute", "rollback"]]:
+    if state["ocr_confidence"] &lt; 0.88 or state["window_focus"] != target_pid:
+        return Command(goto="rollback", update={"retry_budget": state["retry_budget"] - 1})
+    return Command(goto="execute")</div>
+                            <p>Standard tutorials use unbounded LLM decision nodes; ours uses typed deterministic bounds.</p>
+                        </div>
+                        <span class="comment-reply-link">reply</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- THREAD 2: Embedded Hardware Validation -->
+            <div class="comment-thread" id="thread-2">
+                <div class="comment-item">
+                    <button class="upvote-btn" onclick="upvoteComment(this)">▲</button>
+                    <div class="comment-inner">
+                        <div class="comment-header">
+                            <a href="#" class="comment-user">pg_burner</a> 4 hours ago | 
+                            <span class="comment-toggle" onclick="toggleComment(this)">[–]</span>
+                        </div>
+                        <div class="comment-text">
+                            <p>The <strong>ESP32 Smart Helmet</strong> project is the kind of physical computing work that actually shows low-level capability. 94ms UART sensor fusion response under interrupt load indicates real understanding of FreeRTOS queues and memory bounds, not just copy-pasting Arduino delay() loops.</p>
+                        </div>
+                        <span class="comment-reply-link">reply</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- THREAD 3: Leadership & Placement Metric -->
+            <div class="comment-thread" id="thread-3">
+                <div class="comment-item">
+                    <button class="upvote-btn" onclick="upvoteComment(this)">▲</button>
+                    <div class="comment-inner">
+                        <div class="comment-header">
+                            <a href="#" class="comment-user">recruiter_anon</a> 3 hours ago | 
+                            <span class="comment-toggle" onclick="toggleComment(this)">[–]</span>
+                        </div>
+                        <div class="comment-text">
+                            <p>Wait, is the <strong>+200% placement throughput surge</strong> at GNDU a verified metric? That's unusually high operational output for a student coordinator.</p>
+                        </div>
+                        <span class="comment-reply-link">reply</span>
+                    </div>
+                </div>
+
+                <div class="comment-item indent-1">
+                    <button class="upvote-btn" onclick="upvoteComment(this)">▲</button>
+                    <div class="comment-inner">
+                        <div class="comment-header">
+                            <a href="#" class="comment-user author">sparsh_k</a> [OP] 2 hours ago | 
+                            <span class="comment-toggle" onclick="toggleComment(this)">[–]</span>
+                        </div>
+                        <div class="comment-text">
+                            <p>Yes — before our team took over, candidate profiles, interview rosters, and shortlists were tracked manually across uncoordinated spreadsheets. We automated the pipeline, streamlined vetting for 45+ candidate engineers, and coordinated 10+ major company drives (TCS, KPMG, Nagarro), doubling round-turnaround speed.</p>
+                        </div>
+                        <span class="comment-reply-link">reply</span>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Footer & Multiverse Portal Navigation -->
+        <footer class="hn-footer">
+            <div class="footer-portals">
+                <a href="newspaper.html">The Daily Khanna (Newspaper)</a>
+                <span>|</span>
+                <a href="neural.html">Neural Network Latent Space</a>
+                <span>|</span>
+                <a href="terminal.html">Linux Terminal Shell</a>
+                <span>|</span>
+                <a href="arcade.html">1986 Synthwave Arcade</a>
+                <span>|</span>
+                <a href="index.html">Windows 95 OS</a>
+            </div>
+            <div>
+                Contact: <a href="mailto:sparshkhanna0001@gmail.com" style="color:var(--hn-orange)">sparshkhanna0001@gmail.com</a> | 
+                GitHub: <a href="https://github.com/KhannaSparsh0001" target="_blank" style="color:var(--hn-orange)">@KhannaSparsh0001</a>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        // Upvoting functionality with localStorage persistence
+        let upvoted = localStorage.getItem('hn_post_voted') === 'true';
+        let currentPoints = parseInt(localStorage.getItem('hn_points') || '847');
+
+        const pointsElem = document.getElementById('post-points');
+        const postBtn = document.getElementById('post-upvote-btn');
+
+        if (upvoted) {
+            postBtn.classList.add('voted');
+            pointsElem.innerText = currentPoints;
+        }
+
+        function upvotePost() {
+            if (!upvoted) {
+                upvoted = true;
+                currentPoints++;
+                postBtn.classList.add('voted');
+            } else {
+                upvoted = false;
+                currentPoints--;
+                postBtn.classList.remove('voted');
+            }
+            pointsElem.innerText = currentPoints;
+            localStorage.setItem('hn_points', currentPoints);
+            localStorage.setItem('hn_post_voted', upvoted);
+        }
+
+        function upvoteComment(btn) {
+            btn.classList.toggle('voted');
+        }
+
+        // Collapse / Expand comment subtrees
+        function toggleComment(elem) {
+            const inner = elem.closest('.comment-inner');
+            const text = inner.querySelector('.comment-text');
+            const reply = inner.querySelector('.comment-reply-link');
+
+            if (text.style.display === 'none') {
+                text.style.display = 'block';
+                if (reply) reply.style.display = 'inline-block';
+                elem.innerText = '[–]';
+            } else {
+                text.style.display = 'none';
+                if (reply) reply.style.display = 'none';
+                elem.innerText = '[+1 collapsed]';
+            }
+        }
+
+        // Add user comment to thread
+        function submitComment() {
+            const input = document.getElementById('user-comment-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const commentsBox = document.getElementById('comments');
+            const newThread = document.createElement('div');
+            newThread.className = 'comment-thread';
+            newThread.innerHTML = `
+                <div class="comment-item">
+                    <button class="upvote-btn" onclick="upvoteComment(this)">▲</button>
+                    <div class="comment-inner">
+                        <div class="comment-header">
+                            <a href="#" class="comment-user">you</a> just now | 
+                            <span class="comment-toggle" onclick="toggleComment(this)">[–]</span>
+                        </div>
+                        <div class="comment-text">
+                            <p>${escapeHtml(text)}</p>
+                        </div>
+                        <span class="comment-reply-link">reply</span>
+                    </div>
+                </div>
+            `;
+            commentsBox.prepend(newThread);
+            input.value = '';
+        }
+
+        function escapeHtml(t) {
+            return t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        // Theme Toggle (Classic HN Beige <-> Dark Mode)
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            const isDark = document.body.classList.contains('dark-theme');
+            localStorage.setItem('hn_dark_mode', isDark);
+            document.getElementById('theme-btn').innerText = isDark ? "light mode" : "dark mode";
+        }
+
+        if (localStorage.getItem('hn_dark_mode') === 'true') {
+            document.body.classList.add('dark-theme');
+            document.getElementById('theme-btn').innerText = "light mode";
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE DAILY KHANNA — "All The Code That's Fit To Ship"</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400&family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Special+Elite&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --paper-bg: #f6f1e6;
+            --paper-border: #1a140d;
+            --ink-black: #120e0a;
+            --ink-charcoal: #2a221b;
+            --ink-muted: #5a4f44;
+            --sepia-tint: #e8ded0;
+            --highlight-amber: #d97706;
+            --font-head: 'Playfair Display', Georgia, serif;
+            --font-masthead: 'Cinzel', serif;
+            --font-body: 'Newsreader', Georgia, serif;
+            --font-typewriter: 'Special Elite', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #2b251f;
+            color: var(--ink-black);
+            font-family: var(--font-body);
+            font-size: 15px;
+            line-height: 1.5;
+            padding: 24px 12px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* ── Full Newspaper Sheet ── */
+        .broadsheet-wrapper {
+            width: 100%;
+            max-width: 1280px;
+            background-color: var(--paper-bg);
+            background-image: 
+                radial-gradient(#e0d6c3 10%, transparent 11%),
+                linear-gradient(rgba(0,0,0,0.015) 50%, transparent 50%);
+            background-size: 12px 12px, 100% 2px;
+            border: 2px solid var(--paper-border);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), inset 0 0 100px rgba(180, 160, 130, 0.25);
+            padding: 30px 40px;
+            position: relative;
+        }
+
+        /* ── Top Auxiliary Toolbar (Print & Multiverse Switch) ── */
+        .aux-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--paper-border);
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            font-family: var(--font-typewriter);
+            font-size: 11px;
+            color: var(--ink-muted);
+        }
+
+        .aux-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .paper-btn {
+            background: #fff;
+            border: 1px solid var(--paper-border);
+            color: var(--ink-black);
+            font-family: var(--font-typewriter);
+            font-size: 11px;
+            padding: 4px 10px;
+            cursor: pointer;
+            box-shadow: 2px 2px 0px var(--paper-border);
+            transition: all 0.1s ease;
+            text-decoration: none;
+        }
+        .paper-btn:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 3px 3px 0px var(--paper-border);
+            background: #faf3e8;
+        }
+        .paper-btn:active {
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0px var(--paper-border);
+        }
+
+        /* ── Masthead ── */
+        .masthead {
+            text-align: center;
+            border-bottom: 4px double var(--paper-border);
+            padding-bottom: 12px;
+            margin-bottom: 12px;
+        }
+
+        .masthead-motto {
+            font-family: var(--font-typewriter);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--ink-muted);
+            margin-bottom: 4px;
+        }
+
+        .masthead-title {
+            font-family: var(--font-masthead);
+            font-size: clamp(38px, 6vw, 76px);
+            font-weight: 900;
+            letter-spacing: 3px;
+            line-height: 1;
+            text-transform: uppercase;
+            color: var(--ink-black);
+            text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.2);
+            margin: 6px 0;
+        }
+
+        .masthead-dateline {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--paper-border);
+            border-bottom: 1px solid var(--paper-border);
+            padding: 4px 0;
+            font-family: var(--font-typewriter);
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        /* ── AP Breaking Wire Ticker ── */
+        .wire-ticker {
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid var(--paper-border);
+            background: #ede3d1;
+            padding: 4px 8px;
+            margin-bottom: 20px;
+            font-family: var(--font-typewriter);
+            font-size: 12px;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .wire-tag {
+            background: var(--ink-black);
+            color: #fff;
+            padding: 2px 6px;
+            font-weight: bold;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .ticker-marquee {
+            display: inline-block;
+            animation: marquee 26s linear infinite;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* ── Main 6-Column Grid Layout ── */
+        .newspaper-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 22px;
+        }
+
+        /* Column spans */
+        .col-8 { grid-column: span 8; }
+        .col-4 { grid-column: span 4; }
+        .col-6 { grid-column: span 6; }
+        .col-12 { grid-column: span 12; }
+
+        @media (max-width: 992px) {
+            .col-8, .col-4, .col-6 { grid-column: span 12; }
+            .broadsheet-wrapper { padding: 18px; }
+        }
+
+        /* ── Typography & Layout Elements ── */
+        .headline-lead {
+            font-family: var(--font-head);
+            font-size: clamp(26px, 3.2vw, 42px);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .headline-sub {
+            font-family: var(--font-head);
+            font-size: 18px;
+            font-style: italic;
+            color: var(--ink-muted);
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .byline {
+            font-family: var(--font-typewriter);
+            font-size: 11px;
+            text-transform: uppercase;
+            border-top: 1px solid var(--paper-border);
+            border-bottom: 1px solid var(--paper-border);
+            padding: 4px 0;
+            margin-bottom: 14px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .story-body {
+            column-count: 2;
+            column-gap: 20px;
+            text-align: justify;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 600px) {
+            .story-body { column-count: 1; }
+        }
+
+        .drop-cap {
+            float: left;
+            font-family: var(--font-head);
+            font-size: 56px;
+            line-height: 0.8;
+            padding-right: 8px;
+            padding-top: 4px;
+            font-weight: 900;
+            color: var(--ink-black);
+        }
+
+        .quote-box {
+            border-top: 2px solid var(--paper-border);
+            border-bottom: 2px solid var(--paper-border);
+            padding: 12px 16px;
+            margin: 16px 0;
+            font-family: var(--font-head);
+            font-style: italic;
+            font-size: 17px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.03);
+            break-inside: avoid;
+        }
+
+        /* Side Column Section */
+        .side-column {
+            border-left: 1px solid var(--paper-border);
+            padding-left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        @media (max-width: 992px) {
+            .side-column { border-left: none; padding-left: 0; border-top: 2px solid var(--paper-border); padding-top: 18px; }
+        }
+
+        .headline-medium {
+            font-family: var(--font-head);
+            font-size: 22px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 8px;
+        }
+
+        .rule-divider {
+            border: 0;
+            border-top: 1px solid var(--paper-border);
+            margin: 14px 0;
+        }
+
+        .double-divider {
+            border: 0;
+            border-top: 3px double var(--paper-border);
+            margin: 20px 0;
+        }
+
+        /* Weather Box */
+        .weather-box {
+            border: 2px solid var(--paper-border);
+            padding: 8px 12px;
+            background: #ede3d1;
+            font-family: var(--font-typewriter);
+            font-size: 11px;
+            margin-bottom: 14px;
+        }
+        .weather-title { font-weight: bold; border-bottom: 1px solid var(--paper-border); padding-bottom: 2px; margin-bottom: 4px; }
+
+        /* ── Skills Financial Stock Table ── */
+        .market-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: var(--font-typewriter);
+            font-size: 11px;
+            margin-top: 8px;
+        }
+        .market-table th {
+            border-bottom: 2px solid var(--paper-border);
+            text-align: left;
+            padding: 4px 2px;
+            text-transform: uppercase;
+        }
+        .market-table td {
+            border-bottom: 1px dashed #b5a895;
+            padding: 5px 2px;
+        }
+        .gain { color: #0a7029; font-weight: bold; }
+        .loss { color: #b91c1c; font-weight: bold; }
+
+        /* ── Classifieds Section ── */
+        .classifieds-box {
+            border: 2px solid var(--paper-border);
+            padding: 14px;
+            background: #faf4e8;
+        }
+        .classified-item {
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px dotted var(--paper-border);
+            font-size: 13px;
+        }
+        .classified-title {
+            font-family: var(--font-head);
+            font-weight: bold;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        /* ── Physical Photo / Halftone effect ── */
+        .photo-frame {
+            border: 2px solid var(--paper-border);
+            padding: 4px;
+            background: #fff;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .photo-img {
+            width: 100%;
+            max-height: 240px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(125%);
+        }
+        .photo-caption {
+            font-family: var(--font-typewriter);
+            font-size: 10px;
+            color: var(--ink-muted);
+            margin-top: 4px;
+            text-align: left;
+        }
+
+        /* ── Print Specific Stylesheet ── */
+        @media print {
+            body { background: #fff; padding: 0; }
+            .broadsheet-wrapper { box-shadow: none; border: none; padding: 0; max-width: 100%; }
+            .aux-bar, .wire-ticker { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="broadsheet-wrapper">
+        <!-- Top Toolbar: Print & Alternate Universes -->
+        <div class="aux-bar">
+            <span>VOL. IV · NO. 22 · AMRITSAR / CHANDIGARH</span>
+            <div class="aux-actions">
+                <button class="paper-btn" onclick="window.print()">⎙ PRINT BROADSHEET</button>
+                <a href="terminal.html" class="paper-btn">$ LINUX SHELL</a>
+                <a href="arcade.html" class="paper-btn">🕹 ARCADE 1986</a>
+                <a href="index.html" class="paper-btn">⊞ WIN95</a>
+            </div>
+            <span>DAILY CIRCULATION: WORLDWIDE</span>
+        </div>
+
+        <!-- Classic Newspaper Masthead -->
+        <header class="masthead">
+            <div class="masthead-motto">"All The Code That's Fit To Ship" · Est. 2020</div>
+            <h1 class="masthead-title">The Daily Khanna</h1>
+            <div class="masthead-dateline">
+                <span id="live-date">WEDNESDAY, NOVEMBER 27, 2024</span>
+                <span>PUNJAB &amp; GLOBAL EDITION</span>
+                <span>PRICE: ONE ATTENTION SPAN</span>
+            </div>
+        </header>
+
+        <!-- Live AP-style Wire Marquee -->
+        <div class="wire-ticker">
+            <span class="wire-tag">WIRE DISPATCH</span>
+            <div class="ticker-marquee">
+                BREAKING: LangGraph Directed Acyclic Graph passes 12-stage self-correcting validation with zero drift. ++ India Skill Competition crowns Khanna State Winner in Software Systems. ++ ESP32 microcontroller clocking 94ms UART sensor response under load. ++ University placement throughput surges +200% under Khanna leadership. ++
+            </div>
+        </div>
+
+        <!-- Master Newspaper 12-Column Grid -->
+        <main class="newspaper-grid">
+            
+            <!-- LEFT 8 COLS: Front Page Lead Story -->
+            <section class="col-8">
+                <article>
+                    <h2 class="headline-lead">SYSTEMS ENGINEER ARCHITECTS AUTONOMOUS AGENT THAT THINKS</h2>
+                    <h3 class="headline-sub">Landmark Multi-Agent State Machine Completes Complex Multi-Step Desktop Tasks with Bounded Local Inference</h3>
+                    
+                    <div class="byline">
+                        <span>By SPECIAL DISPATCH CORRESPONDENT</span>
+                        <span>CHANDIGARH BUREAU · NOV 2024</span>
+                    </div>
+
+                    <div class="story-body">
+                        <p>
+                            <span class="drop-cap">S</span>PARSH KHANNA, an honors computer systems engineer at Guru Nanak Dev University (GNDU), has officially demonstrated a resilient multi-agent architecture capable of autonomous desktop tutor operations without unconstrained cloud hallucination.
+                        </p>
+                        <p>
+                            Dubbed <em>Blinky</em>, the system orchestrates vision inference, local screen optical recognition, and voice synthesized feedback loops. Utilizing <strong>LangGraph DAG state machines</strong> with memory checkpointing, the system isolates discrete task execution from planning, preventing typical infinite-loop regressions common to first-generation agentic frameworks.
+                        </p>
+                        
+                        <div class="quote-box">
+                            "True engineering rigor isn't about chaining prompt wrappers; it's about finite state machines with deterministic bounds and graceful rollbacks."
+                        </div>
+
+                        <p>
+                            "Rather than relying on naive single-shot prompts, the agent constructs a deterministic graph," Khanna explained from his lab station. "If an action fails validation, the state rollbacks to the preceding node with contextual memory retained, ensuring zero destructive execution on production interfaces."
+                        </p>
+                        <p>
+                            The architecture forms part of Khanna’s broader research into <strong>Stateful Retrieval-Augmented Generation (RAG)</strong> and hybrid dense-sparse vector re-ranking, addressing high-throughput enterprise knowledge ingestion.
+                        </p>
+                    </div>
+                </article>
+
+                <hr class="double-divider">
+
+                <!-- Secondary Front Page Story: Physical Computing -->
+                <article>
+                    <h3 class="headline-medium">EDGE HARDWARE: SMART HELMET DELIVERS LIFE-SAVING TELEMETRY</h3>
+                    <div class="story-body">
+                        <p>
+                            In parallel with his artificial intelligence research, Khanna has developed an emergency vehicular response system mounted directly on safety helmets. Powered by an <strong>ESP32 microcontroller</strong> running real-time interrupt routines, the device processes MPU6050 accelerometer and gyroscope vectors at millisecond intervals.
+                        </p>
+                        <p>
+                            Upon threshold shock detection indicating a collision, the system automatically correlates NEO-6M GPS coordinates and transmits an automated SOS packet via cellular radio before the rider loses consciousness.
+                        </p>
+                    </div>
+                </article>
+            </section>
+
+            <!-- RIGHT 4 COLS: Weather, Breaking News, Market Report, Classifieds -->
+            <aside class="col-4 side-column">
+                
+                <!-- Weather Almanac -->
+                <div class="weather-box">
+                    <div class="weather-title">LOCAL METEOROLOGICAL DISPATCH</div>
+                    <div>AMRITSAR: 21°C · Clear Sky · Visibility 8km</div>
+                    <div>WIND: NW at 6 km/h · Barometer: 1014 hPa</div>
+                    <div>FORECAST: High productive output expected throughout the quarter.</div>
+                </div>
+
+                <!-- Competition Award Story -->
+                <div>
+                    <div class="photo-frame">
+                        <img src="pfp.png" alt="Sparsh Khanna" class="photo-img" onerror="this.src='https://via.placeholder.com/300x180?text=SPARSH+KHANNA'">
+                        <div class="photo-caption">Fig 1. Sparsh Khanna reviewing hardware traces at the India Skill Competition.</div>
+                    </div>
+                    <h3 class="headline-medium">STATE CHAMPION: INDIA SKILL COMPETITION 2024</h3>
+                    <p style="font-size:13px; line-height:1.5;">
+                        Khanna was decorated with the <strong>State Winner Gold (Rank #1)</strong> award in IT Software Solutions for Business at the prestigious India Skill Competition 2024 (IITSB), acknowledging mastery over distributed database concurrency and micro-service resilience.
+                    </p>
+                </div>
+
+                <hr class="rule-divider">
+
+                <!-- Tech Stack Market / Commodities Exchange -->
+                <div>
+                    <h4 style="font-family: var(--font-head); font-size: 14px; text-transform: uppercase;">TECH STACK MARKET CLOSE</h4>
+                    <table class="market-table">
+                        <thead>
+                            <tr>
+                                <th>ASSET</th>
+                                <th>INDEX</th>
+                                <th>DELTA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>LANGGRAPH [AI]</td>
+                                <td>99.40</td>
+                                <td class="gain">▲ +4.2%</td>
+                            </tr>
+                            <tr>
+                                <td>PYTHON / FASTAPI</td>
+                                <td>98.20</td>
+                                <td class="gain">▲ +2.8%</td>
+                            </tr>
+                            <tr>
+                                <td>ESP32 / C++ RTOS</td>
+                                <td>94.80</td>
+                                <td class="gain">▲ +3.1%</td>
+                            </tr>
+                            <tr>
+                                <td>REACT &amp; NEXT.JS</td>
+                                <td>92.10</td>
+                                <td class="gain">▲ +1.5%</td>
+                            </tr>
+                            <tr>
+                                <td>LEGACY MONOLITHS</td>
+                                <td>38.40</td>
+                                <td class="loss">▼ -12.4%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <hr class="rule-divider">
+
+                <!-- Classifieds for Hire -->
+                <div class="classifieds-box">
+                    <h4 class="classified-title">CLASSIFIEDS: POSITIONS &amp; CONTACT</h4>
+                    
+                    <div class="classified-item">
+                        <strong>AVAILABLE FOR HIRE:</strong> Systems Engineer seeking challenging problems in Autonomous Agent Systems, Edge IoT, or Distributed Backend.
+                    </div>
+                    <div class="classified-item">
+                        <strong>TELEGRAPH ADDRESS:</strong> sparshkhanna0001@gmail.com
+                    </div>
+                    <div class="classified-item">
+                        <strong>GITHUB REGISTRY:</strong> github.com/KhannaSparsh0001
+                    </div>
+                    <div class="classified-item">
+                        <strong>DOCUMENTATION:</strong> <a href="docs/Sparsh_khanna_Resume_gndu-18.pdf" target="_blank" style="color:var(--highlight-amber); font-weight:bold;">Download Certified Curriculum Vitae (PDF)</a>
+                    </div>
+                </div>
+
+            </aside>
+
+        </main>
+    </div>
+
+    <script>
+        // Set dynamic date in classic broadsheet format
+        const dateElem = document.getElementById('live-date');
+        const now = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        dateElem.innerText = now.toLocaleDateString('en-US', options).toUpperCase();
+    </script>
+</body>
+</html>

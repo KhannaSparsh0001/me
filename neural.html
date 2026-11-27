@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SPARSH KHANNA // NEURAL NETWORK BRAIN ARCHITECTURE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-void: #050811;
+            --hud-glass: rgba(10, 16, 30, 0.82);
+            --border-glow: rgba(86, 240, 224, 0.35);
+            --neon-cyan: #56f0e0;
+            --neon-blue: #58a6ff;
+            --neon-green: #39d353;
+            --neon-amber: #f2cc60;
+            --neon-magenta: #ff71ce;
+            --text-main: #e6edf3;
+            --text-muted: #8b949e;
+            --font-head: 'Space Grotesk', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body, html {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background-color: var(--bg-void);
+            color: var(--text-main);
+            font-family: var(--font-head);
+        }
+
+        #neural-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            cursor: crosshair;
+        }
+
+        /* ── Top HUD Command Bar ── */
+        .hud-header {
+            position: fixed;
+            top: 16px;
+            left: 20px;
+            right: 20px;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--hud-glass);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glow);
+            border-radius: 12px;
+            padding: 10px 20px;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.6);
+        }
+
+        .hud-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .pulse-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--neon-cyan);
+            box-shadow: 0 0 12px var(--neon-cyan);
+            animation: pulseGlow 1.8s infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.4); opacity: 0.6; }
+        }
+
+        .hud-title {
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--neon-cyan);
+        }
+
+        .hud-filters {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+        }
+
+        .filter-chip {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            font-size: 11px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+        }
+
+        .filter-chip:hover, .filter-chip.active {
+            background: rgba(86, 240, 224, 0.15);
+            border-color: var(--neon-cyan);
+            color: var(--neon-cyan);
+            box-shadow: 0 0 10px rgba(86, 240, 224, 0.3);
+        }
+
+        .hud-search-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .hud-search-input {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-glow);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-family: var(--font-mono);
+            font-size: 12px;
+            padding: 6px 12px;
+            outline: none;
+            width: 180px;
+            transition: width 0.2s ease;
+        }
+        .hud-search-input:focus {
+            width: 240px;
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 12px rgba(86, 240, 224, 0.3);
+        }
+
+        .nav-portals {
+            display: flex;
+            gap: 8px;
+        }
+
+        .portal-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-main);
+            font-family: var(--font-mono);
+            font-size: 11px;
+            padding: 5px 10px;
+            border-radius: 6px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .portal-btn:hover {
+            background: var(--neon-cyan);
+            color: #000;
+        }
+
+        /* ── Slide-Out Synapse Inspection Drawer ── */
+        .inspect-drawer {
+            position: fixed;
+            top: 80px;
+            right: -420px;
+            width: 380px;
+            max-height: calc(100vh - 100px);
+            background: var(--hud-glass);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-glow);
+            border-radius: 14px;
+            padding: 24px;
+            z-index: 20;
+            box-shadow: -10px 0 40px rgba(0, 0, 0, 0.7);
+            transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .inspect-drawer.open {
+            right: 20px;
+        }
+
+        .drawer-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .drawer-close:hover { color: #fff; }
+
+        .drawer-badge {
+            align-self: flex-start;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+        }
+
+        .drawer-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.2;
+        }
+
+        .drawer-desc {
+            font-size: 13px;
+            color: #c9d1d9;
+            line-height: 1.6;
+        }
+
+        .proficiency-meter {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 6px 0;
+        }
+        .proficiency-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-green));
+            border-radius: 3px;
+        }
+
+        .chips-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 6px;
+        }
+        .info-chip {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--neon-cyan);
+            font-family: var(--font-mono);
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+        .drawer-action-btn {
+            background: linear-gradient(135deg, var(--neon-cyan), #00a896);
+            color: #000;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            padding: 10px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: opacity 0.2s;
+            margin-top: 10px;
+        }
+        .drawer-action-btn:hover { opacity: 0.9; }
+
+        /* ── Bottom HUD Status Bar ── */
+        .hud-footer {
+            position: fixed;
+            bottom: 16px;
+            left: 20px;
+            right: 20px;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(6, 11, 22, 0.65);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(86, 240, 224, 0.2);
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Canvas Simulation Engine -->
+    <canvas id="neural-canvas"></canvas>
+
+    <!-- Top Command HUD -->
+    <header class="hud-header">
+        <div class="hud-brand">
+            <div class="pulse-dot"></div>
+            <span class="hud-title">SPARSH // NEURAL LATENT SPACE</span>
+        </div>
+
+        <div class="hud-filters">
+            <button class="filter-chip active" onclick="setFilter('all')">ALL SYNAPSES</button>
+            <button class="filter-chip" onclick="setFilter('ai')">AI &amp; DAG</button>
+            <button class="filter-chip" onclick="setFilter('systems')">SYSTEMS &amp; RTOS</button>
+            <button class="filter-chip" onclick="setFilter('projects')">PROJECTS</button>
+            <button class="filter-chip" onclick="setFilter('career')">CAREER</button>
+        </div>
+
+        <div class="hud-search-box">
+            <input type="text" id="node-search" class="hud-search-input" placeholder="Search node (e.g. LangGraph)..." oninput="handleSearch(this.value)">
+        </div>
+
+        <div class="nav-portals">
+            <a href="newspaper.html" class="portal-btn">📰 PRESS</a>
+            <a href="terminal.html" class="portal-btn">$ BASH</a>
+            <a href="arcade.html" class="portal-btn">🕹 ARCADE</a>
+            <a href="index.html" class="portal-btn">⊞ WIN95</a>
+        </div>
+    </header>
+
+    <!-- Synapse Inspection Drawer -->
+    <aside class="inspect-drawer" id="inspect-drawer">
+        <button class="drawer-close" onclick="closeDrawer()">✕</button>
+        <span class="drawer-badge" id="drawer-badge" style="background: rgba(86,240,224,0.2); color: var(--neon-cyan);">AGENTIC NODE</span>
+        <h2 class="drawer-title" id="drawer-title">LangGraph</h2>
+        
+        <div>
+            <div style="display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:11px; color:var(--text-muted);">
+                <span>SYNAPSE STRENGTH</span>
+                <span id="drawer-strength">99.4%</span>
+            </div>
+            <div class="proficiency-meter">
+                <div class="proficiency-fill" id="drawer-meter" style="width: 99%;"></div>
+            </div>
+        </div>
+
+        <p class="drawer-desc" id="drawer-desc">
+            Directed Acyclic Graph (DAG) state machines orchestrating autonomous agent loops, state checkpointing, and deterministic self-correction.
+        </p>
+
+        <div>
+            <div style="font-family:var(--font-mono); font-size:11px; color:var(--text-muted); margin-bottom:4px;">CONNECTED CONTEXT:</div>
+            <div class="chips-container" id="drawer-connections"></div>
+        </div>
+
+        <a href="docs/Sparsh_khanna_Resume_gndu-18.pdf" target="_blank" class="drawer-action-btn">↓ VERIFY IN OFFICIAL RESUME</a>
+    </aside>
+
+    <!-- Bottom Telemetry Footer -->
+    <footer class="hud-footer">
+        <div>NODES: <span id="telemetry-nodes" style="color:var(--neon-cyan)">24</span> | SYNAPSES: <span id="telemetry-edges" style="color:var(--neon-green)">48</span></div>
+        <div>INTERACTION: DRAG TO REPOSITION · CLICK NODE TO INSPECT · MOUSE REPEL ACTIVE</div>
+        <div>STATION: 31.63° N, 74.87° E</div>
+    </footer>
+
+    <!-- Interactive Canvas Graph Engine -->
+    <script>
+        const canvas = document.getElementById('neural-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        // ── Node & Edge Data Graph ──
+        const rawNodes = [
+            // Center Identity
+            { id: 'sparsh', label: 'SPARSH KHANNA', cat: 'core', r: 24, x: width * 0.5, y: height * 0.5, desc: 'Systems & Software Engineer specializing in Agentic AI architectures (LangGraph, Stateful RAG) and Edge Physical Computing (ESP32). State Winner at India Skill Competition 2024.', strength: '100%' },
+            
+            // AI Nodes
+            { id: 'langgraph', label: 'LangGraph', cat: 'ai', r: 16, x: width * 0.38, y: height * 0.36, desc: 'Directed Acyclic Graph state machines with multi-agent planner-executor cycles, checkpoint memory persistence, and dynamic routing.', strength: '99.4%' },
+            { id: 'rag', label: 'Stateful RAG', cat: 'ai', r: 14, x: width * 0.32, y: height * 0.48, desc: 'Context-aware hybrid dense/sparse vector retrieval with cross-encoder re-ranking and multi-turn conversational session history.', strength: '95.0%' },
+            { id: 'whisper', label: 'Whisper STT', cat: 'ai', r: 12, x: width * 0.28, y: height * 0.38, desc: 'Low-latency speech-to-text ingestion pipelines paired with ElevenLabs & Kokoro local audio synthesis.', strength: '92.0%' },
+            { id: 'mcp', label: 'MCP Automation', cat: 'ai', r: 12, x: width * 0.34, y: height * 0.26, desc: 'Model Context Protocol tool bindings connecting LLMs directly with local dev environments, file trees, and terminal daemons.', strength: '93.5%' },
+            
+            // Systems & Edge Nodes
+            { id: 'esp32', label: 'ESP32 Firmware', cat: 'systems', r: 16, x: width * 0.62, y: height * 0.38, desc: 'Dual-core microcontroller programming in C/C++ with FreeRTOS multi-threading, hardware ISRs, and UART sensor fusion.', strength: '94.8%' },
+            { id: 'python', label: 'Python / FastAPI', cat: 'systems', r: 15, x: width * 0.58, y: height * 0.62, desc: 'High-throughput asynchronous REST & WebSocket microservices with strict Pydantic validation and connection pool caching.', strength: '98.2%' },
+            { id: 'cpp', label: 'C / C++', cat: 'systems', r: 13, x: width * 0.70, y: height * 0.34, desc: 'Low-level memory pointers, interrupt vectors, and register-level bitwise manipulation for telemetry hardware.', strength: '90.0%' },
+            { id: 'postgres', label: 'PostgreSQL', cat: 'systems', r: 13, x: width * 0.52, y: height * 0.72, desc: 'Relational database schema modeling, connection pooling, and pgvector semantic search indexing.', strength: '91.6%' },
+            
+            // Shipped Projects
+            { id: 'blinky', label: 'Blinky AI', cat: 'projects', r: 14, x: width * 0.25, y: height * 0.56, desc: 'Autonomous desktop tutor performing safe-click interface navigation via bounded screen OCR and vision inference loops.', strength: 'PRODUCTION' },
+            { id: 'smarthelmet', label: 'IoT Smart Helmet', cat: 'projects', r: 14, x: width * 0.75, y: height * 0.46, desc: 'Impact detection hardware streaming continuous MPU6050 telemetry with automatic GPS emergency dispatch.', strength: 'HARDWARE' },
+            { id: 'webnote', label: 'webNote', cat: 'projects', r: 12, x: width * 0.44, y: height * 0.70, desc: 'Decoupled React & Django REST workspace with JWT authentication and relational CRUD integrity.', strength: 'FULLSTACK' },
+            { id: 'womensos', label: 'Women SOS', cat: 'projects', r: 12, x: width * 0.20, y: height * 0.44, desc: 'Rapid emergency location broadcaster built with Next.js and WebSockets for SkillSprint v2.', strength: 'SHIPPED' },
+            { id: 'airpulse', label: 'AirPulse Japan', cat: 'projects', r: 12, x: width * 0.66, y: height * 0.68, desc: 'Environmental health analytics correlating prefecture pollution spikes with respiratory admissions.', strength: 'ANALYTICS' },
+
+            // Career Nodes
+            { id: 'isc2024', label: 'ISC 2024 State Winner', cat: 'career', r: 15, x: width * 0.50, y: height * 0.28, desc: 'Awarded State Winner Rank #1 in IT Software Solutions at the prestigious India Skill Competition 2024 (IITSB).', strength: 'GOLD MEDAL' },
+            { id: 'gndu', label: 'GNDU Placement Core', cat: 'career', r: 14, x: width * 0.54, y: height * 0.38, desc: 'Led corporate recruitment drives (TCS, KPMG, Nagarro); drove +200% student placement throughput and vetted 45+ candidate engineers.', strength: '+200% METRIC' }
+        ];
+
+        // Synapse Edges connecting nodes
+        const rawEdges = [
+            { from: 'sparsh', to: 'langgraph', weight: 0.9 },
+            { from: 'sparsh', to: 'esp32', weight: 0.9 },
+            { from: 'sparsh', to: 'python', weight: 0.85 },
+            { from: 'sparsh', to: 'isc2024', weight: 0.95 },
+            { from: 'sparsh', to: 'gndu', weight: 0.8 },
+            { from: 'langgraph', to: 'rag', weight: 0.8 },
+            { from: 'langgraph', to: 'blinky', weight: 0.9 },
+            { from: 'langgraph', to: 'mcp', weight: 0.75 },
+            { from: 'rag', to: 'whisper', weight: 0.7 },
+            { from: 'blinky', to: 'whisper', weight: 0.75 },
+            { from: 'esp32', to: 'smarthelmet', weight: 0.95 },
+            { from: 'esp32', to: 'cpp', weight: 0.85 },
+            { from: 'python', to: 'postgres', weight: 0.8 },
+            { from: 'python', to: 'webnote', weight: 0.85 },
+            { from: 'python', to: 'airpulse', weight: 0.75 },
+            { from: 'postgres', to: 'webnote', weight: 0.8 },
+            { from: 'womensos', to: 'rag', weight: 0.6 },
+            { from: 'isc2024', to: 'cpp', weight: 0.7 },
+            { from: 'isc2024', to: 'python', weight: 0.75 },
+            { from: 'gndu', to: 'sparsh', weight: 0.8 }
+        ];
+
+        // Action potential signal packets traveling along edges
+        let signals = [];
+        for (let i = 0; i < 24; i++) {
+            signals.push({
+                edgeIndex: Math.floor(Math.random() * rawEdges.length),
+                progress: Math.random(),
+                speed: 0.004 + Math.random() * 0.008
+            });
+        }
+
+        // Color mapping by category
+        const catColors = {
+            core: '#56f0e0',
+            ai: '#39d353',
+            systems: '#58a6ff',
+            projects: '#ff71ce',
+            career: '#f2cc60'
+        };
+
+        let activeFilter = 'all';
+        let searchQuery = '';
+        let selectedNode = null;
+        let hoveredNode = null;
+        let draggedNode = null;
+
+        let mouse = { x: -1000, y: -1000 };
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+
+            if (draggedNode) {
+                draggedNode.x = mouse.x;
+                draggedNode.y = mouse.y;
+            } else {
+                hoveredNode = rawNodes.find(n => {
+                    const dx = n.x - mouse.x;
+                    const dy = n.y - mouse.y;
+                    return Math.sqrt(dx * dx + dy * dy) <= n.r + 6;
+                }) || null;
+            }
+        });
+
+        window.addEventListener('mousedown', (e) => {
+            if (e.target.closest('.hud-header') || e.target.closest('.inspect-drawer')) return;
+            if (hoveredNode) {
+                draggedNode = hoveredNode;
+                inspectNode(hoveredNode);
+            }
+        });
+
+        window.addEventListener('mouseup', () => {
+            draggedNode = null;
+        });
+
+        function setFilter(cat) {
+            activeFilter = cat;
+            document.querySelectorAll('.filter-chip').forEach(c => {
+                c.classList.toggle('active', c.innerText.toLowerCase().includes(cat) || (cat === 'all' && c.innerText.includes('ALL')));
+            });
+        }
+
+        function handleSearch(val) {
+            searchQuery = val.trim().toLowerCase();
+        }
+
+        function inspectNode(node) {
+            selectedNode = node;
+            const drawer = document.getElementById('inspect-drawer');
+            document.getElementById('drawer-badge').innerText = node.cat.toUpperCase() + ' NODE';
+            document.getElementById('drawer-badge').style.color = catColors[node.cat];
+            document.getElementById('drawer-title').innerText = node.label;
+            document.getElementById('drawer-desc').innerText = node.desc;
+            document.getElementById('drawer-strength').innerText = node.strength;
+            
+            const numericStrength = parseInt(node.strength) || 92;
+            document.getElementById('drawer-meter').style.width = numericStrength + '%';
+
+            // Find connected neighbors
+            const neighbors = [];
+            rawEdges.forEach(e => {
+                if (e.from === node.id) neighbors.push(e.to);
+                if (e.to === node.id) neighbors.push(e.from);
+            });
+            const neighborNodes = rawNodes.filter(n => neighbors.includes(n.id));
+            const connBox = document.getElementById('drawer-connections');
+            connBox.innerHTML = neighborNodes.map(n => `<span class="info-chip" onclick="inspectNodeById('${n.id}')" style="cursor:pointer">${n.label}</span>`).join('');
+
+            drawer.classList.add('open');
+        }
+
+        function inspectNodeById(id) {
+            const n = rawNodes.find(item => item.id === id);
+            if (n) inspectNode(n);
+        }
+
+        function closeDrawer() {
+            document.getElementById('inspect-drawer').classList.remove('open');
+            selectedNode = null;
+        }
+
+        // ── Physics Simulation Loop ──
+        function updatePhysics() {
+            // Gentle organic floating drift
+            const time = performance.now() * 0.001;
+            rawNodes.forEach((n, idx) => {
+                if (n !== draggedNode) {
+                    n.x += Math.sin(time + idx) * 0.3;
+                    n.y += Math.cos(time + idx * 0.8) * 0.3;
+
+                    // Mouse gentle repulsion
+                    const dx = n.x - mouse.x;
+                    const dy = n.y - mouse.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 120 && dist > 0) {
+                        const force = (120 - dist) / 120 * 2.5;
+                        n.x += (dx / dist) * force;
+                        n.y += (dy / dist) * force;
+                    }
+
+                    // Keep inside canvas bounds
+                    n.x = Math.max(n.r + 20, Math.min(width - n.r - 20, n.x));
+                    n.y = Math.max(n.r + 80, Math.min(height - n.r - 40, n.y));
+                }
+            });
+
+            // Signal packet travel
+            signals.forEach(s => {
+                s.progress += s.speed;
+                if (s.progress >= 1) {
+                    s.progress = 0;
+                    s.edgeIndex = Math.floor(Math.random() * rawEdges.length);
+                }
+            });
+        }
+
+        // ── Render Frame ──
+        function render() {
+            ctx.clearRect(0, 0, width, height);
+
+            // Draw subtle background grid
+            ctx.strokeStyle = 'rgba(86, 240, 224, 0.03)';
+            ctx.lineWidth = 1;
+            const gridSize = 50;
+            for (let x = 0; x < width; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, height);
+                ctx.stroke();
+            }
+            for (let y = 0; y < height; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(width, y);
+                ctx.stroke();
+            }
+
+            // Draw Synapse Edges
+            rawEdges.forEach((e, idx) => {
+                const n1 = rawNodes.find(n => n.id === e.from);
+                const n2 = rawNodes.find(n => n.id === e.to);
+                if (!n1 || !n2) return;
+
+                const isDimmed = (activeFilter !== 'all' && (n1.cat !== activeFilter && n2.cat !== activeFilter)) ||
+                                 (searchQuery && !n1.label.toLowerCase().includes(searchQuery) && !n2.label.toLowerCase().includes(searchQuery));
+
+                ctx.strokeStyle = isDimmed ? 'rgba(255, 255, 255, 0.04)' : 'rgba(86, 240, 224, 0.22)';
+                ctx.lineWidth = e.weight * 2;
+                ctx.beginPath();
+                ctx.moveTo(n1.x, n1.y);
+                ctx.lineTo(n2.x, n2.y);
+                ctx.stroke();
+            });
+
+            // Draw traveling signal packets (action potentials)
+            signals.forEach(s => {
+                const edge = rawEdges[s.edgeIndex];
+                if (!edge) return;
+                const n1 = rawNodes.find(n => n.id === edge.from);
+                const n2 = rawNodes.find(n => n.id === edge.to);
+                if (!n1 || !n2) return;
+
+                const sx = n1.x + (n2.x - n1.x) * s.progress;
+                const sy = n1.y + (n2.y - n1.y) * s.progress;
+
+                ctx.fillStyle = '#56f0e0';
+                ctx.shadowColor = '#56f0e0';
+                ctx.shadowBlur = 8;
+                ctx.beginPath();
+                ctx.arc(sx, sy, 3, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            });
+
+            // Draw Nodes
+            rawNodes.forEach(n => {
+                const isSelected = selectedNode === n;
+                const isHovered = hoveredNode === n;
+                const color = catColors[n.cat] || '#fff';
+
+                const matchesFilter = activeFilter === 'all' || n.cat === activeFilter;
+                const matchesSearch = !searchQuery || n.label.toLowerCase().includes(searchQuery);
+                const isMuted = !matchesFilter || !matchesSearch;
+
+                const alpha = isMuted ? 0.18 : 1.0;
+                ctx.globalAlpha = alpha;
+
+                // Outer Halo Glow
+                if (!isMuted && (isSelected || isHovered || n.cat === 'core')) {
+                    ctx.shadowColor = color;
+                    ctx.shadowBlur = isSelected ? 28 : (isHovered ? 20 : 14);
+                } else {
+                    ctx.shadowBlur = 0;
+                }
+
+                // Node Body
+                ctx.fillStyle = isSelected ? '#ffffff' : color;
+                ctx.beginPath();
+                ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Inner dark core
+                ctx.fillStyle = '#060b14';
+                ctx.beginPath();
+                ctx.arc(n.x, n.y, n.r * 0.55, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.shadowBlur = 0;
+
+                // Node Label
+                ctx.fillStyle = isSelected ? '#ffffff' : (isMuted ? 'rgba(255,255,255,0.2)' : '#e6edf3');
+                ctx.font = `${n.cat === 'core' ? 'bold 13px' : '11px'} 'Space Grotesk', sans-serif`;
+                ctx.textAlign = 'center';
+                ctx.fillText(n.label, n.x, n.y + n.r + 14);
+
+                ctx.globalAlpha = 1.0;
+            });
+
+            updatePhysics();
+            requestAnimationFrame(render);
+        }
+
+        render();
+    </script>
+</body>
+</html>

@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SPARSH ARCADE // 1986 SYNTHWAVE CABINET</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-pink: #ff2a85;
+            --neon-cyan: #00f0ff;
+            --neon-yellow: #ffe600;
+            --neon-purple: #9d00ff;
+            --crt-green: #39ff14;
+            --cabinet-dark: #120a1f;
+            --cabinet-side: #25123d;
+            --bezel-dark: #07030d;
+            --font-arcade: 'Press Start 2P', monospace;
+            --font-sub: 'VT323', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body, html {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: #06020c;
+            color: #fff;
+            font-family: var(--font-arcade);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ── Synthwave Outrun Sunset & Neon Grid Background ── */
+        .synthwave-stage {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            background: linear-gradient(180deg, #0d0121 0%, #2b0b4a 50%, #681156 68%, #ba1e68 82%, #ff7139 100%);
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        /* Glowing Horizon Sun */
+        .outrun-sun {
+            position: absolute;
+            bottom: 30vh;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            background: linear-gradient(180deg, #ffe600 0%, #ff2a85 85%);
+            box-shadow: 0 0 80px rgba(255, 42, 133, 0.8), 0 0 160px rgba(255, 230, 0, 0.5);
+            -webkit-mask-image: linear-gradient(to bottom, 
+                black 0%, black 50%, 
+                transparent 50%, transparent 54%, 
+                black 54%, black 65%, 
+                transparent 65%, transparent 70%, 
+                black 70%, black 82%, 
+                transparent 82%, transparent 88%, 
+                black 88%, black 100%);
+            mask-image: linear-gradient(to bottom, 
+                black 0%, black 50%, 
+                transparent 50%, transparent 54%, 
+                black 54%, black 65%, 
+                transparent 65%, transparent 70%, 
+                black 70%, black 82%, 
+                transparent 82%, transparent 88%, 
+                black 88%, black 100%);
+        }
+
+        /* Perspective Moving 3D Grid */
+        .grid-plane {
+            position: absolute;
+            bottom: 0;
+            left: -50%;
+            width: 200%;
+            height: 36vh;
+            background-image: 
+                linear-gradient(rgba(0, 240, 255, 0.4) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 42, 133, 0.5) 1px, transparent 1px);
+            background-size: 60px 40px;
+            transform: perspective(300px) rotateX(65deg);
+            transform-origin: center bottom;
+            animation: gridScroll 1.6s linear infinite;
+        }
+
+        @keyframes gridScroll {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 40px; }
+        }
+
+        /* Silhouette mountains & palm trees */
+        .palm-left {
+            position: absolute;
+            bottom: 12vh;
+            left: 2vw;
+            width: 140px;
+            height: 220px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 160' fill='%23080112'%3E%3Cpath d='M46 160 Q 48 90 60 40 Q 64 25 72 15 Q 70 30 54 85 Q 50 120 48 160 Z'/%3E%3Cpath d='M68 20 C 50 0 20 15 10 35 C 30 25 55 25 68 20 Z'/%3E%3Cpath d='M68 20 C 60 -10 90 -5 100 15 C 85 10 75 15 68 20 Z'/%3E%3Cpath d='M68 20 C 85 2 110 30 100 50 C 90 35 78 28 68 20 Z'/%3E%3Cpath d='M68 20 C 50 20 25 45 30 65 C 40 45 55 35 68 20 Z'/%3E%3C/svg%3E") no-repeat center bottom;
+            background-size: contain;
+            opacity: 0.85;
+        }
+        .palm-right {
+            position: absolute;
+            bottom: 10vh;
+            right: 2vw;
+            width: 150px;
+            height: 240px;
+            transform: scaleX(-1);
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 160' fill='%23080112'%3E%3Cpath d='M46 160 Q 48 90 60 40 Q 64 25 72 15 Q 70 30 54 85 Q 50 120 48 160 Z'/%3E%3Cpath d='M68 20 C 50 0 20 15 10 35 C 30 25 55 25 68 20 Z'/%3E%3Cpath d='M68 20 C 60 -10 90 -5 100 15 C 85 10 75 15 68 20 Z'/%3E%3Cpath d='M68 20 C 85 2 110 30 100 50 C 90 35 78 28 68 20 Z'/%3E%3Cpath d='M68 20 C 50 20 25 45 30 65 C 40 45 55 35 68 20 Z'/%3E%3C/svg%3E") no-repeat center bottom;
+            background-size: contain;
+            opacity: 0.85;
+        }
+
+        /* ── Physical Arcade Cabinet Housing ── */
+        .arcade-cabinet {
+            position: relative;
+            z-index: 10;
+            width: 95vw;
+            max-width: 960px;
+            height: 96vh;
+            max-height: 840px;
+            background: linear-gradient(135deg, #1b0a2a 0%, #0c0414 100%);
+            border: 6px solid #4a1575;
+            border-radius: 24px 24px 12px 12px;
+            box-shadow: 
+                0 0 60px rgba(157, 0, 255, 0.4),
+                inset 0 0 20px rgba(255, 42, 133, 0.3),
+                0 20px 50px rgba(0, 0, 0, 0.95);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Top Backlit Marquee */
+        .marquee-header {
+            height: 64px;
+            background: linear-gradient(90deg, #2b0047, #ff2a85, #00f0ff, #2b0047);
+            background-size: 300% 100%;
+            animation: marqueeShift 6s ease infinite;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            border-bottom: 5px solid #200438;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
+        }
+
+        @keyframes marqueeShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .marquee-title {
+            font-size: 14px;
+            color: #ffffff;
+            text-shadow: 0 0 8px #fff, 0 0 16px var(--neon-cyan), 0 0 24px var(--neon-pink);
+            letter-spacing: 1.5px;
+        }
+
+        .marquee-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .btn-mini {
+            background: #110521;
+            border: 2px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            font-family: var(--font-arcade);
+            font-size: 9px;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .btn-mini:hover, .btn-mini.active {
+            background: var(--neon-cyan);
+            color: #000;
+            box-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        /* ── CRT Monitor Bezel & Screen ── */
+        .crt-bezel {
+            flex: 1;
+            background: radial-gradient(circle at center, #181124 0%, #05020a 100%);
+            margin: 10px 14px;
+            padding: 12px;
+            border-radius: 18px;
+            border: 8px solid #0d0617;
+            box-shadow: inset 0 0 35px rgba(0, 0, 0, 0.95), 0 0 10px rgba(74, 21, 117, 0.6);
+            display: flex;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .crt-screen {
+            flex: 1;
+            background: #020904;
+            border-radius: 12px;
+            position: relative;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            color: #a4f7b6;
+            box-shadow: inset 0 0 45px rgba(57, 255, 20, 0.15);
+        }
+
+        .crt-screen::-webkit-scrollbar { width: 6px; }
+        .crt-screen::-webkit-scrollbar-thumb { background: #13421f; border-radius: 3px; }
+
+        /* CRT Curved Scanline Mesh */
+        .crt-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%),
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.04), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.04));
+            background-size: 100% 3px, 4px 100%;
+            z-index: 50;
+            border-radius: 12px;
+        }
+
+        /* Screen Glow & Vignette */
+        .crt-glow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(0, 240, 255, 0.15);
+            z-index: 51;
+        }
+
+        /* ── Views: Attract Mode & Stage Select ── */
+        .arcade-view {
+            display: none;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+        }
+        .arcade-view.active {
+            display: flex;
+        }
+
+        /* ATTRACT MODE */
+        .attract-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            gap: 20px;
+        }
+
+        .hero-banner {
+            font-size: 20px;
+            color: var(--neon-yellow);
+            text-shadow: 0 0 10px var(--neon-yellow), 0 0 20px var(--neon-pink);
+            letter-spacing: 2px;
+            line-height: 1.6;
+        }
+
+        .sub-banner {
+            font-size: 11px;
+            color: var(--neon-cyan);
+            line-height: 1.8;
+            max-width: 600px;
+        }
+
+        .blink-insert-coin {
+            font-size: 14px;
+            color: var(--neon-pink);
+            margin-top: 15px;
+            animation: blink 0.8s steps(2, start) infinite;
+            cursor: pointer;
+            padding: 10px 20px;
+            border: 2px dashed var(--neon-pink);
+            background: rgba(255, 42, 133, 0.1);
+        }
+
+        @keyframes blink {
+            to { visibility: hidden; }
+        }
+
+        .credits-tag {
+            font-size: 10px;
+            color: #8b949e;
+            margin-top: 10px;
+        }
+
+        /* STAGE SELECT MENU */
+        .stage-menu-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .screen-topbar {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: var(--neon-yellow);
+            border-bottom: 2px dashed #1f4228;
+            padding-bottom: 8px;
+        }
+
+        .menu-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .menu-item {
+            font-size: 11px;
+            padding: 10px 14px;
+            color: #a4f7b6;
+            cursor: pointer;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.1s ease;
+        }
+
+        .menu-item:hover, .menu-item.selected {
+            background: rgba(0, 240, 255, 0.15);
+            color: var(--neon-cyan);
+            text-shadow: 0 0 8px var(--neon-cyan);
+            transform: translateX(8px);
+        }
+
+        .menu-cursor {
+            color: var(--neon-pink);
+            opacity: 0;
+            font-weight: 700;
+        }
+        .menu-item.selected .menu-cursor {
+            opacity: 1;
+        }
+
+        /* DETAIL STAGE PANELS */
+        .stage-detail-panel {
+            background: rgba(4, 20, 10, 0.85);
+            border: 2px solid #1a5229;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: none;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .stage-detail-panel.show {
+            display: flex;
+        }
+
+        .stage-title {
+            font-size: 13px;
+            color: var(--neon-yellow);
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #1a5229;
+            padding-bottom: 6px;
+        }
+
+        /* High Score Table */
+        .score-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10px;
+            margin-top: 8px;
+        }
+        .score-table th {
+            color: var(--neon-cyan);
+            text-align: left;
+            padding: 6px 4px;
+            border-bottom: 2px solid #1a5229;
+        }
+        .score-table td {
+            padding: 6px 4px;
+            color: #e0f8e5;
+            border-bottom: 1px dashed #11361c;
+        }
+        .rank-1 { color: var(--neon-yellow) !important; font-weight: bold; }
+        .rank-2 { color: #f0f6fc !important; }
+        .rank-3 { color: #ff9d00 !important; }
+
+        /* Boss Rush Elements */
+        .boss-card {
+            border: 2px solid #941334;
+            background: rgba(148, 19, 52, 0.15);
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+        .boss-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: #ff5f7e;
+            margin-bottom: 8px;
+        }
+        .hp-bar-wrap {
+            height: 12px;
+            background: #2b040c;
+            border: 1px solid #ff2a85;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+        .hp-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff2a85, #ffe600);
+            width: 100%;
+        }
+
+        /* Project Cartridges */
+        .cartridge-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .cartridge-card {
+            border: 2px solid #00f0ff;
+            background: rgba(0, 240, 255, 0.06);
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .cartridge-card:hover {
+            background: rgba(0, 240, 255, 0.2);
+            transform: scale(1.02);
+            box-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
+        }
+        .cart-tag {
+            font-size: 8px;
+            padding: 2px 4px;
+            border-radius: 2px;
+            background: var(--neon-purple);
+            color: #fff;
+            margin-right: 4px;
+        }
+
+        /* ── Physical Arcade Control Deck (Joy & Buttons) ── */
+        .control-deck {
+            height: 90px;
+            background: linear-gradient(180deg, #1c0b2b 0%, #0d0417 100%);
+            border-top: 4px solid #4a1575;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 0 20px;
+            flex-shrink: 0;
+            box-shadow: inset 0 4px 15px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Virtual D-Pad / Joystick */
+        .joystick-cluster {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .joy-btn {
+            width: 38px;
+            height: 38px;
+            background: #200438;
+            border: 2px solid var(--neon-cyan);
+            border-radius: 6px;
+            color: var(--neon-cyan);
+            font-family: inherit;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #0f021c;
+            transition: all 0.08s ease;
+        }
+        .joy-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #0f021c;
+            background: var(--neon-cyan);
+            color: #000;
+        }
+
+        /* Action Buttons */
+        .actions-cluster {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+        }
+
+        .action-btn {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.08s ease;
+        }
+        .btn-fire {
+            background: radial-gradient(circle at 35% 35%, #ff5f7e, #b80d32);
+            box-shadow: 0 5px 0 #6e0018, 0 0 15px rgba(255, 42, 133, 0.5);
+            color: #fff;
+        }
+        .btn-fire:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 #6e0018;
+        }
+        .btn-jump {
+            background: radial-gradient(circle at 35% 35%, #00f0ff, #007799);
+            box-shadow: 0 5px 0 #004455, 0 0 15px rgba(0, 240, 255, 0.5);
+            color: #000;
+        }
+        .btn-jump:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 #004455;
+        }
+
+        /* Coin Doors & 25c slot */
+        .coin-slot-cluster {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        .coin-btn {
+            background: #2b0015;
+            border: 2px solid var(--neon-yellow);
+            color: var(--neon-yellow);
+            font-family: inherit;
+            font-size: 8px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(255, 230, 0, 0.4);
+            animation: pulseCoin 2s infinite ease-in-out;
+        }
+        @keyframes pulseCoin {
+            0%, 100% { box-shadow: 0 0 6px rgba(255, 230, 0, 0.3); }
+            50% { box-shadow: 0 0 18px rgba(255, 230, 0, 0.8); }
+        }
+        .coin-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Retro Game Iframe Modal */
+        .arcade-game-modal {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 100;
+            flex-direction: column;
+        }
+        .arcade-game-modal.open { display: flex; }
+        .arcade-game-header {
+            background: #110424;
+            padding: 8px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--neon-pink);
+            font-size: 10px;
+        }
+        .arcade-game-iframe {
+            flex: 1;
+            width: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ── Ambient Synthwave Stage (Sunset, Horizon & 3D Neon Grid) ── -->
+    <div class="synthwave-stage" aria-hidden="true">
+        <div class="outrun-sun"></div>
+        <div class="grid-plane"></div>
+        <div class="palm-left"></div>
+        <div class="palm-right"></div>
+    </div>
+
+    <!-- ── Physical Arcade Cabinet ── -->
+    <main class="arcade-cabinet">
+        <!-- Top Backlit Glass Marquee -->
+        <header class="marquee-header">
+            <div class="marquee-title">★ SPARSH ARCADE 1986 ★</div>
+            <div class="marquee-controls">
+                <button class="btn-mini" id="bgm-toggle" onclick="toggleBGM()">♪ BGM: OFF</button>
+                <button class="btn-mini" onclick="window.location.href='terminal.html'">$ BASH</button>
+                <button class="btn-mini" onclick="window.location.href='index.html'">⊞ WIN95</button>
+            </div>
+        </header>
+
+        <!-- CRT Convex Bezel & Monitor -->
+        <section class="crt-bezel">
+            <div class="crt-overlay"></div>
+            <div class="crt-glow"></div>
+
+            <div class="crt-screen" id="crt-screen">
+                
+                <!-- VIEW 1: ATTRACT MODE (DEMO SCREEN) -->
+                <div class="arcade-view active" id="view-attract">
+                    <div class="attract-container">
+                        <div class="hero-banner">
+                            SPARSH KHANNA<br>
+                            <span style="font-size: 12px; color: var(--neon-cyan);">SYSTEMS &amp; AGENTIC AI ARCHITECT</span>
+                        </div>
+
+                        <div class="sub-banner">
+                            1ST PLACE STATE WINNER · INDIA SKILL COMPETITION 2024<br>
+                            SPECIALIST IN LANGGRAPH DAGs &amp; ESP32 MICROCONTROLLERS
+                        </div>
+
+                        <div class="blink-insert-coin" onclick="insertCoinAndStart()">
+                            ★ INSERT COIN / PRESS START ★
+                        </div>
+
+                        <div class="credits-tag">
+                            CREDITS: <span id="credit-count">00</span> · PRESS '1' FOR 1P OR CLICK COIN
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 2: STAGE SELECT / MAIN PORTFOLIO MENU -->
+                <div class="arcade-view" id="view-menu">
+                    <div class="stage-menu-container">
+                        <div class="screen-topbar">
+                            <span>1UP: 99400</span>
+                            <span>HI-SCORE: 99400</span>
+                            <span id="screen-credits">CREDIT: 01</span>
+                        </div>
+
+                        <div style="font-size: 12px; color: var(--neon-yellow); margin-top: 6px;">
+                            SELECT MISSION STAGE:
+                        </div>
+
+                        <div class="menu-list" id="menu-items">
+                            <div class="menu-item selected" data-stage="story" onclick="selectStage('story')">
+                                <span class="menu-cursor">►</span>
+                                <span>1P STORY MODE &nbsp;&nbsp;&nbsp;[ORIGIN &amp; BIO]</span>
+                            </div>
+                            <div class="menu-item" data-stage="boss" onclick="selectStage('boss')">
+                                <span class="menu-cursor">►</span>
+                                <span>2P BOSS RUSH &nbsp;&nbsp;&nbsp;&nbsp;[EXPERIENCE LOG]</span>
+                            </div>
+                            <div class="menu-item" data-stage="scores" onclick="selectStage('scores')">
+                                <span class="menu-cursor">►</span>
+                                <span>HIGH SCORES &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[SKILLS MATRIX]</span>
+                            </div>
+                            <div class="menu-item" data-stage="projects" onclick="selectStage('projects')">
+                                <span class="menu-cursor">►</span>
+                                <span>STAGE SELECT &nbsp;&nbsp;&nbsp;&nbsp;[PROJECT CARTRIDGES]</span>
+                            </div>
+                            <div class="menu-item" data-stage="retro" onclick="selectStage('retro')">
+                                <span class="menu-cursor">►</span>
+                                <span>BONUS ARCADE &nbsp;&nbsp;&nbsp;&nbsp;[DOOM / QUAKE / WOLF3D]</span>
+                            </div>
+                            <div class="menu-item" data-stage="contact" onclick="selectStage('contact')">
+                                <span class="menu-cursor">►</span>
+                                <span>TRANSMISSION &nbsp;&nbsp;&nbsp;&nbsp;[CONTACT &amp; RESUME]</span>
+                            </div>
+                        </div>
+
+                        <!-- PANEL 1: STORY MODE (BIO) -->
+                        <div class="stage-detail-panel" id="panel-story">
+                            <div class="stage-title">
+                                <span>STAGE 1: ORIGIN STORY // PILOT DOSSIER</span>
+                                <span style="color:var(--neon-cyan)">HP: 100/100</span>
+                            </div>
+                            <div style="font-size: 10px; line-height: 1.8; color: #d0f0d8;">
+                                <p style="margin-bottom: 8px;">
+                                    <strong style="color:var(--neon-yellow)">PILOT:</strong> Sparsh Khanna | B.Tech CSE (Class of 2026)<br>
+                                    <strong style="color:var(--neon-yellow)">STATION:</strong> Guru Nanak Dev University (GNDU), Punjab, India
+                                </p>
+                                <p style="margin-bottom: 8px;">
+                                    Architecting autonomous multi-agent systems via <strong style="color:var(--neon-cyan)">LangGraph DAG state machines</strong> and low-latency edge sensor nodes on <strong style="color:var(--neon-pink)">ESP32 microcontrollers</strong>. State Winner at the India Skill Competition 2024.
+                                </p>
+                                <p>
+                                    Leader in university placement operations: processed 10+ corporate recruitment drives (TCS, KPMG, Nagarro) with <strong style="color:var(--neon-yellow)">+200% student placement throughput</strong>.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- PANEL 2: BOSS RUSH (EXPERIENCE) -->
+                        <div class="stage-detail-panel" id="panel-boss">
+                            <div class="stage-title">
+                                <span>STAGE 2: BOSS RUSH // CORPORATE &amp; CONTESTS</span>
+                                <span style="color:#ff2a85">STATUS: DEFEATED</span>
+                            </div>
+                            
+                            <div class="boss-card">
+                                <div class="boss-header">
+                                    <span>BOSS: GNDU PLACEMENT CORE</span>
+                                    <span>LEVEL 99 // 2024</span>
+                                </div>
+                                <div class="hp-bar-wrap">
+                                    <div class="hp-bar-fill"></div>
+                                </div>
+                                <div style="font-size: 9px; line-height: 1.6; color:#fff;">
+                                    • Automated candidate vetting pipelines; interviewed 45+ engineers.<br>
+                                    • Special Attack: <strong>+200% THROUGHPUT SURGE</strong> across 10+ corporate drives.
+                                </div>
+                            </div>
+
+                            <div class="boss-card">
+                                <div class="boss-header">
+                                    <span>BOSS: INDIA SKILL COMPETITION (IITSB)</span>
+                                    <span>STATE CHAMPIONSHIP</span>
+                                </div>
+                                <div class="hp-bar-wrap">
+                                    <div class="hp-bar-fill"></div>
+                                </div>
+                                <div style="font-size: 9px; line-height: 1.6; color:#fff;">
+                                    • Awarded <strong>State Winner (Rank #1)</strong> in IT Software Solutions.<br>
+                                    • Architected resilient, high-concurrency desktop &amp; web infrastructure.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PANEL 3: HIGH SCORES (SKILLS) -->
+                        <div class="stage-detail-panel" id="panel-scores">
+                            <div class="stage-title">
+                                <span>HALL OF FAME // TECHNICAL HIGH SCORES</span>
+                                <span style="color:var(--neon-yellow)">SEASON '24</span>
+                            </div>
+                            <table class="score-table">
+                                <thead>
+                                    <tr>
+                                        <th>RANK</th>
+                                        <th>TECH STACK</th>
+                                        <th>SCORE</th>
+                                        <th>TIER</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="rank-1">1ST</td>
+                                        <td>LANGGRAPH &amp; AGENTIC AI</td>
+                                        <td>99,400</td>
+                                        <td style="color:var(--neon-yellow)">AAA</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="rank-2">2ND</td>
+                                        <td>PYTHON / FASTAPI / DJANGO</td>
+                                        <td>98,200</td>
+                                        <td style="color:var(--neon-cyan)">AAA</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="rank-3">3RD</td>
+                                        <td>ESP32 &amp; C++ FIRMWARE</td>
+                                        <td>94,800</td>
+                                        <td>AA</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4TH</td>
+                                        <td>STATEFUL RAG &amp; VECTOR DBs</td>
+                                        <td>93,500</td>
+                                        <td>AA</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5TH</td>
+                                        <td>REACT.JS &amp; NEXT.JS</td>
+                                        <td>91,200</td>
+                                        <td>A</td>
+                                    </tr>
+                                    <tr>
+                                        <td>6TH</td>
+                                        <td>POSTGRESQL &amp; SQLITE</td>
+                                        <td>90,400</td>
+                                        <td>A</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- PANEL 4: PROJECTS -->
+                        <div class="stage-detail-panel" id="panel-projects">
+                            <div class="stage-title">
+                                <span>MISSION SELECT // SHIPPED BUILDS</span>
+                                <span style="color:var(--neon-cyan)">TOTAL: 06</span>
+                            </div>
+                            <div class="cartridge-grid">
+                                <div class="cartridge-card">
+                                    <div style="font-size: 11px; color: var(--neon-yellow); margin-bottom: 4px;">BLINKY</div>
+                                    <div style="font-size: 8px; color: #a4f7b6; margin-bottom: 6px;">Autonomous AI safe-click desktop tutor with screen inference.</div>
+                                    <span class="cart-tag">Agentic AI</span><span class="cart-tag">TTS</span>
+                                </div>
+                                <div class="cartridge-card">
+                                    <div style="font-size: 11px; color: var(--neon-yellow); margin-bottom: 4px;">IoT SMART HELMET</div>
+                                    <div style="font-size: 8px; color: #a4f7b6; margin-bottom: 6px;">Emergency hardware with collision shock detection &amp; SOS.</div>
+                                    <span class="cart-tag">ESP32</span><span class="cart-tag">C++</span>
+                                </div>
+                                <div class="cartridge-card">
+                                    <div style="font-size: 11px; color: var(--neon-yellow); margin-bottom: 4px;">webNote</div>
+                                    <div style="font-size: 8px; color: #a4f7b6; margin-bottom: 6px;">Decoupled React &amp; Django REST workspace with JWT sessions.</div>
+                                    <span class="cart-tag">React</span><span class="cart-tag">Django</span>
+                                </div>
+                                <div class="cartridge-card">
+                                    <div style="font-size: 11px; color: var(--neon-yellow); margin-bottom: 4px;">WOMEN SOS</div>
+                                    <div style="font-size: 8px; color: #a4f7b6; margin-bottom: 6px;">Rapid panic broadcast portal built for SkillSprint v2.</div>
+                                    <span class="cart-tag">Next.js</span><span class="cart-tag">Sockets</span>
+                                </div>
+                                <div class="cartridge-card">
+                                    <div style="font-size: 11px; color: var(--neon-yellow); margin-bottom: 4px;">AirPulse: Japan</div>
+                                    <div style="font-size: 8px; color: #a4f7b6; margin-bottom: 6px;">Environmental particulate analytics across Kaggle datasets.</div>
+                                    <span class="cart-tag">PowerBI</span><span class="cart-tag">Pandas</span>
+                                </div>
+                                <div class="cartridge-card">
+                                    <div style="font-size: 11px; color: var(--neon-yellow); margin-bottom: 4px;">CINEMATIC VERSE</div>
+                                    <div style="font-size: 8px; color: #a4f7b6; margin-bottom: 6px;">Film database explorer with context routing &amp; live caching.</div>
+                                    <span class="cart-tag">Vite</span><span class="cart-tag">React</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PANEL 5: RETRO BONUS GAMES -->
+                        <div class="stage-detail-panel" id="panel-retro">
+                            <div class="stage-title">
+                                <span>BONUS ARCADE // INSERT CARTRIDGE</span>
+                                <span style="color:#ffe600">READY</span>
+                            </div>
+                            <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;">
+                                <button class="btn-mini" onclick="launchGame('doom')">PLAY DOOM (1993)</button>
+                                <button class="btn-mini" onclick="launchGame('quake')">PLAY QUAKE 3D (1996)</button>
+                                <button class="btn-mini" onclick="launchGame('wolf3d')">PLAY WOLF 3D</button>
+                            </div>
+                        </div>
+
+                        <!-- PANEL 6: CONTACT & TRANSMISSION -->
+                        <div class="stage-detail-panel" id="panel-contact">
+                            <div class="stage-title">
+                                <span>TRANSMISSION // RADAR LINK</span>
+                                <span style="color:var(--neon-cyan)">COMMS ACTIVE</span>
+                            </div>
+                            <div style="font-size: 10px; line-height: 2; margin-top: 6px;">
+                                <div>EMAIL: <a href="mailto:sparshkhanna0001@gmail.com" style="color:var(--neon-yellow)">sparshkhanna0001@gmail.com</a></div>
+                                <div>GITHUB: <a href="https://github.com/KhannaSparsh0001" target="_blank" style="color:var(--neon-cyan)">github.com/KhannaSparsh0001</a></div>
+                                <div>LINKEDIN: <a href="https://linkedin.com/in/sparshkhanna" target="_blank" style="color:var(--neon-pink)">linkedin.com/in/sparshkhanna</a></div>
+                                <div style="margin-top:8px;">
+                                    <a href="docs/Sparsh_khanna_Resume_gndu-18.pdf" target="_blank" class="btn-mini" style="display:inline-block; text-decoration:none;">↓ DOWNLOAD RESUME PDF</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- MODAL POPUP FOR RETRO GAME ENGINES -->
+                <div class="arcade-game-modal" id="game-modal">
+                    <div class="arcade-game-header">
+                        <span id="game-modal-title">RETRO ENGINE</span>
+                        <button class="btn-mini" onclick="closeGame()">ESC / EXIT GAME</button>
+                    </div>
+                    <iframe class="arcade-game-iframe" id="game-frame" src="about:blank"></iframe>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ── Physical Arcade Control Deck ── -->
+        <footer class="control-deck">
+            <!-- Joystick D-Pad Cluster -->
+            <div class="joystick-cluster">
+                <button class="joy-btn" onclick="navigateMenu(-1)" title="Up">▲</button>
+                <div style="display:flex; flex-direction:column; gap:4px;">
+                    <button class="joy-btn" onclick="navigateMenu(-1)" title="Left">◀</button>
+                    <button class="joy-btn" onclick="navigateMenu(1)" title="Right">▶</button>
+                </div>
+                <button class="joy-btn" onclick="navigateMenu(1)" title="Down">▼</button>
+            </div>
+
+            <!-- Coin Insert & Start Cluster -->
+            <div class="coin-slot-cluster">
+                <button class="coin-btn" onclick="insertCoinAndStart()">
+                    25¢ INSERT COIN
+                </button>
+                <button class="btn-mini" style="font-size:7px; padding:4px 8px;" onclick="insertCoinAndStart()">
+                    START [1P]
+                </button>
+            </div>
+
+            <!-- Action Buttons (Fire & Jump) -->
+            <div class="actions-cluster">
+                <button class="action-btn btn-fire" onclick="confirmSelect()" title="Select (A)">A</button>
+                <button class="action-btn btn-jump" onclick="backToAttract()" title="Back (B)">B</button>
+            </div>
+        </footer>
+    </main>
+
+    <!-- ── Interactive Web Audio Chiptune Synthesizer ── -->
+    <script>
+        let audioCtx = null;
+        let isBgmPlaying = false;
+        let bgmTimer = null;
+        let credits = 0;
+        let selectedIndex = 0;
+
+        const stages = ['story', 'boss', 'scores', 'projects', 'retro', 'contact'];
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        // Metallic coin insert sound effect
+        function playCoinSound() {
+            initAudio();
+            const now = audioCtx.currentTime;
+
+            // Clink
+            const osc1 = audioCtx.createOscillator();
+            const gain1 = audioCtx.createGain();
+            osc1.type = 'sine';
+            osc1.frequency.setValueAtTime(987.77, now); // B5
+            osc1.frequency.exponentialRampToValueAtTime(1318.51, now + 0.08); // E6
+            gain1.gain.setValueAtTime(0.12, now);
+            gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+            osc1.connect(gain1);
+            gain1.connect(audioCtx.destination);
+            osc1.start(now);
+            osc1.stop(now + 0.35);
+        }
+
+        // Menu navigation blip sound
+        function playBlipSound() {
+            initAudio();
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(440, now);
+            osc.frequency.setValueAtTime(660, now + 0.03);
+            gain.gain.setValueAtTime(0.04, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now);
+            osc.stop(now + 0.08);
+        }
+
+        // Selection confirmation sound
+        function playConfirmSound() {
+            initAudio();
+            const now = audioCtx.currentTime;
+            const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+            notes.forEach((freq, idx) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(freq, now + idx * 0.06);
+                gain.gain.setValueAtTime(0.08, now + idx * 0.06);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.06 + 0.12);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now + idx * 0.06);
+                osc.stop(now + idx * 0.06 + 0.12);
+            });
+        }
+
+        // Continuous 8-bit Synthwave Chiptune loop
+        const bassLine = [130.81, 130.81, 155.56, 174.61, 196.00, 196.00, 174.61, 155.56];
+        const leadArp = [523.25, 659.25, 783.99, 1046.50, 783.99, 659.25, 523.25, 392.00];
+        let noteStep = 0;
+
+        function playChiptuneStep() {
+            if (!isBgmPlaying || !audioCtx) return;
+            const now = audioCtx.currentTime;
+
+            // Bass synth
+            const bass = audioCtx.createOscillator();
+            const bassGain = audioCtx.createGain();
+            bass.type = 'sawtooth';
+            bass.frequency.setValueAtTime(bassLine[noteStep % bassLine.length] / 2, now);
+            bassGain.gain.setValueAtTime(0.03, now);
+            bassGain.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
+            bass.connect(bassGain);
+            bassGain.connect(audioCtx.destination);
+            bass.start(now);
+            bass.stop(now + 0.16);
+
+            // Lead Arp synth
+            if (noteStep % 2 === 0) {
+                const lead = audioCtx.createOscillator();
+                const leadGain = audioCtx.createGain();
+                lead.type = 'square';
+                lead.frequency.setValueAtTime(leadArp[(noteStep / 2) % leadArp.length], now);
+                leadGain.gain.setValueAtTime(0.025, now);
+                leadGain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+                lead.connect(leadGain);
+                leadGain.connect(audioCtx.destination);
+                lead.start(now);
+                lead.stop(now + 0.12);
+            }
+
+            noteStep++;
+            bgmTimer = setTimeout(playChiptuneStep, 170);
+        }
+
+        function toggleBGM() {
+            initAudio();
+            isBgmPlaying = !isBgmPlaying;
+            const btn = document.getElementById('bgm-toggle');
+            if (isBgmPlaying) {
+                btn.innerText = "♪ BGM: ON";
+                btn.classList.add('active');
+                playChiptuneStep();
+            } else {
+                btn.innerText = "♪ BGM: OFF";
+                btn.classList.remove('active');
+                clearTimeout(bgmTimer);
+            }
+        }
+
+        // View management & Coin entry
+        function insertCoinAndStart() {
+            credits++;
+            document.getElementById('credit-count').innerText = credits.toString().padStart(2, '0');
+            document.getElementById('screen-credits').innerText = `CREDIT: ${credits.toString().padStart(2, '0')}`;
+            playCoinSound();
+
+            setTimeout(() => {
+                document.getElementById('view-attract').classList.remove('active');
+                document.getElementById('view-menu').classList.add('active');
+                selectStage(stages[selectedIndex]);
+            }, 300);
+        }
+
+        function backToAttract() {
+            playBlipSound();
+            document.getElementById('view-menu').classList.remove('active');
+            document.getElementById('view-attract').classList.add('active');
+        }
+
+        function navigateMenu(direction) {
+            playBlipSound();
+            const items = document.querySelectorAll('.menu-item');
+            items[selectedIndex].classList.remove('selected');
+            selectedIndex = (selectedIndex + direction + stages.length) % stages.length;
+            items[selectedIndex].classList.add('selected');
+            selectStage(stages[selectedIndex]);
+        }
+
+        function selectStage(stageName) {
+            playBlipSound();
+            const items = document.querySelectorAll('.menu-item');
+            items.forEach((item, idx) => {
+                if (item.getAttribute('data-stage') === stageName) {
+                    item.classList.add('selected');
+                    selectedIndex = idx;
+                } else {
+                    item.classList.remove('selected');
+                }
+            });
+
+            // Hide all detail panels and show the matching one
+            document.querySelectorAll('.stage-detail-panel').forEach(p => p.classList.remove('show'));
+            const targetPanel = document.getElementById(`panel-${stageName}`);
+            if (targetPanel) {
+                targetPanel.classList.add('show');
+            }
+        }
+
+        function confirmSelect() {
+            playConfirmSound();
+            const currentStage = stages[selectedIndex];
+            if (currentStage === 'retro') {
+                launchGame('doom');
+            } else {
+                selectStage(currentStage);
+            }
+        }
+
+        function launchGame(engine) {
+            playConfirmSound();
+            const modal = document.getElementById('game-modal');
+            const frame = document.getElementById('game-frame');
+            const title = document.getElementById('game-modal-title');
+
+            if (engine === 'doom') {
+                title.innerText = "DOOM (1993) // DOS ENGINE";
+                frame.src = "apps/doom/index.html";
+            } else if (engine === 'quake') {
+                title.innerText = "QUAKE 3D (1996) // WEBQUAKE";
+                frame.src = "apps/quake/index.html";
+            } else if (engine === 'wolf3d') {
+                title.innerText = "WOLFENSTEIN 3D // RAYCASTER";
+                frame.src = "apps/wolf3d/index.html";
+            }
+            modal.classList.add('open');
+        }
+
+        function closeGame() {
+            playBlipSound();
+            const modal = document.getElementById('game-modal');
+            const frame = document.getElementById('game-frame');
+            frame.src = "about:blank";
+            modal.classList.remove('open');
+        }
+
+        // Global Keyboard Event Listener
+        window.addEventListener('keydown', (e) => {
+            const attractActive = document.getElementById('view-attract').classList.contains('active');
+
+            if (attractActive) {
+                if (e.key === ' ' || e.key === 'Enter' || e.key === '1' || e.key.toLowerCase() === 'c') {
+                    insertCoinAndStart();
+                }
+            } else {
+                if (e.key === 'ArrowUp' || e.key.toLowerCase() === 'w') {
+                    e.preventDefault();
+                    navigateMenu(-1);
+                } else if (e.key === 'ArrowDown' || e.key.toLowerCase() === 's') {
+                    e.preventDefault();
+                    navigateMenu(1);
+                } else if (e.key === 'Enter' || e.key === ' ' || e.key.toLowerCase() === 'j') {
+                    e.preventDefault();
+                    confirmSelect();
+                } else if (e.key === 'Escape' || e.key.toLowerCase() === 'k') {
+                    closeGame();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
